@@ -1,0 +1,6 @@
+@eMechanic.API_HostAddress = http://localhost:5178
+
+GET {{eMechanic.API_HostAddress}}/test/
+Accept: application/json
+
+###

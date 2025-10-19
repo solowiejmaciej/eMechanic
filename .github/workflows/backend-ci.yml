@@ -1,0 +1,38 @@
+name: Backend CI (Build & Test)
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "src/backend/**"
+
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "src/backend/**"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: src/backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore eMechanic.sln
+
+      - name: Build
+        run: dotnet build eMechanic.sln --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test eMechanic.sln --no-build --verbosity normal --configuration Release
