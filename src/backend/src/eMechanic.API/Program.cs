@@ -1,3 +1,5 @@
+using eMechanic.API.Features;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
@@ -10,11 +12,6 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-
-app.MapGet("/test", () =>
-    {
-        Results.Ok("Alive!");
-    })
-    .WithName("Test Endpoint");
+app.MapFeatures();
 
 app.Run();
