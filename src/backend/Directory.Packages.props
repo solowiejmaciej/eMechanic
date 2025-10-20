@@ -1,10 +1,26 @@
 <Project>
-  <PropertyGroup>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.15.0.120848" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.7.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
-  </ItemGroup>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageVersion Include="MediatR" Version="13.0.0" />
+        <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
+        <PackageVersion Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+        <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+        <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
+        <PackageVersion Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="8.0.0" />
+        <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
+        <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="9.0.0" />
+
+        <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.15.0.120848" />
+        <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.7.0" />
+        <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
+
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0"/>
+        <PackageVersion Include="xunit" Version="2.9.2"/>
+        <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2"/>
+        <PackageVersion Include="coverlet.collector" Version="6.0.2"/>
+
+        <PackageVersion Include="NetArchTest.Rules" Version="1.3.2" />
+    </ItemGroup>
 </Project>

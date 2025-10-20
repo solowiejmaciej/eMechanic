@@ -1,7 +1,7 @@
 using eMechanic.API.Features;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 

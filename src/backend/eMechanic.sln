@@ -11,7 +11,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{AFBFCABD
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eMechanic.API", "src\eMechanic.API\eMechanic.API.csproj", "{98CA61DF-8DBD-499E-B54C-12BE680E8C83}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eMechanic.API", "src\eMechanic\eMechanic.API\eMechanic.API.csproj", "{98CA61DF-8DBD-499E-B54C-12BE680E8C83}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eMechanic.Common", "eMechanic.Common", "{38047710-392B-4641-9671-0DC313929022}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eMechanic", "eMechanic", "{F2C5AE70-C33C-48E2-A8AB-158F68D807E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7949FF29-CEF0-4697-87F2-7856C53E600B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eMechanic.Common", "src\eMechanic.Common\src\eMechanic.Common\eMechanic.Common.csproj", "{D5DC0E3B-B037-4F63-9791-CDB77B4836F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eMechanic.Architecture.Tests", "tests\eMechanic.Architecture.Tests\eMechanic.Architecture.Tests.csproj", "{7D4DC5AD-1A0C-4EFB-B22C-477EF8909E31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,12 +29,25 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{98CA61DF-8DBD-499E-B54C-12BE680E8C83} = {A76CE457-901D-49A5-8627-6443E5FA50E1}
+		{38047710-392B-4641-9671-0DC313929022} = {A76CE457-901D-49A5-8627-6443E5FA50E1}
+		{F2C5AE70-C33C-48E2-A8AB-158F68D807E2} = {A76CE457-901D-49A5-8627-6443E5FA50E1}
+		{98CA61DF-8DBD-499E-B54C-12BE680E8C83} = {F2C5AE70-C33C-48E2-A8AB-158F68D807E2}
+		{7949FF29-CEF0-4697-87F2-7856C53E600B} = {38047710-392B-4641-9671-0DC313929022}
+		{D5DC0E3B-B037-4F63-9791-CDB77B4836F4} = {7949FF29-CEF0-4697-87F2-7856C53E600B}
+		{7D4DC5AD-1A0C-4EFB-B22C-477EF8909E31} = {29EA3502-F03E-4F59-A225-210D8123C065}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{98CA61DF-8DBD-499E-B54C-12BE680E8C83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{98CA61DF-8DBD-499E-B54C-12BE680E8C83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98CA61DF-8DBD-499E-B54C-12BE680E8C83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98CA61DF-8DBD-499E-B54C-12BE680E8C83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5DC0E3B-B037-4F63-9791-CDB77B4836F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5DC0E3B-B037-4F63-9791-CDB77B4836F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5DC0E3B-B037-4F63-9791-CDB77B4836F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5DC0E3B-B037-4F63-9791-CDB77B4836F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D4DC5AD-1A0C-4EFB-B22C-477EF8909E31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D4DC5AD-1A0C-4EFB-B22C-477EF8909E31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D4DC5AD-1A0C-4EFB-B22C-477EF8909E31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D4DC5AD-1A0C-4EFB-B22C-477EF8909E31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
