@@ -1,13 +1,20 @@
 namespace eMechanic.Architecture.Tests;
+
 using NetArchTest.Rules;
 using MediatR;
 using Common.Result;
+using System.Reflection;
+using Common.CQRS;
 
 public class MediatRUsageTests
 {
     private const string MEDIATR_NAMESPACE = "MediatR";
+    private const string APPLICATION_NAMESPACE = "eMechanic.Application";
 
-    // Lista nazw interfejsów bazowych, które MUSZĄ dziedziczyć z MediatR, więc mają referencję.
+    private static readonly Assembly[] SolutionAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+        .Where(a => a.FullName != null && a.FullName.StartsWith("eMechanic.", StringComparison.Ordinal))
+        .ToArray();
+
     private static readonly string[] CustomMediatRBaseInterfaces = new[]
     {
         "IResultCommand",
@@ -19,9 +26,8 @@ public class MediatRUsageTests
     [Fact]
     public void AllHandlers_ShouldImplementCustomInterfacesOnly()
     {
-        var assembly = typeof(Error).Assembly;
-
-        var result = Types.InAssembly(assembly)
+        // POPRAWKA: Skanujemy wszystkie assembly, a nie tylko 'Common'
+        var result = Types.InAssemblies(SolutionAssemblies)
             .That()
             .DoNotHaveName(CustomMediatRBaseInterfaces)
             .ShouldNot()
@@ -52,6 +58,28 @@ public class MediatRUsageTests
         {
             var failingTypes = result.FailingTypes.Select(t => t.FullName);
             var errorMessage = $"Direct usage of MediatR types is forbidden in the Common project outside of custom base interfaces (IResult...). Use the wrapper interfaces instead. Failing types found:\n{string.Join("\n", failingTypes)}";
+            Assert.Fail(errorMessage);
+        }
+    }
+
+    [Fact]
+    public void Handlers_ShouldResideInApplicationProject()
+    {
+        // Act
+        var result = Types.InAssemblies(SolutionAssemblies)
+            .That()
+            .ImplementInterface(typeof(IResultQueryHandler<,>))
+            .Or()
+            .ImplementInterface(typeof(IResultCommandHandler<,>))
+            .Should()
+            .ResideInNamespaceStartingWith(APPLICATION_NAMESPACE)
+            .GetResult();
+
+        // Assert
+        if (!result.IsSuccessful)
+        {
+            var failingTypes = result.FailingTypes.Select(t => t.FullName);
+            var errorMessage = $"All Handlers (IResultQueryHandler/IResultCommandHandler) must reside within the '{APPLICATION_NAMESPACE}' namespace. Failing types found:\n{string.Join("\n", failingTypes)}";
             Assert.Fail(errorMessage);
         }
     }

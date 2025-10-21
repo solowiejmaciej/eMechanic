@@ -6,5 +6,6 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\..\eMechanic.Common\src\eMechanic.Common\eMechanic.Common.csproj" />
+      <ProjectReference Include="..\eMechanic.Application\eMechanic.Application.csproj" />
     </ItemGroup>
 </Project>
