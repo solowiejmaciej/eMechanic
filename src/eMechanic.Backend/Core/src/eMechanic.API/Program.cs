@@ -4,11 +4,15 @@ using eMechanic.API.Middleware;
 using eMechanic.Application;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 builder.Services.AddApplication();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 app.MapOpenApi();
 app.UseSwagger();

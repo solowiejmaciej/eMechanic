@@ -6,6 +6,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\Common\src\eMechanic.Common\eMechanic.Common.csproj" />
+        <ProjectReference Include="..\..\..\eMechanic.ServiceDefaults\eMechanic.ServiceDefaults.csproj" />
         <ProjectReference Include="..\eMechanic.Application\eMechanic.Application.csproj" />
     </ItemGroup>
 </Project>
