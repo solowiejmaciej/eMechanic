@@ -13,7 +13,7 @@ public sealed class GetUserByIdFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/users/{id:guid}", async (
+        app.MapGet("users/{id:guid}", async (
                 Guid id,
                 string test,
                 IMediator mediator,

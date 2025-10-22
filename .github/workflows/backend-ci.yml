@@ -4,14 +4,11 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "src/backend/**"
-      - "tests/**"
-
+      - "eMechanic.Backend/**"
   pull_request:
     branches: ["main"]
     paths:
-      - "src/backend/**"
-      - "tests/**"
+      - "eMechanic.Backend/**"
 
 jobs:
   build-and-test:
@@ -27,10 +24,10 @@ jobs:
           dotnet-version: "9.0.x"
 
       - name: Restore dependencies
-        run: dotnet restore src/backend/eMechanic.sln
+        run: dotnet restore eMechanic.Backend/eMechanic.sln
 
       - name: Build
-        run: dotnet build src/backend/eMechanic.sln --no-restore --configuration Release
+        run: dotnet build eMechanic.Backend/eMechanic.sln --no-restore --configuration Release
 
       - name: Test
-        run: dotnet test src/backend/eMechanic.sln --no-build --verbosity normal --configuration Release
+        run: dotnet test eMechanic.Backend/eMechanic.sln --no-build --verbosity normal --configuration Release

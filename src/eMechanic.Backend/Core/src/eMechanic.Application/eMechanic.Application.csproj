@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\eMechanic.Common\src\eMechanic.Common\eMechanic.Common.csproj" />
+      <PackageReference Include="FluentValidation" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="FluentValidation" />
-      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+      <ProjectReference Include="..\..\..\Common\src\eMechanic.Common\eMechanic.Common.csproj" />
     </ItemGroup>
 
 </Project>

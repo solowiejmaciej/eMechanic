@@ -20,9 +20,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\eMechanic\eMechanic.API\eMechanic.API.csproj" />
-      <ProjectReference Include="..\..\src\eMechanic\eMechanic.Domain\eMechanic.Domain.csproj" />
-      <ProjectReference Include="..\..\src\eMechanic\eMechanic.Infrastructure\eMechanic.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\src\eMechanic.API\eMechanic.API.csproj" />
+      <ProjectReference Include="..\..\src\eMechanic.Application\eMechanic.Application.csproj" />
+      <ProjectReference Include="..\..\src\eMechanic.Domain\eMechanic.Domain.csproj" />
+      <ProjectReference Include="..\..\src\eMechanic.Infrastructure\eMechanic.Infrastructure.csproj" />
     </ItemGroup>
+
+
 
 </Project>
