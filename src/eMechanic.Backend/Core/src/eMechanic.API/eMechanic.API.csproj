@@ -5,7 +5,7 @@
         <PackageReference Include="Swashbuckle.AspNetCore" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\eMechanic.Common\src\eMechanic.Common\eMechanic.Common.csproj" />
-      <ProjectReference Include="..\eMechanic.Application\eMechanic.Application.csproj" />
+        <ProjectReference Include="..\..\..\Common\src\eMechanic.Common\eMechanic.Common.csproj" />
+        <ProjectReference Include="..\eMechanic.Application\eMechanic.Application.csproj" />
     </ItemGroup>
 </Project>

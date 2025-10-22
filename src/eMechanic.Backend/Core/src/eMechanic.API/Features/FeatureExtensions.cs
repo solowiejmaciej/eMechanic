@@ -3,7 +3,7 @@ using System.Reflection;
 
 public static class FeatureExtensions
 {
-    public static WebApplication MapFeatures(this WebApplication app)
+    public static IEndpointRouteBuilder MapFeatures(this IEndpointRouteBuilder app)
     {
         var featureTypes = Assembly.GetExecutingAssembly()
             .GetTypes()
