@@ -52,4 +52,22 @@ public class DependencyTests : ArchitectureTestBase
 
         Assert.True(result.IsSuccessful, "Domain layer should not depend on other layers.");
     }
+
+    [Fact]
+    public void Features_Should_Not_DependOnInfrastructure()
+    {
+        var apiAssembly = GetAssembly(API_NAMESPACE);
+
+        var result = Types.InAssembly(apiAssembly)
+            .That()
+            .ResideInNamespaceContaining(FEATURES_NAMESPACE)
+            .ShouldNot()
+            .HaveDependencyOn(INFRASTRUCTURE_NAMESPACE)
+            .GetResult();
+
+        Assert.True(
+            result.IsSuccessful,
+            "API Features should not depend on Infrastructure layer. All infrastructure interactions should be handled in the Application layer."
+        );
+    }
 }

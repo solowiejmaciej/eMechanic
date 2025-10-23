@@ -2,11 +2,16 @@
     <ItemGroup>
         <PackageReference Include="MediatR" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Swashbuckle.AspNetCore" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\Common\src\eMechanic.Common\eMechanic.Common.csproj" />
         <ProjectReference Include="..\..\..\eMechanic.ServiceDefaults\eMechanic.ServiceDefaults.csproj" />
         <ProjectReference Include="..\eMechanic.Application\eMechanic.Application.csproj" />
+        <ProjectReference Include="..\eMechanic.Infrastructure\eMechanic.Infrastructure.csproj" />
     </ItemGroup>
 </Project>

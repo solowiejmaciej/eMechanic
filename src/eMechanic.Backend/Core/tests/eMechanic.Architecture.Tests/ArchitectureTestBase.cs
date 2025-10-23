@@ -3,14 +3,14 @@ namespace eMechanic.Architecture.Tests;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-
 public abstract class ArchitectureTestBase
 {
-    protected const string API_NAMESPACE = "eMechanic.API";
-    protected const string APPLICATION_NAMESPACE = "eMechanic.Application";
-    protected const string DOMAIN_NAMESPACE = "eMechanic.Domain";
-    protected const string INFRASTRUCTURE_NAMESPACE = "eMechanic.Infrastructure";
-    protected const string COMMON_NAMESPACE = "eMechanic.Common";
+    protected static readonly string API_NAMESPACE = typeof(API.AssemblyReference).Namespace!;
+    protected static readonly string APPLICATION_NAMESPACE = typeof(Application.AssemblyReference).Namespace!;
+    protected static readonly string DOMAIN_NAMESPACE = typeof(Domain.AssemblyReference).Namespace!;
+    protected static readonly string INFRASTRUCTURE_NAMESPACE = typeof(Infrastructure.AssemblyReference).Namespace!;
+    protected static readonly string COMMON_NAMESPACE = typeof(Common.AssemblyReference).Namespace!;
+    protected static readonly string FEATURES_NAMESPACE = typeof(API.Features.IFeature).Namespace!;
 
     protected static readonly Assembly[] SolutionAssemblies = LoadSolutionAssemblies();
 
