@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static void AddApplication(this IServiceCollection services)
     {
         var executingAssembly = Assembly.GetExecutingAssembly();
         services.AddValidatorsFromAssembly(executingAssembly, ServiceLifetime.Transient);
@@ -18,7 +18,5 @@ public static class DependencyInjection
             cfg.RegisterServicesFromAssembly(executingAssembly);
             cfg.AddOpenBehavior(typeof(QueryValidationBehavior<,>));
         });
-
-        return services;
     }
 }

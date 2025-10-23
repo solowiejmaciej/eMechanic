@@ -28,5 +28,4 @@ public class Result<TValue, TError>
     public static Result<IEnumerable<T>, TError> FromEnumerable<T>(IEnumerable<T> value) => new(value);
 
     public bool HasError() => !_isSuccess;
-
 }

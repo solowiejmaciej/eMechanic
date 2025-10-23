@@ -13,19 +13,18 @@ public sealed class GetUserByIdFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("users/{id:guid}", async (
+        app.MapGet(UserPrefix.ENDPOINT + "/{id:guid}", async (
                 Guid id,
-                string test,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
-                var query = new GetUserByIdQuery(id, test);
+                var query = new GetUserByIdQuery(id);
                 var result = await mediator.Send(query, cancellationToken);
 
                 return result.ToStatusCode(Results.Ok, MapError);
             })
             .WithName("GetUsersById")
-            .WithTags("Users")
+            .WithTags(UserPrefix.TAG)
             .Produces<GetUsersByIdResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest);

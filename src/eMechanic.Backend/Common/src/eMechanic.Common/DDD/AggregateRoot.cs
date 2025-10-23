@@ -1,10 +1,12 @@
 namespace eMechanic.Common.DDD;
 
+using Helpers;
+
 public abstract class AggregateRoot : Entity
 {
     private readonly List<IDomainEvent> _domainEvents = new();
 
-    protected AggregateRoot(Guid id) : base(id)
+    protected AggregateRoot() : base(GuidFactory.Create())
     {
     }
 

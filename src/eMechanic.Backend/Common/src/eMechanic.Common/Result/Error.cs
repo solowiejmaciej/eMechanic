@@ -1,5 +1,8 @@
 namespace eMechanic.Common.Result;
 
+using System.Collections.ObjectModel;
+using Fields;
+
 public sealed class Error
 {
     public EErrorCode Code { get; }
@@ -16,6 +19,19 @@ public sealed class Error
     {
         Code = code;
         Message = message;
+        ValidationErrors = Array.Empty<KeyValuePair<string, string[]>>()
+            .ToDictionary(kv => kv.Key, kv => kv.Value);
+    }
+
+
+    public static Error Validation(EField field, string message)
+    {
+        var errors = new Dictionary<string, string[]>
+        {
+            { field.ToString(), new[] { message } }
+        };
+
+        return new Error(EErrorCode.ValidationError, new ReadOnlyDictionary<string, string[]>(errors));
     }
 
     public Error(EErrorCode code, IReadOnlyDictionary<string, string[]> validationErrors)

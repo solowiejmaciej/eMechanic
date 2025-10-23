@@ -4,7 +4,6 @@ using Common.Result;
 
 public interface IFeature
 {
-    void MapEndpoint(IEndpointRouteBuilder app);
-
     IResult MapError(Error error);
+    void MapEndpoint(IEndpointRouteBuilder app);
 }
