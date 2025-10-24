@@ -1,32 +1,41 @@
 using eMechanic.API.Constans;
-using eMechanic.API.Features;
 using eMechanic.API.Middleware;
-using eMechanic.Application;
-using eMechanic.Infrastructure;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace eMechanic.API;
 
-builder.AddServiceDefaults();
-builder.AddInfrastructure();
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
-builder.Services.AddOpenApi();
-builder.Services.AddSwaggerGen();
+using Application;
+using Features;
+using Infrastructure;
 
-var app = builder.Build();
+public sealed class Program
+{
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-app.MapDefaultEndpoints();
+        builder.AddServiceDefaults();
+        builder.Services.AddApplication();
+        builder.Services.AddInfrastructure(builder.Configuration);
+        builder.AddInfrastructure();
+        builder.Services.AddOpenApi();
+        builder.Services.AddSwaggerGen();
 
-app.MapOpenApi();
-app.UseSwagger();
-app.UseSwaggerUI();
+        var app = builder.Build();
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+        app.MapDefaultEndpoints();
 
-app.UseHttpsRedirection();
-var apiV1Group = app.MapGroup($"/api/{WebApiConstans.CURRENT_API_VERSION}");
-apiV1Group.MapFeatures();
+        app.MapOpenApi();
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
-app.Services.ApplyMigrations();
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-app.Run();
+        app.UseHttpsRedirection();
+        var apiV1Group = app.MapGroup($"/api/{WebApiConstans.CURRENT_API_VERSION}");
+        apiV1Group.MapFeatures();
+
+        app.Services.ApplyMigrations();
+
+        app.Run();
+    }
+}
