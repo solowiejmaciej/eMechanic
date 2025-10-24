@@ -9,7 +9,7 @@ public class PaginationService : IPaginationService
         GetPaginatedResultAsync<TEntity>(IQueryable<TEntity> query, IPaginationParameters paginationParameters,
             CancellationToken cancellationToken)
     {
-        var count = query.Count();
+        var count = await query.CountAsync(cancellationToken);
         var items = await query
             .Skip((paginationParameters.PageNumber - 1) * paginationParameters.PageSize)
             .Take(paginationParameters.PageSize)

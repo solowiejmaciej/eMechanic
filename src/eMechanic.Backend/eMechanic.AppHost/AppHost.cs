@@ -4,7 +4,8 @@ var postgresServer = builder
     .AddPostgres("emechanic-postgres-server")
     .WithContainerName("emechanic-postgres")
     .WithDataVolume()
-    .WithHostPort(5433);
+    .WithHostPort(5433)
+    .WithLifetime(ContainerLifetime.Persistent);
 
 var postgresDb = postgresServer.AddDatabase("eMechanic");
 

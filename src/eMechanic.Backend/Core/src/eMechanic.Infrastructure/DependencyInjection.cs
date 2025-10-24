@@ -8,6 +8,7 @@ using DAL.Transactions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Repositories;
@@ -18,12 +19,18 @@ public static class DependencyInjection
 {
     public static void AddInfrastructure(this WebApplicationBuilder builder)
     {
-        builder.AddNpgsqlDbContext<AppDbContext>("eMechanic");
-        builder.AddNpgsqlDbContext<IdentityAppDbContext>("eMechanic");
+        builder.EnrichNpgsqlDbContext<AppDbContext>();
+        builder.EnrichNpgsqlDbContext<IdentityAppDbContext>();
     }
 
-    public static void AddInfrastructure(this IServiceCollection services)
+    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseNpgsql(configuration.GetConnectionString("eMechanic")));
+
+        services.AddDbContext<IdentityAppDbContext>(options =>
+            options.UseNpgsql(configuration.GetConnectionString("eMechanic")));
+
         services.AddIdentity<Identity.Identity, IdentityRole<Guid>>(options =>
             {
                 options.Password.RequireDigit = true;
