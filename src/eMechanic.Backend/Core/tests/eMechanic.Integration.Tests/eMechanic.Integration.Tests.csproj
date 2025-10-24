@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\eMechanic.Api\eMechanic.Api.csproj" />
+        <ProjectReference Include="..\..\src\eMechanic.API\eMechanic.API.csproj" />
     </ItemGroup>
 
 </Project>
