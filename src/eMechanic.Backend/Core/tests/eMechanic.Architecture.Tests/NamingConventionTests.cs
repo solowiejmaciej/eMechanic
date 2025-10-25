@@ -11,6 +11,8 @@ public class NamingConventionTests : ArchitectureTestBase
         var result = Types.InAssemblies(SolutionAssemblies)
             .That()
             .ImplementInterface(typeof(IResultQuery<>))
+            .And()
+            .AreClasses()
             .Should()
             .BeSealed()
             .And()
