@@ -1,22 +1,25 @@
 namespace eMechanic.Common.Result;
 
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
 public class Result<TValue, TError>
 {
-    public readonly TValue? Value;
-    public readonly TError? Error;
+    public TValue? Value { get; private init; }
+    public TError? Error { get; private init; }
+    public bool IsSuccess { get; }
 
-    private readonly bool _isSuccess;
-
+    [JsonConstructor]
     private Result(TValue value)
     {
-        _isSuccess = true;
+        IsSuccess = true;
         Value = value;
         Error = default;
     }
 
     private Result(TError error)
     {
-        _isSuccess = false;
+        IsSuccess = false;
         Value = default;
         Error = error;
     }
@@ -27,5 +30,6 @@ public class Result<TValue, TError>
 
     public static Result<IEnumerable<T>, TError> FromEnumerable<T>(IEnumerable<T> value) => new(value);
 
-    public bool HasError() => !_isSuccess;
+    public bool HasError() => !IsSuccess;
 }
+

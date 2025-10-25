@@ -19,6 +19,8 @@ public sealed class Program
         builder.AddInfrastructure();
         builder.Services.AddOpenApi();
         builder.Services.AddSwaggerGen();
+        builder.AddApi();
+        builder.Services.AddApi();
 
         var app = builder.Build();
 

@@ -3,6 +3,7 @@
         <InternalsVisibleTo Include="eMechanic.Integration.Tests" />
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" />
         <PackageReference Include="MediatR" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design">

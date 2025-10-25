@@ -9,9 +9,12 @@ var postgresServer = builder
 
 var postgresDb = postgresServer.AddDatabase("eMechanic");
 
+var redisCache = builder.AddRedis("emechanic-cache");
+
 builder
     .AddProject<Projects.eMechanic_API>("emechanic-api")
     .WithReference(postgresDb)
+    .WithReference(redisCache)
     .WaitFor(postgresServer);
 
 builder.Build().Run();
