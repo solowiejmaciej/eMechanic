@@ -6,5 +6,6 @@ public enum EErrorCode
     NotFoundError = 1,
     InternalServerError = 2,
     ValidationError = 3,
-    NotImplementedError = 4
+    NotImplementedError = 4,
+    UnauthorizedError = 5
 }

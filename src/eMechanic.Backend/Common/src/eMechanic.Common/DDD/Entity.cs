@@ -15,4 +15,6 @@ public abstract class Entity
         Id = id;
         CreatedAt = DateTime.UtcNow;
     }
+
+    public void SetUpdatedAt() => UpdatedAt = DateTime.UtcNow;
 }

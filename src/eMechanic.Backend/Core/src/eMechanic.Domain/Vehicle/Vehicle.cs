@@ -6,10 +6,11 @@ using System;
 using Common.Result;
 using DomainEvents;
 using Enums;
+using References.User;
 
-public class Vehicle : AggregateRoot
+public class Vehicle : AggregateRoot, IUserReferenced
 {
-    public Guid OwnerUserId { get; private set; }
+    public Guid UserId { get; private set; }
     public Vin Vin { get; private set; }
     public Manufacturer Manufacturer { get; private set; }
     public Model Model { get; private set; }
@@ -22,7 +23,7 @@ public class Vehicle : AggregateRoot
     private Vehicle() { }
 
     private Vehicle(
-        Guid ownerUserId,
+        Guid userId,
         Vin vin,
         Manufacturer manufacturer,
         Model model,
@@ -32,12 +33,12 @@ public class Vehicle : AggregateRoot
         EBodyType bodyType,
         EVehicleType vehicleType)
     {
-        if (ownerUserId == Guid.Empty)
+        if (userId == Guid.Empty)
         {
-            throw new ArgumentException("OwnerId can't be empty", nameof(ownerUserId));
+            throw new ArgumentException("UserId can't be empty", nameof(userId));
         }
 
-        OwnerUserId = ownerUserId;
+        UserId = userId;
 
         Vin = vin ?? throw new ArgumentNullException(nameof(vin));
         Manufacturer = manufacturer ?? throw new ArgumentNullException(nameof(manufacturer));
@@ -53,7 +54,7 @@ public class Vehicle : AggregateRoot
     }
 
     public static Result<Vehicle, Error> Create(
-        Guid ownerUserId,
+        Guid userId,
         string? vinInput,
         string? manufacturerInput,
         string? modelInput,
@@ -65,9 +66,9 @@ public class Vehicle : AggregateRoot
     {
         var errors = new List<Error>();
 
-        if (ownerUserId == Guid.Empty)
+        if (userId == Guid.Empty)
         {
-            errors.Add(new Error(EErrorCode.ValidationError, "OwnerUserId cannot be empty."));
+            errors.Add(new Error(EErrorCode.ValidationError, "userId cannot be empty."));
         }
 
         var vinResult = Vin.Create(vinInput);
@@ -117,7 +118,7 @@ public class Vehicle : AggregateRoot
         try
         {
             var vehicle = new Vehicle(
-                ownerUserId,
+                userId,
                 vinResult.Value!,
                 manufacturerResult.Value!,
                 modelResult.Value!,
@@ -135,17 +136,17 @@ public class Vehicle : AggregateRoot
         }
     }
 
-    public Result<Success, Error> ChangeOwner(Guid newOwnerUserId)
+    public Result<Success, Error> ChangeUserId(Guid newUserId)
     {
-        if (newOwnerUserId == Guid.Empty)
+        if (newUserId == Guid.Empty)
         {
-            return new Error(EErrorCode.ValidationError, "Nowe ID właściciela nie może być puste.");
+            return new Error(EErrorCode.ValidationError, "New UserID cant be empty");
         }
-        if (OwnerUserId == newOwnerUserId) return Result.Success;
+        if (UserId == newUserId) return Result.Success;
 
-        var oldOwnerId = OwnerUserId;
-        OwnerUserId = newOwnerUserId;
-        RaiseDomainEvent(new VehicleOwnerChangedDomainEvent(this.Id, oldOwnerId, newOwnerUserId));
+        var oldUserId = UserId;
+        UserId = newUserId;
+        RaiseDomainEvent(new VehicleUserIdChangedDomainEvent(this.Id, oldUserId, newUserId));
         return Result.Success;
     }
 
@@ -158,6 +159,7 @@ public class Vehicle : AggregateRoot
         var oldVin = Vin;
         Vin = vinResult.Value!;
         RaiseDomainEvent(new VehicleVinChangedDomainEvent(this.Id, oldVin, Vin));
+        SetUpdatedAt();
         return Result.Success;
     }
 
@@ -170,6 +172,7 @@ public class Vehicle : AggregateRoot
         var oldManufacturer = Manufacturer;
         Manufacturer = manufacturerResult.Value!;
         RaiseDomainEvent(new VehicleManufacturerChangedDomainEvent(this.Id, oldManufacturer, Manufacturer));
+        SetUpdatedAt();
         return Result.Success;
     }
 
@@ -182,6 +185,7 @@ public class Vehicle : AggregateRoot
         var oldModel = Model;
         Model = modelResult.Value!;
         RaiseDomainEvent(new VehicleModelChangedDomainEvent(this.Id, oldModel, Model));
+        SetUpdatedAt();
         return Result.Success;
     }
 
@@ -194,6 +198,7 @@ public class Vehicle : AggregateRoot
         var oldYear = ProductionYear;
         ProductionYear = yearResult.Value!;
         RaiseDomainEvent(new VehicleProductionYearChangedDomainEvent(this.Id, oldYear, ProductionYear));
+        SetUpdatedAt();
         return Result.Success;
     }
 
@@ -212,6 +217,7 @@ public class Vehicle : AggregateRoot
         var oldCapacity = EngineCapacity;
         EngineCapacity = newEngineCapacity;
         RaiseDomainEvent(new VehicleEngineCapacityChangedDomainEvent(this.Id, oldCapacity, newEngineCapacity));
+        SetUpdatedAt();
         return Result.Success;
     }
 
@@ -226,6 +232,7 @@ public class Vehicle : AggregateRoot
         var oldFuelType = FuelType;
         FuelType = newFuelType;
         RaiseDomainEvent(new VehicleFuelTypeChangedDomainEvent(this.Id, oldFuelType, newFuelType));
+        SetUpdatedAt();
         return Result.Success;
     }
 
@@ -240,6 +247,7 @@ public class Vehicle : AggregateRoot
         var oldBodyType = BodyType;
         BodyType = newBodyType;
         RaiseDomainEvent(new VehicleBodyTypeChangedDomainEvent(this.Id, oldBodyType, newBodyType));
+        SetUpdatedAt();
         return Result.Success;
     }
 
@@ -254,6 +262,7 @@ public class Vehicle : AggregateRoot
         var oldVehicleType = VehicleType;
         VehicleType = newVehicleType;
         RaiseDomainEvent(new VehicleTypeChangedDomainEvent(this.Id, oldVehicleType, newVehicleType));
+        SetUpdatedAt();
         return Result.Success;
     }
 

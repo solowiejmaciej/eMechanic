@@ -7,6 +7,7 @@ using System.Text;
 using Application.Abstractions.Identity;
 using Application.Identity;
 using Common.Helpers;
+using Infrastructure.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -24,12 +25,21 @@ public sealed class TokenGenerator : ITokenGenerator
     {
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, identity.Id.ToString()),
+            new(JwtRegisteredClaimNames.Sub, identity.IdentityId.ToString()),
             new(JwtRegisteredClaimNames.Email, identity.Email!),
             new(JwtRegisteredClaimNames.Jti, GuidFactory.Create().ToString()),
-            new("identityType", identity.Type.ToString())
+            new(ClaimConstants.IDENTITY_TYPE, identity.Type.ToString())
         };
 
+        switch (identity.Type)
+        {
+            case EIdentityType.User:
+                claims.Add(new Claim(ClaimConstants.USER_ID, identity.DomainEntityId.ToString()));
+                break;
+            case EIdentityType.Workshop:
+                claims.Add(new Claim(ClaimConstants.WORKSHOP_ID, identity.DomainEntityId.ToString()));
+                break;
+        }
         var keyString = _configuration["Authentication:JwtBearer:Key"];
         var expiresMinutesString = _configuration["Authentication:JwtBearer:ExpiryInMinutes"];
         var issuer = _configuration["Authentication:JwtBearer:Issuer"];

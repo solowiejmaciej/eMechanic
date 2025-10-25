@@ -1,10 +1,13 @@
 namespace eMechanic.Infrastructure;
 
 using Application.Abstractions.Identity;
+using Application.Abstractions.Identity.Contexts;
 using Application.Abstractions.User;
+using Application.Abstractions.Vehicle;
 using Application.Abstractions.Workshop;
 using DAL;
 using DAL.Transactions;
+using Identity.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -49,6 +52,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IWorkshopRepository, WorkshopRepository>();
+        services.AddScoped<IVehicleRepository, VehicleRepository>();
     }
 
     private static void AddServices(this IServiceCollection services)
@@ -59,6 +63,9 @@ public static class DependencyInjection
         services.AddScoped<IPaginationService, PaginationService>();
         services.AddScoped<ITokenGenerator, TokenGenerator>();
         services.AddScoped<IAuthenticator, Authenticator>();
+        services.AddHttpContextAccessor();
+        services.AddScoped<IUserContext, UserContext>();
+        services.AddScoped<IWorkshopContext, WorkshopContext>();
     }
 
     public static void ApplyMigrations(this IServiceProvider services)

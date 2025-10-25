@@ -26,9 +26,10 @@ public class LoginUserHandlerTests
         // Arrange
         var command = new LoginUserCommand("test@user.com", "Password123");
         var identityId = Guid.NewGuid();
+        var domainEntityId = Guid.NewGuid();
 
         var authenticatedIdentity = new AuthenticatedIdentity(
-            identityId, command.Email, EIdentityType.User);
+            identityId, domainEntityId, command.Email, EIdentityType.User);
 
         var tokenDto = new TokenDTO("generated-token-string", DateTime.UtcNow.AddHours(1));
 
@@ -39,7 +40,6 @@ public class LoginUserHandlerTests
             .Returns(tokenDto);
 
         // Act
-        // Zakładamy, że handler zwraca LoginUserResponse
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
@@ -47,7 +47,7 @@ public class LoginUserHandlerTests
         Assert.NotNull(result.Value);
         Assert.Equal(tokenDto.AccessToken, result.Value.Token);
         Assert.Equal(tokenDto.ExpiresAt, result.Value.ExpiresAtUtc);
-        Assert.Equal(identityId, result.Value.UserId);
+        Assert.Equal(domainEntityId, result.Value.UserId);
     }
 
     [Fact]

@@ -11,62 +11,28 @@ using Specifications;
 public class Repository<T> : IRepository<T> where T : Entity
 {
     private readonly AppDbContext _context;
-    private readonly DbSet<T> _dbSet;
+    protected readonly DbSet<T> DbSet;
     private readonly IPaginationService _paginationService;
 
-    public Repository(AppDbContext context, IPaginationService paginationService)
+    protected Repository(AppDbContext context, IPaginationService paginationService)
     {
         _context = context;
         _paginationService = paginationService;
-        _dbSet = context.Set<T>();
+        DbSet = context.Set<T>();
     }
 
-    public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken) => await _dbSet.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
-
-    public async Task<PaginationResult<T>> GetAllPaginatedAsync(
-        ISpecification<T> specification,
-        IPaginationParameters paginationParameters,
-        CancellationToken cancellationToken)
-    {
-        var specificationsQuery = ApplySpecification(specification);
-        return await _paginationService.GetPaginatedResultAsync(specificationsQuery, paginationParameters,
-            cancellationToken);
-    }
-
-    public async Task<PaginationResult<T>> GetAllPaginatedAsync(
-        IEnumerable<ISpecification<T>> specifications,
-        IPaginationParameters paginationParameters,
-        CancellationToken cancellationToken)
-    {
-        var specificationsQuery = ApplySpecifications(specifications);
-        return await _paginationService.GetPaginatedResultAsync(specificationsQuery, paginationParameters,
-            cancellationToken);
-    }
-
-    public async Task<T?> GetFirstOrDefaultAsync(
-        ISpecification<T> specification,
-        CancellationToken cancellationToken) =>
-        await ApplySpecification(specification).FirstOrDefaultAsync(cancellationToken);
-
-    public async Task<T?> GetSingleAsync(
-        ISpecification<T> specification,
-        CancellationToken cancellationToken) =>
-        await ApplySpecification(specification).SingleOrDefaultAsync(cancellationToken);
-
-    public async Task<T?> GetSingleAsync(
-        IEnumerable<ISpecification<T>> specifications,
-        CancellationToken cancellationToken) =>
-        await ApplySpecifications(specifications).SingleOrDefaultAsync(cancellationToken);
+    public IQueryable<T> GetQuery() => DbSet.AsQueryable();
+    public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken) => await DbSet.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public async Task<Guid> AddAsync(T entity, CancellationToken cancellationToken)
     {
-        var entry = await _dbSet.AddAsync(entity, cancellationToken);
+        var entry = await DbSet.AddAsync(entity, cancellationToken);
         return entry.Entity.Id;
     }
 
     public void UpdateAsync(T entity, CancellationToken cancellationToken) => _context.Entry(entity).CurrentValues.SetValues(entity);
 
-    public void DeleteAsync(T entity, CancellationToken cancellationToken) => _dbSet.Remove(entity);
+    public void DeleteAsync(T entity, CancellationToken cancellationToken) => DbSet.Remove(entity);
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
     {
@@ -98,30 +64,4 @@ public class Repository<T> : IRepository<T> where T : Entity
         }
     }
 
-    private IQueryable<T> ApplySpecification(ISpecification<T>? specification)
-    {
-        var query = _dbSet.AsQueryable();
-
-        if (specification == null) return query;
-
-        query = query.Where(specification.Criteria);
-
-        query = specification.Includes.Aggregate(query, (current, include) => current.Include(include));
-
-        return query;
-    }
-
-    private IQueryable<T> ApplySpecifications(IEnumerable<ISpecification<T>> specifications)
-    {
-        var query = _dbSet.AsQueryable();
-
-        foreach (var specification in specifications)
-        {
-            query = query.Where(specification.Criteria);
-
-            query = specification.Includes.Aggregate(query, (current, include) => current.Include(include));
-        }
-
-        return query;
-    }
 }

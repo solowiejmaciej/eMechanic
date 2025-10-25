@@ -3,6 +3,7 @@ namespace eMechanic.Infrastructure.DAL;
 using System.Reflection;
 using Common.DDD;
 using Domain.User;
+using Domain.Vehicle;
 using Domain.Workshop;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Workshop> Workshops { get; set; }
+    public DbSet<Vehicle> Vehicles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

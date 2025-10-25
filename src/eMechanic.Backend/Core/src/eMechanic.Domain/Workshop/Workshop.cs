@@ -2,8 +2,9 @@ namespace eMechanic.Domain.Workshop;
 
 using Common.DDD;
 using DomainEvents;
+using References.Identity;
 
-public class Workshop : AggregateRoot
+public class Workshop : AggregateRoot, IIdentityReference
 {
     public string Email { get; private set; }
     public string ContactEmail { get; private set; }

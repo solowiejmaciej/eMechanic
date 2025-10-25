@@ -1,7 +1,8 @@
-namespace eMechanic.API.Features.Users.GetById;
+namespace eMechanic.API.Features.User.GetById;
 
+using eMechanic.API.Features.User;
 using eMechanic.Application.Users.GetById;
-using Common.Result;
+using eMechanic.Common.Result;
 using MediatR;
 
 public sealed class GetUserByIdFeature : IFeature
