@@ -4,7 +4,7 @@ using eMechanic.Domain.Vehicle.Enums;
 
 public sealed record VehicleResponse(
     Guid Id,
-    Guid OwnerUserId,
+    Guid UserId,
     string Vin,
     string Manufacturer,
     string Model,
