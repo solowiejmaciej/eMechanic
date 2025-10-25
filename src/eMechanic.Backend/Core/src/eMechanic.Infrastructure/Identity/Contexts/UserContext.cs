@@ -16,10 +16,13 @@ internal sealed class UserContext : IUserContext
     {
         get
         {
+            Console.WriteLine("Test");
             if (!IsAuthenticated)
             {
                 throw new UnauthorizedAccessException("User is not authenticated.");
             }
+
+            Console.WriteLine(IsAuthenticated);
 
             var claim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimConstants.USER_ID);
 
