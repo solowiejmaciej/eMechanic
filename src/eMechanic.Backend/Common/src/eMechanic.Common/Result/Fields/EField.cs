@@ -4,4 +4,5 @@ public enum EField
 {
     None = 0,
     Email = 1,
+    General = 2
 }

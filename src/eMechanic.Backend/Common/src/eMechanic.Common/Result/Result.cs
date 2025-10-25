@@ -10,14 +10,14 @@ public class Result<TValue, TError>
     public bool IsSuccess { get; }
 
     [JsonConstructor]
-    private Result(TValue value)
+    internal Result(TValue value)
     {
         IsSuccess = true;
         Value = value;
         Error = default;
     }
 
-    private Result(TError error)
+    internal Result(TError error)
     {
         IsSuccess = false;
         Value = default;

@@ -20,7 +20,7 @@ public sealed class Program
         builder.Services.AddOpenApi();
         builder.Services.AddSwaggerGen();
         builder.AddApi();
-        builder.Services.AddApi();
+        builder.Services.AddApi(builder.Configuration);
 
         var app = builder.Build();
 

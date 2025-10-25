@@ -8,6 +8,7 @@ using eMechanic.Common.Result;
 using eMechanic.Domain.Workshop;
 using eMechanic.Infrastructure.Exceptions;
 using Identity;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
