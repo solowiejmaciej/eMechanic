@@ -2,10 +2,10 @@ namespace eMechanic.Infrastructure.Services.Creators;
 
 using System.Collections.ObjectModel;
 using Common.Result.Fields;
+using Domain.User;
 using eMechanic.Application.Abstractions.Identity;
 using eMechanic.Application.Abstractions.User;
 using eMechanic.Common.Result;
-using eMechanic.Domain.Users;
 using eMechanic.Infrastructure.Exceptions;
 using eMechanic.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;

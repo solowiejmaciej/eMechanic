@@ -1,6 +1,6 @@
 namespace eMechanic.Application.Abstractions.User;
 
-using eMechanic.Domain.Users;
+using Domain.User;
 using Repositories;
 
 public interface IUserRepository : IRepository<User>

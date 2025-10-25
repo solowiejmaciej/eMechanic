@@ -1,7 +1,7 @@
-namespace eMechanic.Domain.Tests.Users;
+namespace eMechanic.Domain.Tests.User;
 
-using eMechanic.Domain.Users;
-using eMechanic.Domain.Users.DomainEvents;
+using eMechanic.Domain.User;
+using eMechanic.Domain.User.DomainEvents;
 
 public class UserTests
 {

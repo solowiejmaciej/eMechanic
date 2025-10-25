@@ -1,7 +1,6 @@
 namespace eMechanic.Application.Abstractions.User;
 
 using Common.Result;
-using Domain.Users;
 
 public interface IUserCreatorService
 {

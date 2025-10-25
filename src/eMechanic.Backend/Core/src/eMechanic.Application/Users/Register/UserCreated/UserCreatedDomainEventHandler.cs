@@ -1,7 +1,7 @@
 namespace eMechanic.Application.Users.Register.UserCreated;
 
 using Abstractions.DomainEvents;
-using Domain.Users.DomainEvents;
+using Domain.User.DomainEvents;
 using Microsoft.Extensions.Logging;
 
 public class UserCreatedDomainEventHandler : IDomainEventHandler<UserCreatedDomainEvent>
