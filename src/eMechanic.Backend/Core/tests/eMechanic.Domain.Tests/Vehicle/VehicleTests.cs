@@ -611,6 +611,7 @@ public class VehicleTests
         // Arrange
         var vehicle = CreateValidVehicle();
         var sameCapacityValue = VALID_CAPACITY;
+        vehicle.ClearDomainEvents();
 
         // Act
         var result = vehicle.UpdateEngineCapacity(sameCapacityValue);
@@ -738,6 +739,7 @@ public class VehicleTests
     {
         // Arrange
         var vehicle = CreateValidVehicle();
+        vehicle.ClearDomainEvents();
 
         // Act
         var result = vehicle.ChangeVehicleType(VALID_TYPE);
