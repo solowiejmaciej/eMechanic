@@ -1,4 +1,6 @@
 namespace eMechanic.Infrastructure.Identity;
+
+using Application.Abstractions.Identity;
 using Microsoft.AspNetCore.Identity;
 
 public sealed class Identity : IdentityUser<Guid>

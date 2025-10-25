@@ -4,6 +4,9 @@
         <TargetFramework>net9.0</TargetFramework>
         <RootNamespace>eMechanic.Common</RootNamespace>
     </PropertyGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="eMechanic.Application.Tests" />
+    </ItemGroup>
 
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />

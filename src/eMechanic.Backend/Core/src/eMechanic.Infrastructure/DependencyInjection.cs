@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Repositories;
 using Services;
 using Services.Creators;
+using Services.Identity;
 
 public static class DependencyInjection
 {
@@ -56,6 +57,8 @@ public static class DependencyInjection
         services.AddScoped<IWorkshopCreatorService, WorkshopCreatorService>();
         services.AddScoped<ITransactionalExecutor, TransactionalExecutor>();
         services.AddScoped<IPaginationService, PaginationService>();
+        services.AddScoped<ITokenGenerator, TokenGenerator>();
+        services.AddScoped<IAuthenticator, Authenticator>();
     }
 
     public static void ApplyMigrations(this IServiceProvider services)

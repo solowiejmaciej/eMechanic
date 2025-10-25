@@ -10,7 +10,6 @@ using eMechanic.Infrastructure.Exceptions;
 using eMechanic.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Identity = Identity.Identity;
 
 internal sealed class UserCreatorService : IUserCreatorService
 {

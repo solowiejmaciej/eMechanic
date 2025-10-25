@@ -15,8 +15,4 @@
         <ProjectReference Include="..\..\src\eMechanic.Infrastructure\eMechanic.Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Services\" />
-    </ItemGroup>
-
 </Project>

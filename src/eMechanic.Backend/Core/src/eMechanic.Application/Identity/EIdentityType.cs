@@ -1,4 +1,4 @@
-namespace eMechanic.Infrastructure.Identity;
+namespace eMechanic.Application.Abstractions.Identity;
 
 public enum EIdentityType
 {
