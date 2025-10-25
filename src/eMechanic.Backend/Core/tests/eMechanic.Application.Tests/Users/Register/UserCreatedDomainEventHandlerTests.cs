@@ -1,8 +1,8 @@
 namespace eMechanic.Application.Tests.Users.Register;
 
+using Domain.User;
+using Domain.User.DomainEvents;
 using eMechanic.Application.Users.Register.UserCreated;
-using eMechanic.Domain.Users;
-using eMechanic.Domain.Users.DomainEvents;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 

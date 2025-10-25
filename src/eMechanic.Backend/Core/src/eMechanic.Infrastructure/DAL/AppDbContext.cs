@@ -2,8 +2,8 @@ namespace eMechanic.Infrastructure.DAL;
 
 using System.Reflection;
 using Common.DDD;
+using Domain.User;
 using Domain.Workshop;
-using eMechanic.Domain.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

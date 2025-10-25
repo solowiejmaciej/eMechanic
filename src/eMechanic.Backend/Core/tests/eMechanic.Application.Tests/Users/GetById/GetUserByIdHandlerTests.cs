@@ -1,9 +1,9 @@
 namespace eMechanic.Application.Tests.Users.GetById;
 
+using Domain.User;
 using eMechanic.Application.Abstractions.User;
 using eMechanic.Application.Users.GetById;
 using eMechanic.Common.Result;
-using eMechanic.Domain.Users;
 using NSubstitute;
 
 public class GetUserByIdHandlerTests

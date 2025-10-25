@@ -1,8 +1,7 @@
-using eMechanic.Common.DDD;
-
-namespace eMechanic.Domain.Users;
+namespace eMechanic.Domain.User;
 
 using DomainEvents;
+using eMechanic.Common.DDD;
 
 public class User : AggregateRoot
 {

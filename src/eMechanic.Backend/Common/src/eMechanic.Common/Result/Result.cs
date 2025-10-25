@@ -29,7 +29,12 @@ public class Result<TValue, TError>
     public static implicit operator Result<TValue, TError>(TError error) => new(error);
 
     public static Result<IEnumerable<T>, TError> FromEnumerable<T>(IEnumerable<T> value) => new(value);
-
     public bool HasError() => !IsSuccess;
 }
 
+
+
+public static class Result
+{
+    public static Result<Success, Error> Success => new(new Success());
+}

@@ -1,6 +1,6 @@
 namespace eMechanic.Infrastructure.DAL.Configurations;
 
-using eMechanic.Domain.Users;
+using Domain.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

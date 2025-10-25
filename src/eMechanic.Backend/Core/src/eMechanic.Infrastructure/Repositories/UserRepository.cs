@@ -3,7 +3,7 @@ namespace eMechanic.Infrastructure.Repositories;
 using Application.Abstractions.User;
 using Base;
 using DAL;
-using Domain.Users;
+using Domain.User;
 using Services;
 
 internal sealed class UserRepository : Repository<User>, IUserRepository
