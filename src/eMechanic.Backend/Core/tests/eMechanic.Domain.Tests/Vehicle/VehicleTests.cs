@@ -58,7 +58,7 @@ public class VehicleTests
         var vehicle = result.Value;
         vehicle.Should().NotBeNull();
         vehicle.Id.Should().NotBeEmpty();
-        vehicle.OwnerUserId.Should().Be(_validOwnerId);
+        vehicle.UserId.Should().Be(_validOwnerId);
         vehicle.Vin.Value.Should().Be(VALID_VIN);
         vehicle.Manufacturer.Value.Should().Be(VALID_MANUFACTURER);
         vehicle.Model.Value.Should().Be(VALID_MODEL);
@@ -104,7 +104,7 @@ public class VehicleTests
         // Assert
         result.HasError().Should().BeTrue();
         result.Error!.Code.Should().Be(EErrorCode.ValidationError);
-        result.Error.Message.Should().Contain("OwnerUserId");
+        result.Error.Message.Should().Contain("userId");
     }
 
     [Theory]
@@ -257,13 +257,13 @@ public class VehicleTests
         vehicle.ClearDomainEvents();
 
         // Act
-        var result = vehicle.ChangeOwner(newOwnerId);
+        var result = vehicle.ChangeUserId(newOwnerId);
 
         // Assert
         result.HasError().Should().BeFalse();
-        vehicle.OwnerUserId.Should().Be(newOwnerId);
-        vehicle.GetDomainEvents().Should().ContainSingle(e => e is VehicleOwnerChangedDomainEvent);
-        var domainEvent = (VehicleOwnerChangedDomainEvent)vehicle.GetDomainEvents().First();
+        vehicle.UserId.Should().Be(newOwnerId);
+        vehicle.GetDomainEvents().Should().ContainSingle(e => e is VehicleUserIdChangedDomainEvent);
+        var domainEvent = (VehicleUserIdChangedDomainEvent)vehicle.GetDomainEvents().First();
         domainEvent.Id.Should().Be(vehicle.Id);
         domainEvent.NewOwnerUserId.Should().Be(newOwnerId);
         domainEvent.OldOwnerId.Should().Be(_validOwnerId);
@@ -277,11 +277,11 @@ public class VehicleTests
         vehicle.ClearDomainEvents();
 
         // Act
-        var result = vehicle.ChangeOwner(_validOwnerId);
+        var result = vehicle.ChangeUserId(_validOwnerId);
 
         // Assert
         result.HasError().Should().BeFalse();
-        vehicle.OwnerUserId.Should().Be(_validOwnerId);
+        vehicle.UserId.Should().Be(_validOwnerId);
         vehicle.GetDomainEvents().Should().BeEmpty();
     }
 
@@ -293,12 +293,12 @@ public class VehicleTests
         vehicle.ClearDomainEvents();
 
         // Act
-        var result = vehicle.ChangeOwner(Guid.Empty);
+        var result = vehicle.ChangeUserId(Guid.Empty);
 
         // Assert
         result.HasError().Should().BeTrue();
         result.Error!.Code.Should().Be(EErrorCode.ValidationError);
-        vehicle.OwnerUserId.Should().Be(_validOwnerId);
+        vehicle.UserId.Should().Be(_validOwnerId);
         vehicle.GetDomainEvents().Should().BeEmpty();
     }
 

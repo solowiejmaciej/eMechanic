@@ -35,8 +35,11 @@ public class TokenGeneratorTests
     {
         // Arrange
         var identityId = Guid.NewGuid();
+        var domainEntityId = Guid.NewGuid();
+
         var identity = new AuthenticatedIdentity(
             identityId,
+            domainEntityId,
             "test@user.com",
             EIdentityType.User);
 

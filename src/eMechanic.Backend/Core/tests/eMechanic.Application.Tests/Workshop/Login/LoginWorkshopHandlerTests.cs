@@ -26,9 +26,10 @@ public class LoginWorkshopHandlerTests
         // Arrange
         var command = new LoginWorkshopCommand("test@workshop.com", "Password123");
         var identityId = Guid.NewGuid();
+        var domainEntityId = Guid.NewGuid();
 
         var authenticatedIdentity = new AuthenticatedIdentity(
-            identityId, command.Email, EIdentityType.Workshop);
+            identityId, domainEntityId, command.Email, EIdentityType.Workshop);
 
         var tokenDto = new TokenDTO("generated-token-string", DateTime.UtcNow.AddHours(1));
 
@@ -46,7 +47,7 @@ public class LoginWorkshopHandlerTests
         Assert.NotNull(result.Value);
         Assert.Equal(tokenDto.AccessToken, result.Value.Token);
         Assert.Equal(tokenDto.ExpiresAt, result.Value.ExpiresAtUtc);
-        Assert.Equal(identityId, result.Value.WorkshopId);
+        Assert.Equal(domainEntityId, result.Value.WorkshopId);
     }
 
     [Fact]

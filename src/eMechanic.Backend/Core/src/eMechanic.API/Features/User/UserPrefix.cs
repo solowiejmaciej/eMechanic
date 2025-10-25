@@ -1,4 +1,4 @@
-namespace eMechanic.API.Features.Users;
+namespace eMechanic.API.Features.User;
 
 public static class UserPrefix
 {

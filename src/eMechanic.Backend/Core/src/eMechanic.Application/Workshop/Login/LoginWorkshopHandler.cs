@@ -34,6 +34,6 @@ public class LoginWorkshopHandler : IResultCommandHandler<LoginWorkshopCommand, 
 
         var token = _tokenGenerator.GenerateToken(authResult.Value);
 
-        return new LoginWorkshopResponse(token.AccessToken, token.ExpiresAt, authResult.Value!.Id);
+        return new LoginWorkshopResponse(token.AccessToken, token.ExpiresAt, authResult.Value!.DomainEntityId);
     }
 }

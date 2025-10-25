@@ -1,8 +1,9 @@
-namespace eMechanic.API.Features.Users.Register;
+namespace eMechanic.API.Features.User.Register;
 
-using Application.Users.Register;
-using Common.Result;
-using Constans;
+using eMechanic.API.Constans;
+using eMechanic.API.Features.User;
+using eMechanic.Application.Users.Register;
+using eMechanic.Common.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

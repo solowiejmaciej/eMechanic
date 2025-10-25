@@ -37,6 +37,16 @@ public class ExceptionHandlingMiddleware
     {
         var (statusCode, error) = exception switch
         {
+            UnauthorizedAccessException => (StatusCodes.Status401Unauthorized,
+                new Error(
+                    EErrorCode.UnauthorizedError,
+                    "In order to perform this operation please pass JWT token in Authorization header"
+                )),
+            BadHttpRequestException => (StatusCodes.Status400BadRequest,
+                new Error(
+                    EErrorCode.ValidationError,
+                    "Something is wrong with json format"
+                )),
             _ => (
                 StatusCodes.Status500InternalServerError,
                 new Error(

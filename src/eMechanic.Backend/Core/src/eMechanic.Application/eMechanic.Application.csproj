@@ -16,4 +16,8 @@
       <ProjectReference Include="..\eMechanic.Domain\eMechanic.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Vehicle\Create\DomainEvents\" />
+    </ItemGroup>
+
 </Project>

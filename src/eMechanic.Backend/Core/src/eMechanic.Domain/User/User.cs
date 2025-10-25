@@ -2,8 +2,9 @@ namespace eMechanic.Domain.User;
 
 using DomainEvents;
 using eMechanic.Common.DDD;
+using References.Identity;
 
-public class User : AggregateRoot
+public class User : AggregateRoot, IIdentityReference
 {
     public string Email { get; private set; }
     public string FirstName { get; private set; }

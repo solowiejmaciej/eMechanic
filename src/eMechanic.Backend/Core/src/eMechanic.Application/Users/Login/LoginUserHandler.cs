@@ -34,6 +34,6 @@ public class LoginUserHandler : IResultCommandHandler<LoginUserCommand, LoginUse
 
         var token = _tokenGenerator.GenerateToken(authResult.Value);
 
-        return new LoginUserResponse(token.AccessToken, token.ExpiresAt, authResult.Value.Id);
+        return new LoginUserResponse(token.AccessToken, token.ExpiresAt, authResult.Value.DomainEntityId);
     }
 }

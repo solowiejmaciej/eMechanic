@@ -11,25 +11,8 @@ public interface IRepository<T> where T : Entity
     void UpdateAsync(T entity, CancellationToken cancellationToken);
     void DeleteAsync(T entity, CancellationToken cancellationToken);
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-    Task<PaginationResult<T>> GetAllPaginatedAsync(
-        ISpecification<T> specification,
-        IPaginationParameters paginationParameters,
-        CancellationToken cancellationToken);
 
-    Task<PaginationResult<T>> GetAllPaginatedAsync(
-        IEnumerable<ISpecification<T>> specifications,
-        IPaginationParameters paginationParameters,
-        CancellationToken cancellationToken);
+    IQueryable<T> GetQuery();
 
-    Task<T?> GetFirstOrDefaultAsync(
-        ISpecification<T> specification,
-        CancellationToken cancellationToken);
-
-    Task<T?> GetSingleAsync(
-        ISpecification<T> specification,
-        CancellationToken cancellationToken);
-
-    Task<T?> GetSingleAsync(
-        IEnumerable<ISpecification<T>> specifications,
-        CancellationToken cancellationToken);
+    //Pagiantion
 }

@@ -5,5 +5,5 @@ using Repositories;
 
 public interface IWorkshopRepository : IRepository<Workshop>
 {
-
+    Task<Workshop?> GetByIdentityIdAsync(Guid identityId);
 }

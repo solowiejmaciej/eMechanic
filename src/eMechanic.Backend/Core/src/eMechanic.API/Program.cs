@@ -18,7 +18,7 @@ public sealed class Program
         builder.Services.AddInfrastructure(builder.Configuration);
         builder.AddInfrastructure();
         builder.Services.AddOpenApi();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwagger("eMechanic API", WebApiConstans.CURRENT_API_VERSION);
         builder.AddApi();
         builder.Services.AddApi(builder.Configuration);
 
@@ -29,6 +29,7 @@ public sealed class Program
         app.MapOpenApi();
         app.UseSwagger();
         app.UseSwaggerUI();
+        app.AddApi();
 
         app.UseMiddleware<ExceptionHandlingMiddleware>();
 

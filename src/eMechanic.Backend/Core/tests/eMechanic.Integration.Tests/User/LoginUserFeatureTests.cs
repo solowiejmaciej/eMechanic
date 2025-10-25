@@ -10,12 +10,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace eMechanic.Integration.Tests.User;
 
-using Application.Abstractions.Identity;
+using System.Text.RegularExpressions;
+using Application.Users.Register;
+using Application.Workshop.Register;
 
 public class LoginUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory>
 {
     private readonly HttpClient _client;
-    private readonly IServiceProvider _serviceProvider;
 
     private const string TestEmail = "user-login@test.com";
     private const string TestPassword = "Password123!";
@@ -23,36 +24,13 @@ public class LoginUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory>
     public LoginUserFeatureTests(IntegrationTestWebAppFactory factory)
     {
         _client = factory.CreateClient();
-        _serviceProvider = factory.Services;
-    }
-
-    private async Task<Guid> CreateTestIdentity(EIdentityType type, string email, string password)
-    {
-        using var scope = _serviceProvider.CreateScope();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Identity>>();
-
-        var existingUser = await userManager.FindByEmailAsync(email);
-        if (existingUser != null)
-        {
-            await userManager.DeleteAsync(existingUser);
-        }
-
-        var identity = Identity.Create(email, type);
-        var result = await userManager.CreateAsync(identity, password);
-
-        if (!result.Succeeded)
-        {
-            throw new InvalidOperationException("Failed to create test identity: " +
-                string.Join(", ", result.Errors.Select(e => e.Description)));
-        }
-        return identity.Id;
     }
 
     [Fact]
     public async Task LoginUser_Should_ReturnOkAndToken_WhenCredentialsAreValid()
     {
         // Arrange
-        await CreateTestIdentity(EIdentityType.User, TestEmail, TestPassword);
+        await CreateTestUser(TestEmail, TestPassword);
         var command = new LoginUserCommand(TestEmail, TestPassword);
 
         // Act
@@ -70,7 +48,7 @@ public class LoginUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory>
     public async Task LoginUser_Should_ReturnBadRequest_WhenPasswordIsInvalid()
     {
         // Arrange
-        await CreateTestIdentity(EIdentityType.User, "wrong-pass-user@test.com", TestPassword);
+        await CreateTestUser("email@test.com", TestPassword);
         var command = new LoginUserCommand("wrong-pass-user@test.com", "WrongPassword!");
 
         // Act
@@ -100,7 +78,7 @@ public class LoginUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory>
     public async Task LoginUser_Should_ReturnBadRequest_WhenTryingToLoginAsWorkshop()
     {
         // Arrange
-        await CreateTestIdentity(EIdentityType.Workshop, "workshop-account@test.com", TestPassword);
+        await CreateTestWorkshop("workshop-account@test.com", TestPassword);
 
         var command = new LoginUserCommand("workshop-account@test.com", TestPassword);
 
@@ -111,5 +89,32 @@ public class LoginUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory>
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
         problem!.Errors["General"].Should().Contain("Invalid email or password.");
+    }
+
+    private async Task CreateTestWorkshop(string email, string password)
+    {
+        var command = new RegisterWorkshopCommand(
+            email,
+            password,
+            $"contact-{Guid.NewGuid()}@workshop.com",
+            "Super Warsztat",
+            $"SuperW-{Guid.NewGuid()}",
+            "987654321",
+            "ul. Testowa 1",
+            "Poznań",
+            "60-123",
+            "Polska");
+
+        await _client.PostAsJsonAsync("/api/v1/workshops/register", command);
+    }
+    private async Task CreateTestUser(string email, string password)
+    {
+        var command = new RegisterUserCommand(
+            "Jan",
+            "Tester",
+            email,
+            password);
+
+        await _client.PostAsJsonAsync("/api/v1/users/register", command);
     }
 }
