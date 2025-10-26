@@ -1,4 +1,4 @@
-namespace eMechanic.Application.Vehicle.GetById;
+namespace eMechanic.Application.Vehicle.Get;
 
 using eMechanic.Domain.Vehicle.Enums;
 

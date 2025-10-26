@@ -34,6 +34,8 @@ public class Repository<T> : IRepository<T> where T : Entity
 
     public void DeleteAsync(T entity, CancellationToken cancellationToken) => DbSet.Remove(entity);
 
+    protected Task<PaginationResult<T>> GetPaginatedAsync(IQueryable<T> query, PaginationParameters paginationParameters, CancellationToken cancellationToken) => _paginationService.GetPaginatedResultAsync(query, paginationParameters, cancellationToken);
+
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
     {
         try
