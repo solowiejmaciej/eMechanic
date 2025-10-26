@@ -2,6 +2,7 @@ namespace eMechanic.Infrastructure.Repositories;
 
 using Application.Abstractions.Vehicle;
 using Base;
+using Common.Result;
 using DAL;
 using Domain.Vehicle;
 using Extensions;
@@ -15,11 +16,22 @@ internal sealed class VehicleRepository : Repository<Vehicle>, IVehicleRepositor
     }
 
 
-    public async Task<Vehicle?> GetForUserById(Guid entityId, Guid userId, CancellationToken cancellationToken)
-    {
-        return await GetQuery()
+    public async Task<Vehicle?> GetForUserById(
+        Guid entityId,
+        Guid userId,
+        CancellationToken cancellationToken)
+        => await GetQuery()
             .FilterById(entityId)
             .FilterByUserId(userId)
             .SingleOrDefaultAsync(cancellationToken);
+
+    public Task<PaginationResult<Vehicle>> GetForUserPaginatedAsync(PaginationParameters paginationParameters,
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
+        var query = GetQuery()
+            .FilterByUserId(userId);
+
+        return GetPaginatedAsync(query, paginationParameters, cancellationToken);
     }
 }

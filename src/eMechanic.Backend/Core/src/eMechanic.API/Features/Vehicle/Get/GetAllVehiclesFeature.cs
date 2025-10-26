@@ -1,30 +1,30 @@
-namespace eMechanic.API.Features.Vehicle.GetById;
+namespace eMechanic.API.Features.Vehicle.Get;
 
-using eMechanic.Application.Vehicle.GetById;
+using Application.Vehicle.Get;
+using Application.Vehicle.Get.All;
 using eMechanic.Common.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-public sealed class GetVehicleByIdFeature : IFeature
+public sealed class GetAllVehiclesFeature : IFeature
 {
     public IResult MapError(Error error) => ErrorMapper.MapToHttpResult(error);
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet(VehiclePrefix.ENDPOINT + "/{id:guid}", async (
-                Guid id,
+        app.MapGet(VehiclePrefix.ENDPOINT, async (
+                [AsParameters]PaginationParameters paginationParameters,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
-                var query = new GetVehicleByIdQuery(id);
+                var query = new GetVehiclesQuery(paginationParameters);
                 var result = await mediator.Send(query, cancellationToken);
 
                 return result.ToStatusCode(Results.Ok, MapError);
             })
-            .WithName("GetVehicleById")
+            .WithName("GetVehicles")
             .WithTags(VehiclePrefix.TAG)
             .Produces<VehicleResponse>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status404NotFound)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .Produces(StatusCodes.Status401Unauthorized)

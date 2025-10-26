@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using API.Features.Vehicle.Create.Request;
 using API.Features.Vehicle.Update.Request;
+using Application.Vehicle.Get;
 using Domain.Vehicle.Enums;
 using FluentAssertions;
 using Helpers;
@@ -59,7 +60,7 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
 
         var getResponse = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}");
         getResponse.EnsureSuccessStatusCode();
-        var updatedVehicle = await getResponse.Content.ReadFromJsonAsync<Application.Vehicle.GetById.VehicleResponse>();
+        var updatedVehicle = await getResponse.Content.ReadFromJsonAsync<VehicleResponse>();
         updatedVehicle!.Manufacturer.Should().Be("Updated Manufacturer");
         updatedVehicle!.Model.Should().Be("Updated Model");
         updatedVehicle!.Vin.Should().Be(updateRequest.Vin.ToUpperInvariant());

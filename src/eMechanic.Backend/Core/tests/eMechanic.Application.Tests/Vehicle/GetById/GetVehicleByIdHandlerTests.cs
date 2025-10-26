@@ -2,7 +2,8 @@ namespace eMechanic.Application.Tests.Vehicle.GetById;
 
 using Application.Abstractions.Identity.Contexts;
 using Application.Abstractions.Vehicle;
-using Application.Vehicle.GetById;
+using Application.Vehicle.Get;
+using Application.Vehicle.Get.ById;
 using Common.Result;
 using Domain.Vehicle;
 using Domain.Vehicle.Enums;

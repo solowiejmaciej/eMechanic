@@ -1,6 +1,6 @@
-namespace eMechanic.Application.Vehicle.GetById;
+namespace eMechanic.Application.Vehicle.Get.ById;
 
-using Abstractions.Identity.Contexts;
+using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Application.Abstractions.Vehicle;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;

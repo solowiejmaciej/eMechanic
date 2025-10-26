@@ -1,4 +1,4 @@
-namespace eMechanic.Application.Vehicle.GetById;
+namespace eMechanic.Application.Vehicle.Get.ById;
 
 using eMechanic.Common.CQRS;
 using FluentValidation;
