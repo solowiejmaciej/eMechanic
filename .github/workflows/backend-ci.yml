@@ -40,8 +40,7 @@ jobs:
           dotnet test src/eMechanic.Backend/eMechanic.sln \
             --no-build --verbosity normal --configuration Release \
             --logger "trx;LogFileName=test-results.trx" \
-            --collect:"XPlat Code Coverage" \
-            -r "TestResults"
+            --collect:"XPlat Code Coverage"
 
       - name: Upload Test Results Artifact
         if: always()
@@ -49,7 +48,9 @@ jobs:
         with:
           name: test-results
           path: |
-            **/TestResults/test-results.trx
+            # Ten wzorzec poprawnie znajdzie wszystkie pliki trx
+            **/TestResults/*.trx
+            # Ten wzorzec poprawnie znajdzie wszystkie pliki pokrycia
             **/TestResults/**/coverage.cobertura.xml
           retention-days: 1
 
@@ -57,7 +58,6 @@ jobs:
     name: SonarQube Analysis
     runs-on: ubuntu-latest
     needs: build-and-test 
-    
     continue-on-error: true 
 
     steps:
@@ -98,7 +98,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: test-results
-          path: TestResults
+          path: TestArtifacts
 
       - name: SonarScanner Begin
         env:
@@ -106,7 +106,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: bash
         run: |
-          # Musimy wskazać Sonarowi pobrane artefakty
+          # Poprawione ścieżki, aby przeszukiwały pobrane artefakty
           ./.sonar/scanner/dotnet-sonarscanner begin /k:"solowiejmaciej_eMechanic" /o:"solowiejmaciej" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
             /d:sonar.host.url="https://sonarcloud.io" \
@@ -115,13 +115,13 @@ jobs:
             /d:sonar.pullrequest.key="${{ github.event.pull_request.number }}" \
             /d:sonar.pullrequest.base="${{ github.event.pull_request.base.ref }}" \
             /d:sonar.pullrequest.branch="${{ github.event.pull_request.head.ref }}" \
-            /d:sonar.cs.vstest.reportsPaths="TestResults/test-results.trx" \
-            /d:sonar.cs.cobertura.reportsPaths="TestResults/**/coverage.cobertura.xml" \
-            /d:sonar.verbose="true" # Dodatkowe logowanie na wszelki wypadek
+            /d:sonar.cs.vstest.reportsPaths="TestArtifacts/**/test-results.trx" \
+            /d:sonar.cs.cobertura.reportsPaths="TestArtifacts/**/coverage.cobertura.xml" \
+            /d:sonar.verbose="true"
 
       - name: Restore dependencies
         run: dotnet restore src/eMechanic.Backend/eMechanic.sln
-        
+              
       - name: Build
         run: dotnet build src/eMechanic.Backend/eMechanic.sln --no-restore --configuration Release
 
