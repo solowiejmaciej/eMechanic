@@ -48,9 +48,7 @@ jobs:
         with:
           name: test-results
           path: |
-            # Ten wzorzec poprawnie znajdzie wszystkie pliki trx
             **/TestResults/*.trx
-            # Ten wzorzec poprawnie znajdzie wszystkie pliki pokrycia
             **/TestResults/**/coverage.cobertura.xml
           retention-days: 1
 
@@ -104,20 +102,33 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          REPO_NAME: ${{ github.repository }}
         shell: bash
         run: |
-          # Poprawione ścieżki, aby przeszukiwały pobrane artefakty
-          ./.sonar/scanner/dotnet-sonarscanner begin /k:"solowiejmaciej_eMechanic" /o:"solowiejmaciej" \
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.pullrequest.provider="github" \
-            /d:sonar.pullrequest.github.repository="${{ github.repository }}" \
-            /d:sonar.pullrequest.key="${{ github.event.pull_request.number }}" \
-            /d:sonar.pullrequest.base="${{ github.event.pull_request.base.ref }}" \
-            /d:sonar.pullrequest.branch="${{ github.event.pull_request.head.ref }}" \
-            /d:sonar.cs.vstest.reportsPaths="TestArtifacts/**/test-results.trx" \
-            /d:sonar.cs.cobertura.reportsPaths="TestArtifacts/**/coverage.cobertura.xml" \
-            /d:sonar.verbose="true"
+          SONAR_CMD="./.sonar/scanner/dotnet-sonarscanner begin /k:\"solowiejmaciej_eMechanic\" /o:\"solowiejmaciej\""
+          SONAR_CMD="$SONAR_CMD /d:sonar.token=\"${SONAR_TOKEN}\""
+          SONAR_CMD="$SONAR_CMD /d:sonar.host.url=\"https://sonarcloud.io\""
+          SONAR_CMD="$SONAR_CMD /d:sonar.cs.vstest.reportsPaths=\"TestArtifacts/**/test-results.trx\""
+          SONAR_CMD="$SONAR_CMD /d:sonar.cs.cobertura.reportsPaths=\"TestArtifacts/**/coverage.cobertura.xml\""
+          SONAR_CMD="$SONAR_CMD /d:sonar.verbose=\"true\""
+
+          if [ "$GITHUB_EVENT_NAME" == "pull_request" ]; then
+            echo "Pull Request event detected. Adding PR analysis parameters."
+            SONAR_CMD="$SONAR_CMD /d:sonar.pullrequest.provider=\"github\""
+            SONAR_CMD="$SONAR_CMD /d:sonar.pullrequest.github.repository=\"${REPO_NAME}\""
+            SONAR_CMD="$SONAR_CMD /d:sonar.pullrequest.key=\"${PR_NUMBER}\""
+            SONAR_CMD="$SONAR_CMD /d:sonar.pullrequest.base=\"${PR_BASE_REF}\""
+            SONAR_CMD="$SONAR_CMD /d:sonar.pullrequest.branch=\"${PR_HEAD_REF}\""
+          else
+            echo "Push event detected (e.g., merge to main). Skipping PR analysis parameters."
+          fi
+
+          echo "Executing SonarScanner..."
+          eval $SONAR_CMD
 
       - name: Restore dependencies
         run: dotnet restore src/eMechanic.Backend/eMechanic.sln
