@@ -20,7 +20,7 @@ public sealed class GetVehicleByIdHandler : IResultQueryHandler<GetVehicleByIdQu
 
     public async Task<Result<VehicleResponse, Error>> Handle(GetVehicleByIdQuery request, CancellationToken cancellationToken)
     {
-        var currentUserId = _userContext.UserId;
+        var currentUserId = _userContext.GetUserId();
         var vehicle = await _vehicleRepository.GetForUserById(request.Id, currentUserId, cancellationToken);
 
         if (vehicle is null)

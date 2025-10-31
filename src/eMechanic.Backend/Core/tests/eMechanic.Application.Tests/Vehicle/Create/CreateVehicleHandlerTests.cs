@@ -35,7 +35,7 @@ public class CreateVehicleHandlerTests
 
         _vehicleRepository.AddAsync(Arg.Any<Vehicle>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Guid.NewGuid()));
-        _userContext.UserId.Returns(_currentUserId);
+        _userContext.GetUserId().Returns(_currentUserId);
         _userContext.IsAuthenticated.Returns(true);
 
 
@@ -57,7 +57,7 @@ public class CreateVehicleHandlerTests
             "INVALID", "Test Manufacturer", "Test Model", "2023",
             1.6m, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
 
-        _userContext.UserId.Returns(_currentUserId);
+        _userContext.GetUserId().Returns(_currentUserId);
         _userContext.IsAuthenticated.Returns(true);
 
         // Act
@@ -78,7 +78,7 @@ public class CreateVehicleHandlerTests
             "V1N123456789ABCDE", "Test Manufacturer", "Test Model", "2023",
             1.6m, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
 
-         _userContext.UserId.ThrowsForAnyArgs<UnauthorizedAccessException>();
+         _userContext.GetUserId().ThrowsForAnyArgs<UnauthorizedAccessException>();
 
         // Act & Assert
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => _handler.Handle(command, CancellationToken.None));

@@ -25,7 +25,7 @@ public class GetVehicleByIdHandlerTests
     {
         _vehicleRepository = Substitute.For<IVehicleRepository>();
         _userContext = Substitute.For<IUserContext>();
-        _userContext.UserId.Returns(_currentUserId);
+        _userContext.GetUserId().Returns(_currentUserId);
         _userContext.IsAuthenticated.Returns(true);
 
          var creationResult = Vehicle.Create(
@@ -57,7 +57,6 @@ public class GetVehicleByIdHandlerTests
         result.Value.UserId.Should().Be(_currentUserId);
         result.Value.Vin.Should().Be(_existingVehicle.Vin.Value);
         result.Value.Manufacturer.Should().Be(_existingVehicle.Manufacturer.Value);
-        // ... (assert other properties)
     }
 
      [Fact]
@@ -67,7 +66,7 @@ public class GetVehicleByIdHandlerTests
         var query = new GetVehicleByIdQuery(_vehicleId);
 
         _vehicleRepository.GetForUserById(_vehicleId, _currentUserId, Arg.Any<CancellationToken>())
-             .Returns(Task.FromResult<Vehicle?>(null)); // Vehicle not found
+             .Returns(Task.FromResult<Vehicle?>(null));
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
@@ -82,7 +81,7 @@ public class GetVehicleByIdHandlerTests
     {
         // Arrange
         var query = new GetVehicleByIdQuery(_vehicleId);
-        _userContext.UserId.ThrowsForAnyArgs<UnauthorizedAccessException>();
+        _userContext.GetUserId().ThrowsForAnyArgs<UnauthorizedAccessException>();
 
         // Act & Assert
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => _handler.Handle(query, CancellationToken.None));

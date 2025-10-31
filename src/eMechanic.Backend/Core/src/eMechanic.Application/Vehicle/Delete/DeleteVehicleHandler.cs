@@ -20,7 +20,7 @@ public sealed class DeleteVehicleHandler : IResultCommandHandler<DeleteVehicleCo
 
     public async Task<Result<Success, Error>> Handle(DeleteVehicleCommand request, CancellationToken cancellationToken)
     {
-        var currentUserId = _userContext.UserId;
+        var currentUserId = _userContext.GetUserId();
         var vehicle = await _vehicleRepository.GetForUserById(request.Id, currentUserId, cancellationToken);
 
         if (vehicle is null)

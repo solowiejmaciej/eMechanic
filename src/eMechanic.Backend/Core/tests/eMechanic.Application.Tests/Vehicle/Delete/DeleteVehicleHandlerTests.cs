@@ -24,7 +24,7 @@ public class DeleteVehicleHandlerTests
     {
         _vehicleRepository = Substitute.For<IVehicleRepository>();
         _userContext = Substitute.For<IUserContext>();
-        _userContext.UserId.Returns(_currentUserId);
+        _userContext.GetUserId().Returns(_currentUserId);
         _userContext.IsAuthenticated.Returns(true);
 
         var creationResult = Vehicle.Create(
@@ -80,7 +80,7 @@ public class DeleteVehicleHandlerTests
     {
         // Arrange
         var command = new DeleteVehicleCommand(_vehicleId);
-        _userContext.UserId.ThrowsForAnyArgs<UnauthorizedAccessException>();
+        _userContext.GetUserId().ThrowsForAnyArgs<UnauthorizedAccessException>();
 
         // Act & Assert
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => _handler.Handle(command, CancellationToken.None));

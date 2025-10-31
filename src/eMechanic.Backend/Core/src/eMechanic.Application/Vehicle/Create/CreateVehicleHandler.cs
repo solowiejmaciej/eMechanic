@@ -21,7 +21,7 @@ public sealed class CreateVehicleHandler : IResultCommandHandler<CreateVehicleCo
 
     public async Task<Result<Guid, Error>> Handle(CreateVehicleCommand request, CancellationToken cancellationToken)
     {
-        var currenUserId = _userContext.UserId;
+        var currenUserId = _userContext.GetUserId();
 
         var vehicleResult = Vehicle.Create(
             currenUserId,
