@@ -7,6 +7,6 @@ using Repositories;
 public interface IVehicleRepository : IRepository<Vehicle>
 {
     Task<Vehicle?> GetForUserById(Guid entityId, Guid userId, CancellationToken cancellationToken);
-    Task<PaginationResult<Vehicle>> GetForUserPaginatedAsync(PaginationParameters requestPaginationParameters,
+    Task<PaginationResult<Vehicle>> GetForUserPaginatedAsync(PaginationParameters paginationParameters,
         Guid userId, CancellationToken cancellationToken);
 }

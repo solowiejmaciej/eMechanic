@@ -2,6 +2,6 @@ namespace eMechanic.Application.Abstractions.Identity.Contexts;
 
 public interface IUserContext
 {
-    Guid UserId { get; }
+    Guid GetUserId();
     bool IsAuthenticated { get; }
 }

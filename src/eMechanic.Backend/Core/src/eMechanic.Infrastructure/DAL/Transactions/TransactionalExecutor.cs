@@ -18,7 +18,7 @@ internal sealed class TransactionalExecutor : ITransactionalExecutor
         _identityDbContext = identityDbContext;
     }
 
-    public async Task ExecuteAsync(Func<Task> operation, CancellationToken ct = default)
+    public async Task ExecuteAsync(Func<Task> operation, CancellationToken cancellationToken)
     {
         var strategy = _appDbContext.Database.CreateExecutionStrategy();
 
@@ -26,17 +26,17 @@ internal sealed class TransactionalExecutor : ITransactionalExecutor
         {
             _identityDbContext.Database.SetDbConnection(_appDbContext.Database.GetDbConnection());
 
-            await using var transaction = await _appDbContext.Database.BeginTransactionAsync(ct);
-            await _identityDbContext.Database.UseTransactionAsync(transaction.GetDbTransaction(), ct);
+            await using var transaction = await _appDbContext.Database.BeginTransactionAsync(cancellationToken);
+            await _identityDbContext.Database.UseTransactionAsync(transaction.GetDbTransaction(), cancellationToken);
 
             try
             {
                 await operation();
-                await transaction.CommitAsync(ct);
+                await transaction.CommitAsync(cancellationToken);
             }
             catch (Exception)
             {
-                await transaction.RollbackAsync(ct);
+                await transaction.RollbackAsync(cancellationToken);
                 throw;
             }
         });

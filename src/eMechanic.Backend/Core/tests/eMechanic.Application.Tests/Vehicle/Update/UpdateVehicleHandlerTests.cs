@@ -24,7 +24,7 @@ public class UpdateVehicleHandlerTests
     {
         _vehicleRepository = Substitute.For<IVehicleRepository>();
         _userContext = Substitute.For<IUserContext>();
-        _userContext.UserId.Returns(_currentUserId);
+        _userContext.GetUserId().Returns(_currentUserId);
         _userContext.IsAuthenticated.Returns(true);
 
         var creationResult = Vehicle.Create(
@@ -117,7 +117,7 @@ public class UpdateVehicleHandlerTests
          var command = new UpdateVehicleCommand(
             _vehicleId, "V1N123456789ABCDE", "Test Manufacturer", "Test Model", "2023",
             1.6m, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
-         _userContext.UserId.ThrowsForAnyArgs<UnauthorizedAccessException>();
+         _userContext.GetUserId().ThrowsForAnyArgs<UnauthorizedAccessException>();
         // Act & Assert
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => _handler.Handle(command, CancellationToken.None));
         await _vehicleRepository.DidNotReceiveWithAnyArgs().GetForUserById(default, default, default);

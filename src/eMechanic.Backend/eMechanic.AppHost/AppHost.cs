@@ -17,4 +17,4 @@ builder
     .WithReference(redisCache)
     .WaitFor(postgresServer);
 
-builder.Build().Run();
+await builder.Build().RunAsync();
