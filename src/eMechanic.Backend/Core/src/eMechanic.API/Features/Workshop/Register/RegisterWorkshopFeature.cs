@@ -1,6 +1,5 @@
 namespace eMechanic.API.Features.Workshop.Register;
 
-using Application.Workshop.Register;
 using Common.Result;
 using Constans;
 using MediatR;
@@ -13,11 +12,11 @@ public sealed class RegisterWorkshopFeature : IFeature
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost(WorkshopPrefix.ENDPOINT + "/register", async (
-                RegisterWorkshopCommand command,
+                RegisterWorkshopRequest request,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
-                var result = await mediator.Send(command, cancellationToken);
+                var result = await mediator.Send(request.MapToCommand(), cancellationToken);
 
                 return result.ToStatusCode(
                     id => Results.Created($"{WebApiConstans.CURRENT_API_VERSION}/WorkshopPrefix.ENDPOINT/{id}", new { WorkshopId = id }),

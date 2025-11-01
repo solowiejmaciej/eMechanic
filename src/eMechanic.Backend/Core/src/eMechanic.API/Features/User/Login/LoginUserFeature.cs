@@ -13,11 +13,11 @@ public sealed class LoginUserFeature : IFeature
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost(UserPrefix.ENDPOINT + "/login",  async (
-                LoginUserCommand command,
+                LoginUserRequest request,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
-                var result = await mediator.Send(command, cancellationToken);
+                var result = await mediator.Send(request.MapToCommand(), cancellationToken);
 
                 return result.ToStatusCode(
                     Results.Ok,

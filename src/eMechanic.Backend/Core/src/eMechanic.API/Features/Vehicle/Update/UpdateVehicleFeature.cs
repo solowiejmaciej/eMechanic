@@ -4,6 +4,7 @@ using eMechanic.Common.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Request;
+using Security;
 
 public sealed class UpdateVehicleFeature : IFeature
 {
@@ -29,6 +30,6 @@ public sealed class UpdateVehicleFeature : IFeature
             .Produces(StatusCodes.Status500InternalServerError)
             .Produces(StatusCodes.Status401Unauthorized)
             .WithSummary("Updates an existing vehicle.")
-            .RequireAuthorization();
+            .RequireAuthorization(AuthorizationPolicies.MUST_BE_USER);
     }
 }

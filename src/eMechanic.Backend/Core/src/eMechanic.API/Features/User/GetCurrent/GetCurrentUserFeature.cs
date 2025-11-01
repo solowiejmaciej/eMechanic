@@ -1,11 +1,12 @@
 namespace eMechanic.API.Features.User.GetById;
 
+using Application.Users.Get.Current;
 using eMechanic.API.Features.User;
-using eMechanic.Application.Users.GetById;
 using eMechanic.Common.Result;
 using MediatR;
+using Security;
 
-public sealed class GetUserByIdFeature : IFeature
+public sealed class GetCurrentUserFeature : IFeature
 {
     public IResult MapError(Error error) => error.Code switch
     {
@@ -14,20 +15,20 @@ public sealed class GetUserByIdFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet(UserPrefix.ENDPOINT + "/{id:guid}", async (
-                Guid id,
+        app.MapGet(UserPrefix.ENDPOINT, async (
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
-                var query = new GetUserByIdQuery(id);
+                var query = new GetCurrentUserQuery();
                 var result = await mediator.Send(query, cancellationToken);
 
                 return result.ToStatusCode(Results.Ok, MapError);
             })
-            .WithName("GetUsersById")
+            .WithName("GetsCurrentUser")
             .WithTags(UserPrefix.TAG)
-            .Produces<GetUsersByIdResponse>(StatusCodes.Status200OK)
+            .Produces<GetCurrentUserResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .RequireAuthorization(AuthorizationPolicies.MUST_BE_USER);
     }
 }

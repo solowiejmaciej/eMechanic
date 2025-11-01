@@ -3,6 +3,7 @@ namespace eMechanic.Application.Workshop.Login;
 using eMechanic.Application.Abstractions.Identity;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
+using Identity;
 
 public class LoginWorkshopHandler : IResultCommandHandler<LoginWorkshopCommand, LoginWorkshopResponse>
 {

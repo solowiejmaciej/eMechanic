@@ -11,8 +11,4 @@ public interface IRepository<T> where T : Entity
     void UpdateAsync(T entity, CancellationToken cancellationToken);
     void DeleteAsync(T entity, CancellationToken cancellationToken);
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-
-    IQueryable<T> GetQuery();
-
-    //Pagiantion
 }

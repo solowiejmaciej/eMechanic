@@ -2,6 +2,7 @@ namespace eMechanic.Infrastructure.Repositories;
 
 using Application.Abstractions.Workshop;
 using Base;
+using Common.Result;
 using DAL;
 using Domain.Workshop;
 using Extensions;
@@ -21,4 +22,10 @@ public class WorkshopRepository : Repository<Workshop>, IWorkshopRepository
             .SingleOrDefaultAsync();
     }
 
+    public Task<PaginationResult<Workshop>> GetPaginatedAsync(PaginationParameters paginationParameters,
+        CancellationToken cancellationToken)
+    {
+        var query = GetQuery();
+        return GetPaginatedAsync(query, paginationParameters, cancellationToken);
+    }
 }

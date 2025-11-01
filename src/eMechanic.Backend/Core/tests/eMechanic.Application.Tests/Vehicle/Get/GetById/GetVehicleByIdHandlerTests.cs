@@ -1,12 +1,11 @@
-namespace eMechanic.Application.Tests.Vehicle.GetById;
+namespace eMechanic.Application.Tests.Vehicle.Get.GetById;
 
-using Application.Abstractions.Identity.Contexts;
-using Application.Abstractions.Vehicle;
-using Application.Vehicle.Get;
-using Application.Vehicle.Get.ById;
-using Common.Result;
-using Domain.Vehicle;
-using Domain.Vehicle.Enums;
+using eMechanic.Application.Abstractions.Identity.Contexts;
+using eMechanic.Application.Abstractions.Vehicle;
+using eMechanic.Application.Vehicle.Get.ById;
+using eMechanic.Common.Result;
+using eMechanic.Domain.Vehicle;
+using eMechanic.Domain.Vehicle.Enums;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;

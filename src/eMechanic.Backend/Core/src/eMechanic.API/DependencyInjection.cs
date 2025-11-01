@@ -1,10 +1,13 @@
 namespace eMechanic.API;
 
 using System.Text;
+using Application.Identity;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Security;
 
 public static class DependencyInjection
 {
@@ -47,7 +50,15 @@ public static class DependencyInjection
         var issuer = configuration["Authentication:JwtBearer:Issuer"];
         var audience = configuration["Authentication:JwtBearer:Audience"];
 
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(AuthorizationPolicies.MUST_BE_USER, policy =>
+                policy.RequireClaim(ClaimConstants.IDENTITY_TYPE, nameof(EIdentityType.User)));
+
+            options.AddPolicy(AuthorizationPolicies.MUST_BE_WORKSHOP, policy =>
+                policy.RequireClaim(ClaimConstants.IDENTITY_TYPE, nameof(EIdentityType.Workshop)));
+        });
+
         services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
