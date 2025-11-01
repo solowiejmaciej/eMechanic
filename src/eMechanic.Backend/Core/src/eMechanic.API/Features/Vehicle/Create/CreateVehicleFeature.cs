@@ -5,8 +5,10 @@ using eMechanic.API.Features.Vehicle;
 using eMechanic.Application.Vehicle.Create;
 using eMechanic.Common.Result;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Request;
+using Security;
 
 public sealed class CreateVehicleFeature : IFeature
 {
@@ -34,6 +36,6 @@ public sealed class CreateVehicleFeature : IFeature
             .Produces(StatusCodes.Status500InternalServerError)
             .Produces(StatusCodes.Status401Unauthorized)
             .WithSummary("Creates a new vehicle.")
-            .RequireAuthorization();
+            .RequireAuthorization(AuthorizationPolicies.MUST_BE_USER);
     }
 }

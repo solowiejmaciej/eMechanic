@@ -2,7 +2,6 @@ namespace eMechanic.API.Features.User.Register;
 
 using eMechanic.API.Constans;
 using eMechanic.API.Features.User;
-using eMechanic.Application.Users.Register;
 using eMechanic.Common.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +13,11 @@ public sealed class RegisterUserFeature : IFeature
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost(UserPrefix.ENDPOINT +"/register", async (
-                RegisterUserCommand command,
+                RegisterUserRequest request,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
-                var result = await mediator.Send(command, cancellationToken);
+                var result = await mediator.Send(request.MapToCommand(), cancellationToken);
 
                 return result.ToStatusCode(
                     id => Results.Created($"{WebApiConstans.CURRENT_API_VERSION}{UserPrefix.ENDPOINT}/{id}", new { UserId = id }),

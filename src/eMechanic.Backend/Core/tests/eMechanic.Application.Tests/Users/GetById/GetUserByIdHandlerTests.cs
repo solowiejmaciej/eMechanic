@@ -1,58 +1,78 @@
 namespace eMechanic.Application.Tests.Users.GetById;
 
-using Domain.User;
+using Application.Users.Get.Current;
+using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Application.Abstractions.User;
-using eMechanic.Application.Users.GetById;
 using eMechanic.Common.Result;
+using eMechanic.Domain.User;
+using FluentAssertions;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 
-public class GetUserByIdHandlerTests
+public class GetCurrentUserHandlerTests
 {
     private readonly IUserRepository _userRepository;
-    private readonly GetUserByIdHandler _handler;
+    private readonly IUserContext _userContext;
+    private readonly GetCurrentUserHandler _handler;
+    private readonly Guid _currentUserId = Guid.NewGuid();
+    private readonly User _fakeUser;
 
-    public GetUserByIdHandlerTests()
+    public GetCurrentUserHandlerTests()
     {
         _userRepository = Substitute.For<IUserRepository>();
-        _handler = new GetUserByIdHandler(_userRepository);
+        _userContext = Substitute.For<IUserContext>();
+        _handler = new GetCurrentUserHandler(_userRepository, _userContext);
+
+        _fakeUser = User.Create("test@user.pl", "Test", "User", Guid.NewGuid());
+        typeof(User).GetProperty("Id")!.SetValue(_fakeUser, _currentUserId);
+
+        // Konfiguracja mocka UserContext
+        _userContext.GetUserId().Returns(_currentUserId);
+        _userContext.IsAuthenticated.Returns(true);
     }
 
     [Fact]
-    public async Task Handle_Should_ReturnUserResponse_WhenUserExists()
+    public async Task Handle_Should_ReturnUserResponse_WhenUserIsAuthenticated()
     {
         // Arrange
-        var userId = Guid.NewGuid();
-        var query = new GetUserByIdQuery(userId);
-
-        var fakeUser = User.Create("test@user.pl", "Test", "User", Guid.NewGuid());
-
-        _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>())
-                       .Returns(fakeUser);
+        var query = new GetCurrentUserQuery();
+        _userRepository.GetByIdAsync(_currentUserId, Arg.Any<CancellationToken>())
+                       .Returns(_fakeUser);
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
-        Assert.False(result.HasError());
-        Assert.Equal(fakeUser.Id, result.Value!.Id);
-        Assert.Equal(fakeUser.FirstName, result.Value.FirstName);
+        result.HasError().Should().BeFalse();
+        result.Value.Should().NotBeNull();
+        result.Value!.Id.Should().Be(_currentUserId);
+        result.Value.Email.Should().Be(_fakeUser.Email);
     }
 
     [Fact]
-    public async Task Handle_Should_ReturnNotFoundError_WhenUserDoesNotExist()
+    public async Task Handle_Should_ReturnNotFoundError_WhenUserFromTokenIsNotFoundInDb()
     {
         // Arrange
-        var userId = Guid.NewGuid();
-        var query = new GetUserByIdQuery(userId);
-
-        _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>())
+        var query = new GetCurrentUserQuery();
+        _userRepository.GetByIdAsync(_currentUserId, Arg.Any<CancellationToken>())
                        .Returns(Task.FromResult<User?>(null));
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
-        Assert.True(result.HasError());
-        Assert.Equal(EErrorCode.NotFoundError, result.Error!.Code);
+        result.HasError().Should().BeTrue();
+        result.Error!.Code.Should().Be(EErrorCode.NotFoundError);
+    }
+
+    [Fact]
+    public async Task Handle_Should_Throw_WhenUserContextThrowsUnauthorized()
+    {
+        // Arrange
+        var query = new GetCurrentUserQuery();
+        _userContext.GetUserId().Throws<UnauthorizedAccessException>();
+
+        // Act & Assert
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => _handler.Handle(query, CancellationToken.None));
     }
 }

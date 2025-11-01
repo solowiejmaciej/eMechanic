@@ -5,6 +5,7 @@ using Application.Vehicle.Get.All;
 using eMechanic.Common.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Security;
 
 public sealed class GetAllVehiclesFeature : IFeature
 {
@@ -24,11 +25,11 @@ public sealed class GetAllVehiclesFeature : IFeature
             })
             .WithName("GetVehicles")
             .WithTags(VehiclePrefix.TAG)
-            .Produces<VehicleResponse>(StatusCodes.Status200OK)
+            .Produces<PaginationResult<VehicleResponse>>(StatusCodes.Status200OK)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .Produces(StatusCodes.Status401Unauthorized)
             .WithSummary("Gets a vehicle by its unique identifier.")
-            .RequireAuthorization();
+            .RequireAuthorization(AuthorizationPolicies.MUST_BE_USER);
     }
 }

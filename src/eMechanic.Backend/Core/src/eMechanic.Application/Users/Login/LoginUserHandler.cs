@@ -3,6 +3,7 @@ namespace eMechanic.Application.Users.Login;
 using Abstractions.Identity;
 using Common.CQRS;
 using Common.Result;
+using Identity;
 
 public class LoginUserHandler : IResultCommandHandler<LoginUserCommand, LoginUserResponse>
 {

@@ -1,7 +1,14 @@
 namespace eMechanic.Common.Result;
 
+using System.Text.Json.Serialization;
+
 public class PaginationResult<T>
 {
+    [JsonConstructor]
+    private PaginationResult()
+    {
+    }
+
     public PaginationResult(IEnumerable<T> items, int count, int paginationParametersPageNumber,
         int paginationParametersPageSize)
     {

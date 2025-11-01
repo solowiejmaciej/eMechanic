@@ -6,7 +6,6 @@ using Caching;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Users.GetById;
 
 public static class DependencyInjection
 {
@@ -29,10 +28,10 @@ public static class DependencyInjection
     {
         var cacheConfig = new CacheConfiguration();
 
-        cacheConfig.Register(new CacheRule<GetUserByIdQuery>(
-            TimeSpan.FromMinutes(5),
-            q => ECacheKey.GetUserById.ToCacheKeyString(q.Id)
-        ));
+        // cacheConfig.Register(new CacheRule<GetCurrentUserQuery>(
+        //     TimeSpan.FromMinutes(5),
+        //     q => ECacheKey.GetUserById.ToCacheKeyString()
+        // ));
 
         services.AddSingleton<ICacheConfiguration>(cacheConfig);
     }

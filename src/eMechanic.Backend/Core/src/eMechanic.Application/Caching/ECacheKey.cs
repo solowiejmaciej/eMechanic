@@ -8,9 +8,9 @@ public enum ECacheKey
 
 public static class CacheKeyExtensions
 {
-    public static string ToCacheKeyString(this ECacheKey key, Guid id) => key switch
-    {
-        ECacheKey.GetUserById => $"{nameof(ECacheKey.GetUserById)}-{id}",
-        _ => throw new ArgumentOutOfRangeException(nameof(key), key, null)
-    };
+    // public static string ToCacheKeyString(this ECacheKey key, Guid id) => key switch
+    // {
+    //     ECacheKey.GetUserById => $"{nameof(ECacheKey.GetUserById)}-{id}",
+    //     _ => throw new ArgumentOutOfRangeException(nameof(key), key, null)
+    // };
 }

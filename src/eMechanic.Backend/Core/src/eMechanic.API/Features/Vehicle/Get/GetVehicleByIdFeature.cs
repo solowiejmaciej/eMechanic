@@ -5,6 +5,7 @@ using Application.Vehicle.Get.ById;
 using eMechanic.Common.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Security;
 
 public sealed class GetVehicleByIdFeature : IFeature
 {
@@ -30,6 +31,6 @@ public sealed class GetVehicleByIdFeature : IFeature
             .Produces(StatusCodes.Status500InternalServerError)
             .Produces(StatusCodes.Status401Unauthorized)
             .WithSummary("Gets a vehicle by its unique identifier.")
-            .RequireAuthorization();
+            .RequireAuthorization(AuthorizationPolicies.MUST_BE_USER);
     }
 }

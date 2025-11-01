@@ -21,7 +21,7 @@ public class Repository<T> : IRepository<T> where T : Entity
         DbSet = context.Set<T>();
     }
 
-    public IQueryable<T> GetQuery() => DbSet.AsQueryable();
+    protected IQueryable<T> GetQuery() => DbSet.AsQueryable();
     public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken) => await DbSet.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public async Task<Guid> AddAsync(T entity, CancellationToken cancellationToken)
