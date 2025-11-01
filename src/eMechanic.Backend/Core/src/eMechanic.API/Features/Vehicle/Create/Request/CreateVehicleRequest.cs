@@ -9,13 +9,11 @@ public sealed record CreateVehicleRequest(
     string Model,
     string ProductionYear,
     decimal? EngineCapacity,
+    int Mileage,
+    EMileageUnit MileageUnit,
     EFuelType FuelType,
     EBodyType BodyType,
     EVehicleType VehicleType)
 {
-    public CreateVehicleCommand ToCommand()
-    {
-        return new CreateVehicleCommand(Vin, Manufacturer, Model, ProductionYear, EngineCapacity,
-            FuelType, BodyType, VehicleType);
-    }
+    public CreateVehicleCommand ToCommand() => new(Vin, Manufacturer, Model, ProductionYear, EngineCapacity, Mileage, MileageUnit, FuelType, BodyType, VehicleType);
 }

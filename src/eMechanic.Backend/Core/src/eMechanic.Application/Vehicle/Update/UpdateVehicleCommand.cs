@@ -12,6 +12,8 @@ public sealed record UpdateVehicleCommand(
     string Model,
     string ProductionYear,
     decimal? EngineCapacity,
+    int MillageValue,
+    EMileageUnit MillageUnit,
     EFuelType FuelType,
     EBodyType BodyType,
     EVehicleType VehicleType) : IResultCommand<Success>;
@@ -26,6 +28,8 @@ public class UpdateVehicleCommandValidator : AbstractValidator<UpdateVehicleComm
         RuleFor(x => x.Model).NotEmpty().MaximumLength(100);
         RuleFor(x => x.ProductionYear).NotEmpty().Length(4);
         RuleFor(x => x.EngineCapacity).GreaterThan(0).When(x => x.EngineCapacity.HasValue);
+        RuleFor(x => x.MillageValue).GreaterThan(0);
+        RuleFor(x => x.MillageUnit).IsInEnum().NotEqual(EMileageUnit.None);
         RuleFor(x => x.FuelType).IsInEnum().NotEqual(EFuelType.None);
         RuleFor(x => x.BodyType).IsInEnum().NotEqual(EBodyType.None);
         RuleFor(x => x.VehicleType).IsInEnum().NotEqual(EVehicleType.None);

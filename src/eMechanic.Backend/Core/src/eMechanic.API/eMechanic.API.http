@@ -1,11 +1,20 @@
-# --- Variables ---
+### ----------------------------------------------------------------
+### --- Zmienne Globalne ---
+### ----------------------------------------------------------------
 @eMechanic.API_HostAddress = http://localhost:5178
 @api_version = v1
 @base_url = {{eMechanic.API_HostAddress}}/api/{{api_version}}
-@userId = 019a1201-cc4a-7ca4-b575-0c94a05397f5
+
+# --- Zmienne przechwytywane (ustawiane automatycznie) ---
+@userToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTlhM2ZhZC1iYzljLTc2NzQtOTdiMy01MzlhODJmZWMxNmMiLCJlbWFpbCI6Im1hY2llai5ub3dha180MkB0ZXN0LmNvbSIsImp0aSI6IjAxOWEzZmFlLWY5ZGEtNzVkYS05NzZkLTdhNTNmZDY2ZDg4NCIsImlkZW50aXR5VHlwZSI6IlVzZXIiLCJ1c2VySWQiOiIwMTlhM2ZhZC1iZWQ0LTdkNDMtYjkxMi05MjA3OTZhNjg2YWUiLCJleHAiOjE3NjIwMDg2MjMsImlzcyI6ImVNZWNoYW5pY0FQSSIsImF1ZCI6ImVNZWNoYW5pY0FQSSJ9.rIj7cY13PZC7qn5mHZ3RpmZZoIM0uTkWJw5ukuKFeUc
+@workshopToken =
+@userId =
+@vehicleId =
 
 
-# --- Users ---
+### ----------------------------------------------------------------
+### --- Users ---
+### ----------------------------------------------------------------
 
 ### Register User
 # @name RegisterUser
@@ -15,26 +24,35 @@ Content-Type: application/json
 {
   "firstName": "Jan",
   "lastName": "Nowak",
-  "email": "jan.nowak_{{$randomInt}}@test.com",
+  "email": "maciej.nowak_{{$randomInt}}@test.com",
   "password": "Password123!"
 }
 
-### Login User
+### Login User (and capture token)
 # @name LoginUser
 POST {{base_url}}/users/login
 Content-Type: application/json
 
 {
-    "email": "string@gmail.com",
-    "password": "zaq1@WSX"
+    "email": "maciej.nowak_42@test.com",
+    "password": "Password123!"
 }
 
-### Get User By ID
-# @name GetUserById
-GET {{base_url}}/users/{{userId}}
+> {%
+    client.global.set("userToken", response.body.token);
+    client.global.set("userId", response.body.userId);
+%}
+
+### Get Current User
+# @name GetCurrentUser
+GET {{base_url}}/users
+Authorization: Bearer {{userToken}}
 Accept: application/json
 
-# --- Workshops ---
+
+### ----------------------------------------------------------------
+### --- Workshops ---
+### ----------------------------------------------------------------
 
 ### Register Workshop
 # @name RegisterWorkshop
@@ -54,53 +72,74 @@ Content-Type: application/json
   "country": "Polska"
 }
 
-### Login Workshop
+### Login Workshop (and capture token)
 # @name LoginWorkshop
 POST {{base_url}}/workshops/login
 Content-Type: application/json
 
 {
-    "email": "workshop-login@test.com",
+    "email": "workshop_1@example.com",
     "password": "Password123!"
 }
 
-# --- Vehicles ---
+> {%
+    client.global.set("workshopToken", response.body.token);
+%}
+
+### Get All Workshops (Paginated)
+# @name GetAllWorkshops
+GET {{base_url}}/workshops?pageNumber=1&pageSize=10
+Accept: application/json
 
 ### Create Vehicle
 # @name CreateVehicle
 POST {{base_url}}/vehicles
+Authorization: Bearer {{userToken}}
 Content-Type: application/json
 
 {
-  "ownerUserId": "{{userId}}",
-  "vin": "VIN{{$randomInt}}ABC123456",
+  "vin": "VIN{{$randomInt}}ABC12DS345d6",
   "manufacturer": "Test Manufacturer",
   "model": "Test Model",
   "productionYear": "2023",
   "engineCapacity": 1.9,
-  "fuelType": "Diesel", // Options: Gasoline, Diesel, LPG, Electric, Hybrid, Hydrogen
-  "bodyType": "Sedan",  // Options: Sedan, Hatchback, Kombi, SUV, Coupe, Convertible, Minivan, Pickup, Van
-  "vehicleType": "Passenger" // Options: Passenger, Motorcycle
+  "mileage": 125000,
+  "mileageUnit": 1,
+  "fuelType": 1,
+  "bodyType": 1,
+  "vehicleType": 1
 }
+
+> {%
+    client.global.set("vehicleId", response.body.vehicleId);
+%}
 
 ### Get Vehicle By ID
 # @name GetVehicleById
-GET {{base_url}}/vehicles/{{vehicleId}} # Set vehicleId variable after creating one
+GET {{base_url}}/vehicles/{{vehicleId}}
+Authorization: Bearer {{userToken}}
+Accept: application/json
+
+### Get All Vehicles
+# @name GetAllVehicles
+GET {{base_url}}/vehicles?pageNumber=1&pageSize=5
+Authorization: Bearer {{userToken}}
 Accept: application/json
 
 ### Update Vehicle
 # @name UpdateVehicle
-PUT {{base_url}}/vehicles/{{vehicleId}} # Set vehicleId variable
+PUT {{base_url}}/vehicles/{{vehicleId}}
+Authorization: Bearer {{userToken}}
 Content-Type: application/json
 
 {
-  "id": "{{vehicleId}}", # Must match the ID in the URL
-  "ownerUserId": "{{userId}}", # New or existing owner ID
   "vin": "VIN{{$randomInt}}XYZ987654",
   "manufacturer": "Updated Manufacturer",
   "model": "Updated Model S",
   "productionYear": "2024",
   "engineCapacity": 2.5,
+  "mileage": 130000,
+  "mileageUnit": "Kilometers",
   "fuelType": "Electric",
   "bodyType": "Hatchback",
   "vehicleType": "Passenger"
@@ -108,9 +147,5 @@ Content-Type: application/json
 
 ### Delete Vehicle
 # @name DeleteVehicle
-DELETE {{base_url}}/vehicles/{{vehicleId}} # Set vehicleId variable
-
-# --- Variables (set these after running requests) ---
-@userId = REPLACE_WITH_USER_ID_FROM_REGISTER_OR_GET
-@workshopId = REPLACE_WITH_WORKSHOP_ID_FROM_REGISTER
-@vehicleId = REPLACE_WITH_VEHICLE_ID_FROM_CREATE
+DELETE {{base_url}}/vehicles/{{vehicleId}}
+Authorization: Bearer {{userToken}}

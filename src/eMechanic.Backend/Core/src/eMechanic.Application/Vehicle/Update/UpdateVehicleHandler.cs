@@ -74,6 +74,12 @@ public sealed class UpdateVehicleHandler : IResultCommandHandler<UpdateVehicleCo
             return vehicleTypeResult.Error!;
         }
 
+        var millageTypeResult = vehicle.UpdateMileage(request.MillageValue, request.MillageUnit);
+        if (millageTypeResult.HasError())
+        {
+            return millageTypeResult.Error!;
+        }
+
         _vehicleRepository.UpdateAsync(vehicle, cancellationToken);
         await _vehicleRepository.SaveChangesAsync(cancellationToken);
 

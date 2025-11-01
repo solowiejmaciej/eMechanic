@@ -32,7 +32,7 @@ public class GetVehiclesHandlerTests
     {
         var result = Vehicle.Create(
             _currentUserId, vin, manufacturer, "TestModel", "2022",
-            1.5m, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+            1.5m,  200, EMileageUnit.Miles, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
         result.HasError().Should().BeFalse();
         return result.Value!;
     }

@@ -29,7 +29,7 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
 
         var createRequest = new CreateVehicleRequest(
             $"V1N{Guid.NewGuid().ToString("N")[..14]}", $"UpdateTest Manufacturer {suffix}", $"UpdateTest Model {suffix}", "2020",
-            1.9m, EFuelType.Diesel, EBodyType.Sedan, EVehicleType.Passenger);
+            1.9m, 200, EMileageUnit.Miles, EFuelType.Diesel, EBodyType.Sedan, EVehicleType.Passenger);
         var createResponse = await _client.PostAsJsonAsync("/api/v1/vehicles", createRequest);
         createResponse.EnsureSuccessStatusCode();
         var createdContent = await createResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();
@@ -41,7 +41,7 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     private UpdateVehicleRequest CreateValidUpdateRequest() => new(
         $"V1N{Guid.NewGuid().ToString("N")[..14]}",
         "Updated Manufacturer", "Updated Model", "2022",
-        2.5m, EFuelType.Electric, EBodyType.Coupe, EVehicleType.Passenger
+        2.5m, 200, EMileageUnit.Kilometers, EFuelType.Electric, EBodyType.Coupe, EVehicleType.Passenger
     );
 
     [Fact]

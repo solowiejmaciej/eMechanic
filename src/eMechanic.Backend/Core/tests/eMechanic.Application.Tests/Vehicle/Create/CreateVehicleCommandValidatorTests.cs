@@ -14,7 +14,7 @@ public class CreateVehicleCommandValidatorTests
         // Arrange
         var command = new CreateVehicleCommand(
             "VIN123456789ABCDE", "Test Manufacturer", "Test Model", "2023",
-            1.6m, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+            1.6m,  200, EMileageUnit.Miles, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
 
         // Act
         var result = _validator.TestValidate(command);
@@ -33,7 +33,7 @@ public class CreateVehicleCommandValidatorTests
         // Arrange
         var command = new CreateVehicleCommand(
             invalidVin, "Test Manufacturer", "Test Model", "2023",
-            1.6m, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+            1.6m,  200, EMileageUnit.Miles, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
 
         // Act
         var result = _validator.TestValidate(command);
@@ -50,7 +50,7 @@ public class CreateVehicleCommandValidatorTests
          // Arrange
         var command = new CreateVehicleCommand(
             "VIN123456789ABCDE", invalidManufacturer!, "Test Model", "2023",
-            1.6m, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+            1.6m,  200, EMileageUnit.Miles, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
 
         // Act
         var result = _validator.TestValidate(command);
@@ -65,7 +65,7 @@ public class CreateVehicleCommandValidatorTests
          // Arrange
         var command = new CreateVehicleCommand(
             "VIN123456789ABCDE", "Test Manufacturer", "Test Model", "2023",
-            -1.0m, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+            -1.0m,  200, EMileageUnit.Miles, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
 
         // Act
         var result = _validator.TestValidate(command);
@@ -80,7 +80,7 @@ public class CreateVehicleCommandValidatorTests
          // Arrange
         var command = new CreateVehicleCommand(
             "VIN123456789ABCDE", "Test Manufacturer", "Test Model", "2023",
-            1.6m, EFuelType.None, EBodyType.Sedan, EVehicleType.Passenger);
+            1.6m,  200, EMileageUnit.Miles, EFuelType.None, EBodyType.Sedan, EVehicleType.Passenger);
 
         // Act
         var result = _validator.TestValidate(command);
@@ -95,7 +95,7 @@ public class CreateVehicleCommandValidatorTests
          // Arrange
         var command = new CreateVehicleCommand(
             "VIN123456789ABCDE", "Test Manufacturer", "Test Model", "2023",
-            1.6m, EFuelType.Gasoline, EBodyType.None, EVehicleType.Passenger);
+            1.6m,  200, EMileageUnit.Miles, EFuelType.Gasoline, EBodyType.None, EVehicleType.Passenger);
 
         // Act
         var result = _validator.TestValidate(command);
@@ -110,7 +110,7 @@ public class CreateVehicleCommandValidatorTests
          // Arrange
         var command = new CreateVehicleCommand(
             "VIN123456789ABCDE", "Test Manufacturer", "Test Model", "2023",
-            1.6m, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.None);
+            1.6m,  200, EMileageUnit.Miles, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.None);
 
         // Act
         var result = _validator.TestValidate(command);

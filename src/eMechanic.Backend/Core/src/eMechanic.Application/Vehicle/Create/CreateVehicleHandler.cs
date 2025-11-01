@@ -30,6 +30,8 @@ public sealed class CreateVehicleHandler : IResultCommandHandler<CreateVehicleCo
             request.Model,
             request.ProductionYear,
             request.EngineCapacity,
+            request.Mileage,
+            request.MileageUnit,
             request.FuelType,
             request.BodyType,
             request.VehicleType);
