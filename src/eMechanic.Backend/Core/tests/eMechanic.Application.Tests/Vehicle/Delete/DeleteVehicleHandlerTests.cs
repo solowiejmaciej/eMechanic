@@ -29,7 +29,7 @@ public class DeleteVehicleHandlerTests
 
         var creationResult = Vehicle.Create(
             _currentUserId, "V1N123456789ABCDE", "ToDelete", "ToDelete", "2021",
-            1.0m, EFuelType.LPG, EBodyType.Van, EVehicleType.Passenger);
+            1.0m, 200, EMileageUnit.Miles, EFuelType.LPG, EBodyType.Van, EVehicleType.Passenger);
         creationResult.HasError().Should().BeFalse();
         _existingVehicle = creationResult.Value!;
         typeof(Vehicle).GetProperty("Id")!.SetValue(_existingVehicle, _vehicleId);

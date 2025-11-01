@@ -16,6 +16,7 @@ public class Vehicle : AggregateRoot, IUserReferenced
     public Model Model { get; private set; }
     public ProductionYear ProductionYear{ get; private set; }
     public EngineCapacity? EngineCapacity { get; private set; }
+    public Mileage Mileage { get; private set; }
     public EFuelType FuelType { get; private set; }
     public EBodyType BodyType { get; private set; }
     public EVehicleType VehicleType { get; private set; }
@@ -27,8 +28,9 @@ public class Vehicle : AggregateRoot, IUserReferenced
         Vin vin,
         Manufacturer manufacturer,
         Model model,
-        ProductionYear productionProductionYear,
+        ProductionYear productionYear,
         EngineCapacity? engineCapacity,
+        Mileage mileage,
         EFuelType fuelType,
         EBodyType bodyType,
         EVehicleType vehicleType)
@@ -38,20 +40,20 @@ public class Vehicle : AggregateRoot, IUserReferenced
             throw new ArgumentException("UserId can't be empty", nameof(userId));
         }
 
-        UserId = userId;
-
-        Vin = vin ?? throw new ArgumentNullException(nameof(vin));
-        Manufacturer = manufacturer ?? throw new ArgumentNullException(nameof(manufacturer));
-        Model = model ?? throw new ArgumentNullException(nameof(model));
-        ProductionYear = productionProductionYear ?? throw new ArgumentNullException(nameof(productionProductionYear));
-        EngineCapacity = engineCapacity;
-
+        SetUserId(userId);
+        SetVin(vin);
+        SetManufacturer(manufacturer);
+        SetModel(model);
+        SetProductionYear(productionYear);
+        SetMileage(mileage);
+        SetEngineCapacity(engineCapacity);
         SetFuelType(fuelType);
         SetBodyType(bodyType);
         SetVehicleType(vehicleType);
 
         RaiseDomainEvent(new VehicleCreatedDomainEvent(this));
     }
+
 
     public static Result<Vehicle, Error> Create(
         Guid userId,
@@ -60,6 +62,8 @@ public class Vehicle : AggregateRoot, IUserReferenced
         string? modelInput,
         string? productionYearInput,
         decimal? engineCapacityInput,
+        int? millageInput,
+        EMileageUnit unitInput,
         EFuelType fuelType,
         EBodyType bodyType,
         EVehicleType vehicleType)
@@ -109,6 +113,12 @@ public class Vehicle : AggregateRoot, IUserReferenced
             }
         }
 
+        var mileageResult = Mileage.Create(millageInput, unitInput);
+        if (mileageResult.HasError())
+        {
+            errors.Add(mileageResult.Error!);
+        }
+
         if (errors.Count != 0)
         {
             var aggregatedMessage = string.Join("; ", errors.Select(e => e.Message));
@@ -124,6 +134,7 @@ public class Vehicle : AggregateRoot, IUserReferenced
                 modelResult.Value!,
                 yearResult.Value!,
                 engineCapacity,
+                mileageResult.Value!,
                 fuelType,
                 bodyType,
                 vehicleType);
@@ -221,6 +232,29 @@ public class Vehicle : AggregateRoot, IUserReferenced
         return Result.Success;
     }
 
+    public Result<Success, Error> UpdateMileage(int? newMileageValue, EMileageUnit newMileageUnit)
+    {
+        var newMileageResult = Mileage.Create(newMileageValue, newMileageUnit);
+
+        if (newMileageResult.HasError())
+        {
+            return newMileageResult.Error!;
+        }
+
+        if (Mileage == newMileageResult.Value)
+        {
+            return Result.Success;
+        }
+
+        var oldMileage = Mileage;
+        Mileage = newMileageResult.Value!;
+
+        RaiseDomainEvent(new VehicleMileageChangedDomainEvent(Id, oldMileage, Mileage));
+        SetUpdatedAt();
+
+        return Result.Success;
+    }
+
     public Result<Success, Error> ChangeFuelType(EFuelType newFuelType)
     {
         if (!Enum.IsDefined(newFuelType) || newFuelType == EFuelType.None)
@@ -264,6 +298,28 @@ public class Vehicle : AggregateRoot, IUserReferenced
         RaiseDomainEvent(new VehicleTypeChangedDomainEvent(this.Id, oldVehicleType, newVehicleType));
         SetUpdatedAt();
         return Result.Success;
+    }
+
+    private void SetMileage(Mileage mileage) => Mileage = mileage ?? throw new ArgumentNullException(nameof(mileage));
+
+    private void SetEngineCapacity(EngineCapacity? engineCapacity) => EngineCapacity = engineCapacity;
+
+    private void SetProductionYear(ProductionYear productionYear) => ProductionYear = productionYear ?? throw new ArgumentNullException(nameof(productionYear));
+
+    private void SetModel(Model model) => Model = model ?? throw new ArgumentNullException(nameof(model));
+
+    private void SetManufacturer(Manufacturer manufacturer) => Manufacturer = manufacturer ?? throw new ArgumentNullException(nameof(manufacturer));
+
+    private void SetVin(Vin vin) => Vin = vin ?? throw new ArgumentNullException(nameof(vin));
+
+    private void SetUserId(Guid userId)
+    {
+        if (userId == Guid.Empty)
+        {
+            throw new ArgumentNullException(nameof(userId));
+        }
+
+        UserId = userId;
     }
 
     private void SetFuelType(EFuelType fuelType)

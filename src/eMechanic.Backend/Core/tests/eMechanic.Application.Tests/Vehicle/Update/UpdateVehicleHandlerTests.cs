@@ -29,7 +29,7 @@ public class UpdateVehicleHandlerTests
 
         var creationResult = Vehicle.Create(
             _currentUserId, "V1N123456789ABCDE", "Old Manufacturer", "Old Model", "2020",
-            1.5m, EFuelType.Diesel, EBodyType.Kombi, EVehicleType.Passenger);
+            1.5m,200, EMileageUnit.Miles, EFuelType.Diesel, EBodyType.Kombi, EVehicleType.Passenger);
         creationResult.HasError().Should().BeFalse();
         _existingVehicle = creationResult.Value!;
         typeof(Vehicle).GetProperty("Id")!.SetValue(_existingVehicle, _vehicleId);
@@ -44,7 +44,7 @@ public class UpdateVehicleHandlerTests
         // Arrange
         var command = new UpdateVehicleCommand(
             _vehicleId, "V1N123456789ABCDE", "New Manufacturer", "New Model", "2024",
-            2.0m, EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
+            2.0m,  200, EMileageUnit.Kilometers, EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
 
         _vehicleRepository.GetForUserById(_vehicleId, _currentUserId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Vehicle?>(_existingVehicle));
@@ -74,7 +74,7 @@ public class UpdateVehicleHandlerTests
         // Arrange
         var command = new UpdateVehicleCommand(
              _vehicleId, "V1N123456789ABCDE", "New Manufacturer", "New Model", "2024",
-             2.0m, EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
+             2.0m,  200, EMileageUnit.Kilometers,EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
 
         _vehicleRepository.GetForUserById(_vehicleId, _currentUserId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Vehicle?>(null)); // Vehicle not found
@@ -95,7 +95,7 @@ public class UpdateVehicleHandlerTests
         // Arrange
          var command = new UpdateVehicleCommand(
              _vehicleId, "dasdasdasdas", "New Manufacturer", "New Model", "2024",
-             2.0m, EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
+             2.0m,  200, EMileageUnit.Kilometers, EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
 
         _vehicleRepository.GetForUserById(_vehicleId, _currentUserId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Vehicle?>(_existingVehicle));
@@ -116,7 +116,7 @@ public class UpdateVehicleHandlerTests
         // Arrange
          var command = new UpdateVehicleCommand(
             _vehicleId, "V1N123456789ABCDE", "Test Manufacturer", "Test Model", "2023",
-            1.6m, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+            1.6m,  200, EMileageUnit.Kilometers, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
          _userContext.GetUserId().ThrowsForAnyArgs<UnauthorizedAccessException>();
         // Act & Assert
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => _handler.Handle(command, CancellationToken.None));

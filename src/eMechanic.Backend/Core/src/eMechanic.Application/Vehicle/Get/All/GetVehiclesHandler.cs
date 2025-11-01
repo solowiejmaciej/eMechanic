@@ -25,8 +25,20 @@ public class GetVehiclesHandler : IResultQueryHandler<GetVehiclesQuery, Paginati
         var userId = _userContext.GetUserId();
 
         var vehicles = await _vehicleRepository.GetForUserPaginatedAsync(request.PaginationParameters, userId, cancellationToken);
-        var result = vehicles.MapToDto(x => new VehicleResponse(x.Id, x.UserId, x.Vin.Value, x.Manufacturer.Value, x.Model.Value,
-            x.ProductionYear.Value, x.EngineCapacity?.Value, x.FuelType, x.BodyType, x.VehicleType, x.CreatedAt));
+        var result = vehicles.MapToDto(x => new VehicleResponse(
+            x.Id,
+            x.UserId,
+            x.Vin.Value,
+            x.Manufacturer.Value,
+            x.Model.Value,
+            x.ProductionYear.Value,
+            x.EngineCapacity?.Value,
+            x.Mileage.Value,
+            x.Mileage.Unit,
+            x.FuelType,
+            x.BodyType,
+            x.VehicleType,
+            x.CreatedAt));
 
         return result;
     }

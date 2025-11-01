@@ -26,7 +26,7 @@ public class DeleteVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
 
         var createRequest = new CreateVehicleRequest(
             $"V1N{Guid.NewGuid().ToString("N")[..14]}", $"DeleteTest Manufacturer {suffix}", $"DeleteTest Model {suffix}", "2019",
-            1.2m, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+            1.2m,200, EMileageUnit.Miles,EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
         var createResponse = await _client.PostAsJsonAsync("/api/v1/vehicles", createRequest);
         createResponse.EnsureSuccessStatusCode();
         var createdContent = await createResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();

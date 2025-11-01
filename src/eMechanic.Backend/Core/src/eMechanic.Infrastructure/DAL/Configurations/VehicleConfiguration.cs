@@ -43,6 +43,18 @@ internal sealed class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
             .HasColumnType("decimal(4, 1)")
             .IsRequired(false);
 
+        builder.OwnsOne(v => v.Mileage, mileageBuilder =>
+        {
+            mileageBuilder.Property(m => m.Value)
+                .IsRequired();
+
+            mileageBuilder.Property(m => m.Unit)
+                .HasColumnName("MileageUnit")
+                .HasConversion<string>()
+                .HasMaxLength(50)
+                .IsRequired();
+        });
+
         builder.Property(v => v.FuelType)
             .HasConversion<string>()
             .HasMaxLength(50)

@@ -28,7 +28,7 @@ public class GetVehicleByIdFeatureTests : IClassFixture<IntegrationTestWebAppFac
 
          var createRequest = new CreateVehicleRequest(
              $"V1N{Guid.NewGuid().ToString("N")[..14]}", "GetById Manufacturer", "GetById Model", "2021",
-             1.4m, EFuelType.Gasoline, EBodyType.Hatchback, EVehicleType.Passenger);
+             1.4m, 200, EMileageUnit.Kilometers, EFuelType.Gasoline, EBodyType.Hatchback, EVehicleType.Passenger);
          var createResponse = await _client.PostAsJsonAsync("/api/v1/vehicles", createRequest);
          createResponse.EnsureSuccessStatusCode();
          var createdContent = await createResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();

@@ -17,6 +17,8 @@ public class VehicleTests
     private const string VALID_MODEL = "6";
     private const string VALID_YEAR = "2006";
     private const decimal VALID_CAPACITY = 1.9m;
+    private const int VALID_MILEAGE_VALUE = 150000;
+    private const EMileageUnit VALID_MILEAGE_UNIT = EMileageUnit.Kilometers;
     private const EFuelType VALID_FUEL = EFuelType.Gasoline;
     private const EBodyType VALID_BODY = EBodyType.Sedan;
     private const EVehicleType VALID_TYPE = EVehicleType.Passenger;
@@ -30,9 +32,12 @@ public class VehicleTests
             VALID_MODEL,
             VALID_YEAR,
             VALID_CAPACITY,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
             VALID_FUEL,
             VALID_BODY,
             VALID_TYPE);
+
         result.HasError().Should().BeFalse();
         return result.Value!;
     }
@@ -49,6 +54,8 @@ public class VehicleTests
             VALID_MODEL,
             VALID_YEAR,
             VALID_CAPACITY,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
             VALID_FUEL,
             VALID_BODY,
             VALID_TYPE);
@@ -85,10 +92,11 @@ public class VehicleTests
             VALID_MODEL,
             VALID_YEAR,
             null,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
             VALID_FUEL,
             VALID_BODY,
             VALID_TYPE);
-
         // Assert
         result.HasError().Should().BeFalse();
         result.Value.Should().NotBeNull();
@@ -99,7 +107,7 @@ public class VehicleTests
     public void Create_Should_ReturnError_WhenOwnerIdIsEmpty()
     {
         // Act
-        var result = Vehicle.Create(Guid.Empty, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY, VALID_FUEL, VALID_BODY, VALID_TYPE);
+        var result = Vehicle.Create(Guid.Empty, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY, VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT ,VALID_FUEL, VALID_BODY, VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -115,7 +123,7 @@ public class VehicleTests
     [InlineData(null)]
     public void Create_Should_ReturnError_WhenVinIsInvalid(string? invalidVin)
     {
-        var result = Vehicle.Create(_validOwnerId, invalidVin, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY, VALID_FUEL, VALID_BODY, VALID_TYPE);
+        var result = Vehicle.Create(_validOwnerId, invalidVin, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY, VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_FUEL, VALID_BODY, VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -131,7 +139,7 @@ public class VehicleTests
     public void Create_Should_ReturnError_WhenManufacturerIsInvalid(string? invalidManufacturer)
     {
         // Act
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, invalidManufacturer, VALID_MODEL, VALID_YEAR, VALID_CAPACITY, VALID_FUEL, VALID_BODY, VALID_TYPE);
+        var result = Vehicle.Create(_validOwnerId, VALID_VIN, invalidManufacturer, VALID_MODEL, VALID_YEAR, VALID_CAPACITY,VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_FUEL, VALID_BODY, VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -147,7 +155,7 @@ public class VehicleTests
     public void Create_Should_ReturnError_WhenModelIsInvalid(string? invalidModel)
     {
         // Act
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, invalidModel, VALID_YEAR, VALID_CAPACITY, VALID_FUEL, VALID_BODY, VALID_TYPE);
+        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, invalidModel, VALID_YEAR, VALID_CAPACITY,VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_FUEL, VALID_BODY, VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -165,7 +173,7 @@ public class VehicleTests
     public void Create_Should_ReturnError_WhenProductionYearIsInvalid(string? invalidYear)
     {
         // Act:
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, invalidYear, VALID_CAPACITY, VALID_FUEL, VALID_BODY, VALID_TYPE);
+        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, invalidYear, VALID_CAPACITY,VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_FUEL, VALID_BODY, VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -179,7 +187,7 @@ public class VehicleTests
     public void Create_Should_ReturnError_WhenFuelTypeIsInvalid(EFuelType invalidFuel)
     {
         // Act
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY, invalidFuel, VALID_BODY, VALID_TYPE);
+        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY,VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, invalidFuel, VALID_BODY, VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -187,13 +195,13 @@ public class VehicleTests
         result.Error.Message.Should().Contain("fuel type");
     }
 
-     [Theory]
+    [Theory]
     [InlineData(EBodyType.None)]
     [InlineData((EBodyType)99)]
     public void Create_Should_ReturnError_WhenBodyTypeIsInvalid(EBodyType invalidBody)
     {
         // Act
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY, VALID_FUEL, invalidBody, VALID_TYPE);
+        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY,VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_FUEL, invalidBody, VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -201,13 +209,13 @@ public class VehicleTests
         result.Error.Message.Should().Contain("body type");
     }
 
-     [Theory]
+    [Theory]
     [InlineData(EVehicleType.None)]
     [InlineData((EVehicleType)99)]
     public void Create_Should_ReturnError_WhenVehicleTypeIsInvalid(EVehicleType invalidType)
     {
         // Act
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY, VALID_FUEL, VALID_BODY, invalidType);
+        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY,VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_FUEL, VALID_BODY, invalidType);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -219,7 +227,7 @@ public class VehicleTests
     public void Create_Should_ReturnError_WhenEngineCapacityIsInvalid()
     {
         // Act
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, -1.0m, VALID_FUEL, VALID_BODY, VALID_TYPE);
+        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, -1.0m,VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_FUEL, VALID_BODY, VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -239,12 +247,56 @@ public class VehicleTests
         EVehicleType type = invalidEnum is EVehicleType t ? t : VALID_TYPE;
 
         // Act
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY, fuel, body, type);
+        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY,  VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, fuel, body, type);
 
         // Assert
         result.HasError().Should().BeTrue();
         result.Error!.Code.Should().Be(EErrorCode.ValidationError);
         result.Error.Message.Should().Contain("Invalid");
+    }
+
+    [Fact]
+    public void Create_Should_ReturnError_WhenMileageIsInvalid()
+    {
+        // Act
+        var result = Vehicle.Create(
+            _validOwnerId,
+            VALID_VIN,
+            VALID_MANUFACTURER,
+            VALID_MODEL,
+            VALID_YEAR,
+            VALID_CAPACITY,
+            -100,
+            VALID_MILEAGE_UNIT,
+            VALID_FUEL,
+            VALID_BODY,
+            VALID_TYPE);
+
+        // Assert
+        result.HasError().Should().BeTrue();
+        result.Error!.Code.Should().Be(EErrorCode.ValidationError);
+    }
+
+    [Fact]
+    public void Create_Should_ReturnError_WhenMileageUnitIsInvalid()
+    {
+        // Act
+        var result = Vehicle.Create(
+            _validOwnerId,
+            VALID_VIN,
+            VALID_MANUFACTURER,
+            VALID_MODEL,
+            VALID_YEAR,
+            VALID_CAPACITY,
+            VALID_MILEAGE_VALUE,
+            EMileageUnit.None,
+            VALID_FUEL,
+            VALID_BODY,
+            VALID_TYPE);
+
+        // Assert
+        result.HasError().Should().BeTrue();
+        result.Error!.Code.Should().Be(EErrorCode.ValidationError);
     }
 
 
@@ -770,4 +822,65 @@ public class VehicleTests
         vehicle.GetDomainEvents().Should().BeEmpty();
     }
 
+    [Fact]
+    public void UpdateMileage_Should_UpdateMileageAndRaiseEvent_WhenNewValueIsValid()
+    {
+        // Arrange
+        var vehicle = CreateValidVehicle();
+        vehicle.ClearDomainEvents();
+
+        var newMileageValue = VALID_MILEAGE_VALUE + 100;
+        var newMileageUnit = EMileageUnit.Kilometers;
+        var oldMileage = vehicle.Mileage;
+
+        // Act
+        var result = vehicle.UpdateMileage(newMileageValue, newMileageUnit);
+
+        // Assert
+        result.HasError().Should().BeFalse();
+        vehicle.Mileage.Value.Should().Be(newMileageValue);
+        vehicle.Mileage.Unit.Should().Be(newMileageUnit);
+
+        vehicle.GetDomainEvents().Should().ContainSingle(e => e is VehicleMileageChangedDomainEvent);
+        var domainEvent = (VehicleMileageChangedDomainEvent)vehicle.GetDomainEvents().First();
+
+        domainEvent.Id.Should().Be(vehicle.Id);
+        domainEvent.OldMileage.Should().Be(oldMileage);
+        domainEvent.Mileage.Should().Be(vehicle.Mileage);
+    }
+
+    [Fact]
+    public void UpdateMileage_Should_ReturnError_WhenNewValueIsInvalid()
+    {
+        // Arrange
+        var vehicle = CreateValidVehicle();
+        var originalMileage = vehicle.Mileage;
+        vehicle.ClearDomainEvents();
+
+        // Act
+        var result = vehicle.UpdateMileage(-50, EMileageUnit.Kilometers);
+
+        // Assert
+        result.HasError().Should().BeTrue();
+        result.Error!.Code.Should().Be(EErrorCode.ValidationError);
+        vehicle.Mileage.Should().Be(originalMileage);
+        vehicle.GetDomainEvents().Should().BeEmpty();
+    }
+
+    [Fact]
+    public void UpdateMileage_Should_ReturnSuccess_AndNotRaiseEvent_WhenValueIsSame()
+    {
+        // Arrange
+        var vehicle = CreateValidVehicle();
+        var sameMileageValue = vehicle.Mileage.Value;
+        var sameMileageUnit = vehicle.Mileage.Unit;
+        vehicle.ClearDomainEvents();
+
+        // Act
+        var result = vehicle.UpdateMileage(sameMileageValue, sameMileageUnit);
+
+        // Assert
+        result.HasError().Should().BeFalse();
+        vehicle.GetDomainEvents().Should().BeEmpty();
+    }
 }

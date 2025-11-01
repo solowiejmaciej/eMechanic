@@ -10,6 +10,8 @@ public sealed record VehicleResponse(
     string Model,
     string ProductionYear,
     decimal? EngineCapacity,
+    int Mileage,
+    EMileageUnit MileageUnit,
     EFuelType FuelType,
     EBodyType BodyType,
     EVehicleType VehicleType,

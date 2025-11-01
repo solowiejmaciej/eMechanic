@@ -26,6 +26,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         "Integration Test Model",
         "2024",
         1.8m,
+        200,
+        EMileageUnit.Miles,
         EFuelType.Hybrid,
         EBodyType.SUV,
         EVehicleType.Passenger
