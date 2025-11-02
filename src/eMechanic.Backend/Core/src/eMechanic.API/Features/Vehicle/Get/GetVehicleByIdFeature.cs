@@ -1,11 +1,11 @@
-namespace eMechanic.API.Features.Vehicle.GetById;
+namespace eMechanic.API.Features.Vehicle.Get;
 
-using Application.Vehicle.Get;
-using Application.Vehicle.Get.ById;
+using eMechanic.API.Security;
+using eMechanic.Application.Vehicle.Get;
+using eMechanic.Application.Vehicle.Get.ById;
 using eMechanic.Common.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Security;
 
 public sealed class GetVehicleByIdFeature : IFeature
 {

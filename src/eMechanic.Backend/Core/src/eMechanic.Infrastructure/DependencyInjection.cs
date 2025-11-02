@@ -4,9 +4,11 @@ using Application.Abstractions.Identity;
 using Application.Abstractions.Identity.Contexts;
 using Application.Abstractions.User;
 using Application.Abstractions.Vehicle;
+using Application.Abstractions.VehicleTimeline;
 using Application.Abstractions.Workshop;
 using DAL;
 using DAL.Transactions;
+using Domain.Vehicle;
 using Identity.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -53,6 +55,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IWorkshopRepository, WorkshopRepository>();
         services.AddScoped<IVehicleRepository, VehicleRepository>();
+        services.AddScoped<IVehicleTimelineRepository, VehicleTimelineRepository>();
     }
 
     private static void AddServices(this IServiceCollection services)
