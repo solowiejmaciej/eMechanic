@@ -2,6 +2,6 @@ namespace eMechanic.Application.Abstractions.Identity.Contexts;
 
 public interface IWorkshopContext
 {
-    Guid WorkshopId { get; }
+    Guid GetWorkshopId();
     bool IsAuthenticated { get; }
 }

@@ -1,7 +1,7 @@
-namespace eMechanic.Application.Vehicle.Get.Timeline;
+namespace eMechanic.Application.Vehicle.Features.Get.Timeline;
 
-using Common.CQRS;
-using Common.Result;
+using eMechanic.Common.CQRS;
+using eMechanic.Common.Result;
 using FluentValidation;
 
 public sealed record GetVehicleTimelineByVehicleIdQuery(Guid VehicleId, PaginationParameters PaginationParameters) : IResultQuery<PaginationResult<VehicleTimelineResponse>>;

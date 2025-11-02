@@ -1,10 +1,10 @@
-namespace eMechanic.API.Features.User.GetById;
+namespace eMechanic.API.Features.User.GetCurrent;
 
-using Application.Users.Get.Current;
 using eMechanic.API.Features.User;
+using eMechanic.API.Security;
+using eMechanic.Application.Users.Get.Current;
 using eMechanic.Common.Result;
 using MediatR;
-using Security;
 
 public sealed class GetCurrentUserFeature : IFeature
 {

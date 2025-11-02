@@ -6,8 +6,6 @@ using NSubstitute;
 
 namespace eMechanic.Infrastructure.Tests.Services.Identity;
 
-using Application.Abstractions.Identity;
-
 public class TokenGeneratorTests
 {
     private readonly IConfiguration _configuration;

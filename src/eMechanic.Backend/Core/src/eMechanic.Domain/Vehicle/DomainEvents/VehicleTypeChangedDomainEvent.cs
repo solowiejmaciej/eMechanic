@@ -1,6 +1,6 @@
-namespace eMechanic.Domain.Vehicle;
+namespace eMechanic.Domain.Vehicle.DomainEvents;
 
-using Common.DDD;
-using Enums;
+using eMechanic.Common.DDD;
+using eMechanic.Domain.Vehicle.Enums;
 
 public record VehicleTypeChangedDomainEvent(Guid Id, EVehicleType OldVehicleType, EVehicleType NewVehicleType) : IDomainEvent;

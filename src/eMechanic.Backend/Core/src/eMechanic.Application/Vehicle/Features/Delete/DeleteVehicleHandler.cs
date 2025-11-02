@@ -1,6 +1,6 @@
-namespace eMechanic.Application.Vehicle.Delete;
+namespace eMechanic.Application.Vehicle.Features.Delete;
 
-using Abstractions.Identity.Contexts;
+using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Application.Abstractions.Vehicle;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;

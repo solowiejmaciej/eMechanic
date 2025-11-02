@@ -1,9 +1,9 @@
-namespace eMechanic.Application.Vehicle.Get.All;
+namespace eMechanic.Application.Vehicle.Features.Get.All;
 
-using Abstractions.Identity.Contexts;
-using Abstractions.Vehicle;
-using Common.CQRS;
-using Common.Result;
+using eMechanic.Application.Abstractions.Identity.Contexts;
+using eMechanic.Application.Abstractions.Vehicle;
+using eMechanic.Common.CQRS;
+using eMechanic.Common.Result;
 
 public class GetVehiclesHandler : IResultQueryHandler<GetVehiclesQuery, PaginationResult<VehicleResponse>>
 {

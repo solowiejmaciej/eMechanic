@@ -1,7 +1,7 @@
 namespace eMechanic.Application.Tests.Vehicle.Update;
 
 using Application.Abstractions.Vehicle;
-using Application.Vehicle.Update;
+using Application.Vehicle.Features.Update;
 using Common.Result;
 using Domain.Vehicle;
 using Domain.Vehicle.Enums;

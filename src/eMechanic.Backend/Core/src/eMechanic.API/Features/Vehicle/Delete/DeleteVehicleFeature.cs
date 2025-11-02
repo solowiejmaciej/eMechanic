@@ -1,6 +1,6 @@
 namespace eMechanic.API.Features.Vehicle.Delete;
 
-using Application.Vehicle.Delete;
+using Application.Vehicle.Features.Delete;
 using eMechanic.Common.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

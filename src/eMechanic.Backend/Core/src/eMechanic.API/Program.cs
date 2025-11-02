@@ -6,6 +6,7 @@ namespace eMechanic.API;
 using Application;
 using Features;
 using Infrastructure;
+using ServiceDefaults;
 
 public sealed class Program
 {

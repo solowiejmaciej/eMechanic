@@ -1,4 +1,4 @@
-namespace eMechanic.Application.Vehicle.Get.All;
+namespace eMechanic.Application.Vehicle.Features.Get.All;
 
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;

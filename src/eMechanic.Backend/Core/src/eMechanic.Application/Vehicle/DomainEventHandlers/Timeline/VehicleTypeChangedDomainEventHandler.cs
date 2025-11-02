@@ -1,12 +1,9 @@
-namespace eMechanic.Application.Vehicle.DomainEventHandlers;
+namespace eMechanic.Application.Vehicle.DomainEventHandlers.Timeline;
 
-using Abstractions.DomainEvents;
-using Abstractions.VehicleTimeline;
-using Application.Timeline;
-using Domain.Vehicle;
 using Domain.Vehicle.DomainEvents;
-using Microsoft.Extensions.Logging;
-using Timeline;
+using eMechanic.Application.Abstractions.DomainEvents;
+using eMechanic.Application.Abstractions.VehicleTimeline;
+using eMechanic.Application.Timeline;
 
 public class VehicleTypeChangedDomainEventHandler : BaseTimelineEventHandler, IDomainEventHandler<VehicleTypeChangedDomainEvent>
 {
@@ -30,7 +27,7 @@ public class VehicleTypeChangedDomainEventHandler : BaseTimelineEventHandler, ID
 
         return CreateTimelineEntryAsync(
             notification.Id,
-            nameof(VehicleTypeChangedDomainEventHandler),
+            nameof(VehicleTypeChangedDomainEvent),
             payload,
             cancellationToken);
     }

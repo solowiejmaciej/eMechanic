@@ -1,4 +1,4 @@
-namespace eMechanic.Application.Vehicle.Create;
+namespace eMechanic.Application.Vehicle.Features.Create;
 
 using eMechanic.Common.CQRS;
 using eMechanic.Domain.Vehicle.Enums;
