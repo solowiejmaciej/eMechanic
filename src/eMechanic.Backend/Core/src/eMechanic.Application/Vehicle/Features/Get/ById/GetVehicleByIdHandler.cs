@@ -3,8 +3,6 @@ namespace eMechanic.Application.Vehicle.Features.Get.ById;
 using eMechanic.Application.Abstractions.Vehicle;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
-using Vehicle.Get;
-using Vehicle.Get.ById;
 
 public sealed class GetVehicleByIdHandler : IResultQueryHandler<GetVehicleByIdQuery, VehicleResponse>
 {

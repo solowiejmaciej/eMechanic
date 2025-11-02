@@ -2,7 +2,7 @@ namespace eMechanic.Application.Tests.Vehicle.Delete;
 
 using Application.Abstractions.Identity.Contexts;
 using Application.Abstractions.Vehicle;
-using Application.Vehicle.Delete;
+using Application.Vehicle.Features.Delete;
 using Common.Result;
 using Domain.Vehicle;
 using Domain.Vehicle.Enums;

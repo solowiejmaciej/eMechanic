@@ -1,4 +1,4 @@
-namespace eMechanic.Application.Vehicle.Delete;
+namespace eMechanic.Application.Vehicle.Features.Delete;
 
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;

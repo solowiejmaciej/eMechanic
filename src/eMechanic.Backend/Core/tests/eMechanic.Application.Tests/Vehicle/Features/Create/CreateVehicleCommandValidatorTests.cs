@@ -1,6 +1,6 @@
 namespace eMechanic.Application.Tests.Vehicle.Create;
 
-using Application.Vehicle.Create;
+using Application.Vehicle.Features.Create;
 using Domain.Vehicle.Enums;
 using FluentValidation.TestHelper;
 

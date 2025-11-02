@@ -1,6 +1,6 @@
 namespace eMechanic.Application.Tests.Vehicle.Update;
 
-using Application.Vehicle.Update;
+using Application.Vehicle.Features.Update;
 using Domain.Vehicle.Enums;
 using FluentValidation.TestHelper;
 

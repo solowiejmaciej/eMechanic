@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using API.Features.Vehicle.Create.Request;
 using API.Features.Vehicle.Update.Request;
-using Application.Vehicle.Get;
+using Application.Vehicle.Features.Get;
 using Domain.Vehicle.Enums;
 using FluentAssertions;
 using Helpers;

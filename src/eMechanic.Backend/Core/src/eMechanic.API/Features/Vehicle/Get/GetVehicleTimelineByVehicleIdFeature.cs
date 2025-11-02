@@ -1,7 +1,7 @@
 namespace eMechanic.API.Features.Vehicle.Get;
 
-using Application.Vehicle.Get;
-using Application.Vehicle.Get.Timeline;
+using Application.Vehicle.Features.Get;
+using Application.Vehicle.Features.Get.Timeline;
 using Common.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

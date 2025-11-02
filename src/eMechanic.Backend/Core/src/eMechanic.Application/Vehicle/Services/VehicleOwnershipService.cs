@@ -5,7 +5,7 @@ using eMechanic.Application.Abstractions.Vehicle;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;
 
-internal sealed class VehicleOwnershipService : IVehicleOwnershipService
+public sealed class VehicleOwnershipService : IVehicleOwnershipService
 {
     private readonly IUserContext _userContext;
     private readonly IVehicleRepository _vehicleRepository;

@@ -1,6 +1,6 @@
 namespace eMechanic.Application.Tests.Vehicle.Get.GetById;
 
-using eMechanic.Application.Vehicle.Get.ById;
+using Application.Vehicle.Features.Get.ById;
 using FluentValidation.TestHelper;
 
 public class GetVehicleByIdQueryValidatorTests

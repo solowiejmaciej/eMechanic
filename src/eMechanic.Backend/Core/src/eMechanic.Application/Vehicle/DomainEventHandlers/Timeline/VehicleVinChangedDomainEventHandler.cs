@@ -1,5 +1,6 @@
 namespace eMechanic.Application.Vehicle.DomainEventHandlers.Timeline;
 
+using Domain.Vehicle.DomainEvents;
 using eMechanic.Application.Abstractions.DomainEvents;
 using eMechanic.Application.Abstractions.VehicleTimeline;
 using eMechanic.Application.Timeline;
@@ -27,7 +28,7 @@ public class VehicleVinChangedDomainEventHandler : BaseTimelineEventHandler, IDo
 
         return CreateTimelineEntryAsync(
             notification.Id,
-            nameof(VehicleVinChangedDomainEventHandler),
+            nameof(VehicleVinChangedDomainEvent),
             payload,
             cancellationToken);
     }

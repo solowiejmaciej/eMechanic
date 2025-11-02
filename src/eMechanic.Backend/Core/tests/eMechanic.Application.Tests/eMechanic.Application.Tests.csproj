@@ -16,4 +16,8 @@
       <ProjectReference Include="..\..\src\eMechanic.Application\eMechanic.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Vehicle\Features\" />
+    </ItemGroup>
+
 </Project>

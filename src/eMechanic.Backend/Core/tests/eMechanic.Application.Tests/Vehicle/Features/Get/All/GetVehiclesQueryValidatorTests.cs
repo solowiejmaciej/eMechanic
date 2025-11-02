@@ -1,7 +1,6 @@
 namespace eMechanic.Application.Tests.Vehicle.Get.All;
 
-
-using Application.Vehicle.Get.All;
+using Application.Vehicle.Features.Get.All;
 using Common.Result;
 using FluentValidation.TestHelper;
 

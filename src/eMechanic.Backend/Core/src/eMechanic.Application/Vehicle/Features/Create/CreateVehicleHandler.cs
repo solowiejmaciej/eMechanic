@@ -1,6 +1,6 @@
-namespace eMechanic.Application.Vehicle.Create;
+namespace eMechanic.Application.Vehicle.Features.Create;
 
-using Abstractions.Identity.Contexts;
+using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Application.Abstractions.Vehicle;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;

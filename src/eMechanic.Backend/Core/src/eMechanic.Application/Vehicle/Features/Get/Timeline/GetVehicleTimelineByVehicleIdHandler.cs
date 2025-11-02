@@ -1,9 +1,9 @@
-namespace eMechanic.Application.Vehicle.Get.Timeline;
+namespace eMechanic.Application.Vehicle.Features.Get.Timeline;
 
-using Abstractions.Vehicle;
-using Abstractions.VehicleTimeline;
-using Common.CQRS;
-using Common.Result;
+using eMechanic.Application.Abstractions.Vehicle;
+using eMechanic.Application.Abstractions.VehicleTimeline;
+using eMechanic.Common.CQRS;
+using eMechanic.Common.Result;
 
 public class GetVehicleTimelineByVehicleIdHandler : IResultQueryHandler<GetVehicleTimelineByVehicleIdQuery,
     PaginationResult<VehicleTimelineResponse>>

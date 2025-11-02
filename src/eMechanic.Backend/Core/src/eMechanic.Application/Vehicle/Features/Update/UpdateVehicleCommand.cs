@@ -1,4 +1,4 @@
-namespace eMechanic.Application.Vehicle.Update;
+namespace eMechanic.Application.Vehicle.Features.Update;
 
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;

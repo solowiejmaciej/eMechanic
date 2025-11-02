@@ -2,7 +2,6 @@ namespace eMechanic.API.Features.Vehicle.Create;
 
 using eMechanic.API.Constans;
 using eMechanic.API.Features.Vehicle;
-using eMechanic.Application.Vehicle.Create;
 using eMechanic.Common.Result;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
