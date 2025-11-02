@@ -6,7 +6,6 @@ using Common.Result;
 using DAL;
 using Microsoft.EntityFrameworkCore;
 using Services;
-using Specifications;
 
 public class Repository<T> : IRepository<T> where T : Entity
 {

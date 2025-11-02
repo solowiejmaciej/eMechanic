@@ -1,8 +1,6 @@
 namespace eMechanic.Application.Abstractions.Repositories;
 
 using Common.DDD;
-using Common.Result;
-using Infrastructure.Repositories.Specifications;
 
 public interface IRepository<T> where T : Entity
 {

@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Vehicle\Create\DomainEvents\" />
+      <Folder Include="Vehicle\Features\" />
     </ItemGroup>
 
 </Project>

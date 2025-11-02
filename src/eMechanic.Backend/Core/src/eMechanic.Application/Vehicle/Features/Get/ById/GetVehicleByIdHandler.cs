@@ -1,32 +1,30 @@
-namespace eMechanic.Application.Vehicle.Get.ById;
+namespace eMechanic.Application.Vehicle.Features.Get.ById;
 
-using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Application.Abstractions.Vehicle;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
+using Vehicle.Get;
+using Vehicle.Get.ById;
 
 public sealed class GetVehicleByIdHandler : IResultQueryHandler<GetVehicleByIdQuery, VehicleResponse>
 {
-    private readonly IVehicleRepository _vehicleRepository;
-    private readonly IUserContext _userContext;
+    private readonly IVehicleOwnershipService _vehicleOwnershipService;
 
-    public GetVehicleByIdHandler(
-        IVehicleRepository vehicleRepository,
-        IUserContext userContext)
+    public GetVehicleByIdHandler( IVehicleOwnershipService vehicleOwnershipService)
     {
-        _vehicleRepository = vehicleRepository;
-        _userContext = userContext;
+        _vehicleOwnershipService = vehicleOwnershipService;
     }
 
     public async Task<Result<VehicleResponse, Error>> Handle(GetVehicleByIdQuery request, CancellationToken cancellationToken)
     {
-        var currentUserId = _userContext.GetUserId();
-        var vehicle = await _vehicleRepository.GetForUserById(request.Id, currentUserId, cancellationToken);
+        var vehicleResult = await _vehicleOwnershipService.GetAndVerifyOwnershipAsync(request.Id, cancellationToken);
 
-        if (vehicle is null)
+        if (vehicleResult.HasError())
         {
-            return new Error(EErrorCode.NotFoundError, $"Vehicle with Id '{request.Id}' not found.");
+            return vehicleResult.Error!;
         }
+
+        var vehicle = vehicleResult.Value!;
 
         var response = new VehicleResponse(
             vehicle.Id,

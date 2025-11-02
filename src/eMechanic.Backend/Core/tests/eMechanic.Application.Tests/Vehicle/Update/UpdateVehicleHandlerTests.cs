@@ -1,6 +1,5 @@
 namespace eMechanic.Application.Tests.Vehicle.Update;
 
-using Application.Abstractions.Identity.Contexts;
 using Application.Abstractions.Vehicle;
 using Application.Vehicle.Update;
 using Common.Result;
@@ -8,12 +7,11 @@ using Domain.Vehicle;
 using Domain.Vehicle.Enums;
 using FluentAssertions;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 
 public class UpdateVehicleHandlerTests
 {
     private readonly IVehicleRepository _vehicleRepository;
-    private readonly IUserContext _userContext;
+    private readonly IVehicleOwnershipService _ownershipService;
     private readonly UpdateVehicleHandler _handler;
 
     private readonly Guid _currentUserId = Guid.NewGuid();
@@ -23,19 +21,16 @@ public class UpdateVehicleHandlerTests
     public UpdateVehicleHandlerTests()
     {
         _vehicleRepository = Substitute.For<IVehicleRepository>();
-        _userContext = Substitute.For<IUserContext>();
-        _userContext.GetUserId().Returns(_currentUserId);
-        _userContext.IsAuthenticated.Returns(true);
-
+        _ownershipService = Substitute.For<IVehicleOwnershipService>();
         var creationResult = Vehicle.Create(
             _currentUserId, "V1N123456789ABCDE", "Old Manufacturer", "Old Model", "2020",
-            1.5m,200, EMileageUnit.Miles, EFuelType.Diesel, EBodyType.Kombi, EVehicleType.Passenger);
+            1.5m, 200, EMileageUnit.Miles, EFuelType.Diesel, EBodyType.Kombi, EVehicleType.Passenger);
+
         creationResult.HasError().Should().BeFalse();
         _existingVehicle = creationResult.Value!;
         typeof(Vehicle).GetProperty("Id")!.SetValue(_existingVehicle, _vehicleId);
 
-
-        _handler = new UpdateVehicleHandler(_vehicleRepository, _userContext);
+        _handler = new UpdateVehicleHandler(_vehicleRepository, _ownershipService);
     }
 
     [Fact]
@@ -44,16 +39,17 @@ public class UpdateVehicleHandlerTests
         // Arrange
         var command = new UpdateVehicleCommand(
             _vehicleId, "V1N123456789ABCDE", "New Manufacturer", "New Model", "2024",
-            2.0m,  200, EMileageUnit.Kilometers, EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
+            2.0m, 200, EMileageUnit.Kilometers, EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
 
-        _vehicleRepository.GetForUserById(_vehicleId, _currentUserId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<Vehicle?>(_existingVehicle));
+        _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Result<Vehicle, Error>>(_existingVehicle));
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
         result.HasError().Should().BeFalse();
+
         _vehicleRepository.Received(1).UpdateAsync(Arg.Is<Vehicle>(v =>
             v.Id == _vehicleId &&
             v.Manufacturer.Value == command.Manufacturer &&
@@ -69,15 +65,16 @@ public class UpdateVehicleHandlerTests
     }
 
     [Fact]
-    public async Task Handle_Should_ReturnNotFoundError_WhenVehicleDoesNotExistForUser()
+    public async Task Handle_Should_ReturnNotFoundError_WhenOwnershipServiceFails()
     {
         // Arrange
         var command = new UpdateVehicleCommand(
              _vehicleId, "V1N123456789ABCDE", "New Manufacturer", "New Model", "2024",
-             2.0m,  200, EMileageUnit.Kilometers,EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
+             2.0m, 200, EMileageUnit.Kilometers, EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
 
-        _vehicleRepository.GetForUserById(_vehicleId, _currentUserId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<Vehicle?>(null)); // Vehicle not found
+        var notFoundError = new Error(EErrorCode.NotFoundError, "Vehicle not found.");
+        _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Result<Vehicle, Error>>(notFoundError));
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -85,6 +82,7 @@ public class UpdateVehicleHandlerTests
         // Assert
         result.HasError().Should().BeTrue();
         result.Error!.Code.Should().Be(EErrorCode.NotFoundError);
+
         _vehicleRepository.DidNotReceiveWithAnyArgs().UpdateAsync(default!, default);
         await _vehicleRepository.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
     }
@@ -94,11 +92,11 @@ public class UpdateVehicleHandlerTests
     {
         // Arrange
          var command = new UpdateVehicleCommand(
-             _vehicleId, "dasdasdasdas", "New Manufacturer", "New Model", "2024",
-             2.0m,  200, EMileageUnit.Kilometers, EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
+             _vehicleId, "zly-vin", "New Manufacturer", "New Model", "2024", // <-- Błędny VIN
+             2.0m, 200, EMileageUnit.Kilometers, EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
 
-        _vehicleRepository.GetForUserById(_vehicleId, _currentUserId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<Vehicle?>(_existingVehicle));
+        _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Result<Vehicle, Error>>(_existingVehicle));
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -106,20 +104,29 @@ public class UpdateVehicleHandlerTests
         // Assert
         result.HasError().Should().BeTrue();
         result.Error!.Code.Should().Be(EErrorCode.ValidationError);
+
         _vehicleRepository.DidNotReceiveWithAnyArgs().UpdateAsync(default!, default);
         await _vehicleRepository.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
     }
 
-     [Fact]
-    public async Task Handle_Should_ThrowUnauthorizedAccessException_WhenUserIsNotAuthenticated()
+    [Fact]
+    public async Task Handle_Should_ReturnUnauthorizedError_WhenOwnershipServiceReturnsUnauthorized()
     {
         // Arrange
          var command = new UpdateVehicleCommand(
             _vehicleId, "V1N123456789ABCDE", "Test Manufacturer", "Test Model", "2023",
-            1.6m,  200, EMileageUnit.Kilometers, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
-         _userContext.GetUserId().ThrowsForAnyArgs<UnauthorizedAccessException>();
-        // Act & Assert
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => _handler.Handle(command, CancellationToken.None));
+            1.6m, 200, EMileageUnit.Kilometers, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+
+        var unauthorizedError = new Error(EErrorCode.UnauthorizedError, "User is not authenticated.");
+        _ownershipService.GetAndVerifyOwnershipAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Result<Vehicle, Error>>(unauthorizedError));
+
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        result.HasError().Should().BeTrue();
+        result.Error!.Code.Should().Be(EErrorCode.UnauthorizedError);
         await _vehicleRepository.DidNotReceiveWithAnyArgs().GetForUserById(default, default, default);
     }
 }

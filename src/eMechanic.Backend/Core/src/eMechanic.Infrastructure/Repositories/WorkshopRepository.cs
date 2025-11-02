@@ -9,7 +9,7 @@ using Extensions;
 using Microsoft.EntityFrameworkCore;
 using Services;
 
-public class WorkshopRepository : Repository<Workshop>, IWorkshopRepository
+internal sealed class WorkshopRepository : Repository<Workshop>, IWorkshopRepository
 {
     public WorkshopRepository(AppDbContext context, IPaginationService paginationService) : base(context, paginationService)
     {
