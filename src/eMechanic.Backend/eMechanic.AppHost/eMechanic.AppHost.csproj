@@ -9,12 +9,14 @@
 
     <ItemGroup>
         <PackageReference Include="Aspire.Hosting.AppHost"/>
+        <PackageReference Include="Aspire.Hosting.Azure.Functions" />
         <PackageReference Include="Aspire.Hosting.PostgreSQL" />
         <PackageReference Include="Aspire.Hosting.Redis" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Core\src\eMechanic.API\eMechanic.API.csproj" />
+      <ProjectReference Include="..\Services\src\eMechanic.OutboxPublisher\eMechanic.OutboxPublisher.csproj" />
     </ItemGroup>
 
 </Project>

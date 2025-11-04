@@ -1,0 +1,10 @@
+{
+    "profiles": {
+        "eMechanic.OutboxPublisher": {
+            "commandName": "Executable",
+            "executablePath": "func",
+            "commandLineArgs": "start",
+            "launchBrowser": false
+        }
+    }
+}

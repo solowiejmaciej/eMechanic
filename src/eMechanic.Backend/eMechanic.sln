@@ -44,6 +44,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eMechanic.API.Tests", "Core
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eMechanic.Integration.Tests", "Core\tests\eMechanic.Integration.Tests\eMechanic.Integration.Tests.csproj", "{0068B523-E6E2-4BF9-82DD-C859C4927363}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DE0C51B8-46D8-4699-9593-B2A94DCB48D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eMechanic.OutboxPublisher", "Services\src\eMechanic.OutboxPublisher\eMechanic.OutboxPublisher.csproj", "{F1ADB012-796E-440D-A010-F05C490261A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +68,8 @@ Global
 		{6E0D222E-489C-43BF-8B96-6A733CEC3342} = {29EA3502-F03E-4F59-A225-210D8123C065}
 		{DBDF9248-3043-4D0F-8936-D9B09F0B5493} = {29EA3502-F03E-4F59-A225-210D8123C065}
 		{0068B523-E6E2-4BF9-82DD-C859C4927363} = {29EA3502-F03E-4F59-A225-210D8123C065}
+		{DE0C51B8-46D8-4699-9593-B2A94DCB48D9} = {643CEF70-5F08-4A60-8534-A91306BEF73B}
+		{F1ADB012-796E-440D-A010-F05C490261A6} = {DE0C51B8-46D8-4699-9593-B2A94DCB48D9}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{98CA61DF-8DBD-499E-B54C-12BE680E8C83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -122,5 +128,9 @@ Global
 		{0068B523-E6E2-4BF9-82DD-C859C4927363}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0068B523-E6E2-4BF9-82DD-C859C4927363}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0068B523-E6E2-4BF9-82DD-C859C4927363}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1ADB012-796E-440D-A010-F05C490261A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1ADB012-796E-440D-A010-F05C490261A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1ADB012-796E-440D-A010-F05C490261A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1ADB012-796E-440D-A010-F05C490261A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
