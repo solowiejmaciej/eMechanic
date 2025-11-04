@@ -38,9 +38,9 @@ jobs:
       - name: 'Login to Azure'
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_06CA4A04193C45C1BFDB2D14681EB597 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F63489E157184C80A665EDDC7DD2EC1A }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_2DBFE6844D834F2AB17B9AC6A4A91D05 }}
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
@@ -49,3 +49,4 @@ jobs:
           app-name: 'emechanic-outbox-publisher'
           slot-name: 'Production'
           package: ${{ env.PACKAGE_PATH }}
+
