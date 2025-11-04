@@ -24,7 +24,7 @@ Content-Type: application/json
 {
   "firstName": "Jan",
   "lastName": "Nowak",
-  "email": "maciej.nowak_{{$randomInt}}@test.com",
+  "email": "maciej.nowak15@test.com",
   "password": "Password123!"
 }
 

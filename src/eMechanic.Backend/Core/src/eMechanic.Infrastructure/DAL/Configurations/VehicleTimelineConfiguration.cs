@@ -4,7 +4,7 @@ using Domain.VehicleTimeline;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-public class VehicleTimelineConfiguration
+internal sealed class VehicleTimelineConfiguration
 {
     public void Configure(EntityTypeBuilder<VehicleTimeline> builder)
     {

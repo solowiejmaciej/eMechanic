@@ -8,7 +8,6 @@ var postgresServer = builder
     .WithLifetime(ContainerLifetime.Persistent);
 
 var postgresDb = postgresServer.AddDatabase("eMechanic");
-
 var redisCache = builder.AddRedis("emechanic-cache");
 
 builder
@@ -16,5 +15,8 @@ builder
     .WithReference(postgresDb)
     .WithReference(redisCache)
     .WaitFor(postgresServer);
+
+builder.AddAzureFunctionsProject<Projects.eMechanic_OutboxPublisher>("outbox-publisher")
+    .WithReference(postgresDb);
 
 await builder.Build().RunAsync();
