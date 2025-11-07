@@ -24,7 +24,7 @@ Content-Type: application/json
 {
   "firstName": "Jan",
   "lastName": "Nowak",
-  "email": "maciej.nowak15@test.com",
+  "email": "maciej.nowak17@test.com",
   "password": "Password123!"
 }
 
@@ -34,7 +34,7 @@ POST {{base_url}}/users/login
 Content-Type: application/json
 
 {
-    "email": "maciej.nowak_42@test.com",
+    "email": "maciej.nowak_4@test.com",
     "password": "Password123!"
 }
 

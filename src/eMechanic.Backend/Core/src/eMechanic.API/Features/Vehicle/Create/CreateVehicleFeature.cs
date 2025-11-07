@@ -1,5 +1,6 @@
 namespace eMechanic.API.Features.Vehicle.Create;
 
+using Common.Web;
 using eMechanic.API.Constans;
 using eMechanic.API.Features.Vehicle;
 using eMechanic.Common.Result;

@@ -29,20 +29,26 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        await DispatchDomainEventsAsync();
+        var domainEvents = GetDomainEvents();
+
+        await PrepareOutboxMessagesAsync(domainEvents, cancellationToken);
+        //If this is before save tiemline works correctly, published events will not include Id of added entity
+        //But if we put this after save the Timeline stops working because there is not save in the handlers
+        await PublishInProcessEventsAsync(domainEvents, cancellationToken);
+
         var result = await base.SaveChangesAsync(cancellationToken);
+
         return result;
     }
 
-    private async Task DispatchDomainEventsAsync()
+    private List<IDomainEvent> GetDomainEvents()
     {
-        var eventsToPublish = ChangeTracker.Entries<AggregateRoot>()
+        return ChangeTracker.Entries<AggregateRoot>()
             .Select(aggregateRoot => aggregateRoot.Entity)
             .SelectMany(aggregateRoot =>
             {
@@ -50,23 +56,32 @@ public class AppDbContext : DbContext
                 aggregateRoot.ClearDomainEvents();
                 return domainEvents;
             }).ToList();
+    }
 
-        var outboxEvents = eventsToPublish
-            .OfType<IOutboxMessage>()
-            .ToList();
+    private async Task PrepareOutboxMessagesAsync(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken)
+    {
+        var outboxEvents = domainEvents.OfType<IOutboxMessage>().ToList();
 
         foreach (var outboxEvent in outboxEvents)
         {
+            var @event = outboxEvent.MapToEvent();
+
             var outboxMessage = new OutboxMessage(
-                outboxEvent.GetType().Name,
-                JsonSerializer.Serialize(outboxEvent, outboxEvent.GetType())
+                @event.GetType().Name,
+                JsonSerializer.Serialize(@event, @event.GetType())
             );
 
-            await OutboxMessages.AddAsync(outboxMessage);
+            await OutboxMessages.AddAsync(outboxMessage, cancellationToken);
         }
+    }
 
-        var tasks = eventsToPublish
-            .Select(async domainEvent => { await _mediator.Publish(domainEvent); });
+    private async Task PublishInProcessEventsAsync(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken)
+    {
+        var tasks = domainEvents
+            .Select(async domainEvent =>
+            {
+                await _mediator.Publish(domainEvent, cancellationToken);
+            });
 
         await Task.WhenAll(tasks);
     }

@@ -1,5 +1,6 @@
 namespace eMechanic.API.Features.User.Register;
 
+using Common.Web;
 using eMechanic.API.Constans;
 using eMechanic.API.Features.User;
 using eMechanic.Common.Result;

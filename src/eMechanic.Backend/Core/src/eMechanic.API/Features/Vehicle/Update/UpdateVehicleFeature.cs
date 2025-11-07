@@ -1,5 +1,6 @@
 namespace eMechanic.API.Features.Vehicle.Update;
 
+using Common.Web;
 using eMechanic.Common.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

@@ -1,3 +1,4 @@
+using eMechanic.Events;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.Configuration;
@@ -20,5 +21,6 @@ if (string.IsNullOrEmpty(dbConnectionString))
 }
 
 builder.Services.AddNpgsqlDataSource(dbConnectionString);
+builder.Services.AddEventPublishing(builder.Configuration);
 
 builder.Build().Run();

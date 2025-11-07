@@ -1,6 +1,7 @@
 namespace eMechanic.API.Features.Workshop.Register;
 
 using Common.Result;
+using Common.Web;
 using Constans;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
