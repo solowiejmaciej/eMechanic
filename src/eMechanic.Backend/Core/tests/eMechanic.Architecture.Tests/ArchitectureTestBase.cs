@@ -3,6 +3,8 @@ namespace eMechanic.Architecture.Tests;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Common.Web;
+
 public abstract class ArchitectureTestBase
 {
     protected static readonly string API_NAMESPACE = typeof(API.AssemblyReference).Namespace!;
@@ -10,7 +12,7 @@ public abstract class ArchitectureTestBase
     protected static readonly string DOMAIN_NAMESPACE = typeof(Domain.AssemblyReference).Namespace!;
     protected static readonly string INFRASTRUCTURE_NAMESPACE = typeof(Infrastructure.AssemblyReference).Namespace!;
     protected static readonly string COMMON_NAMESPACE = typeof(Common.AssemblyReference).Namespace!;
-    protected static readonly string FEATURES_NAMESPACE = typeof(API.Features.IFeature).Namespace!;
+    protected static readonly string FEATURES_NAMESPACE = typeof(IFeature).Namespace!;
 
     protected static readonly Assembly[] SolutionAssemblies = LoadSolutionAssemblies();
 

@@ -1,5 +1,6 @@
 namespace eMechanic.Architecture.Tests;
 using API.Features;
+using Common.Web;
 using NetArchTest.Rules;
 using Xunit;
 

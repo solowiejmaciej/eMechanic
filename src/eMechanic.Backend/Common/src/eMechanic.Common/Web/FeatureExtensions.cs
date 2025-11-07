@@ -1,11 +1,13 @@
-namespace eMechanic.API.Features;
+namespace eMechanic.Common.Web;
+
 using System.Reflection;
+using Microsoft.AspNetCore.Routing;
 
 public static class FeatureExtensions
 {
     public static IEndpointRouteBuilder MapFeatures(this IEndpointRouteBuilder app)
     {
-        var featureTypes = Assembly.GetExecutingAssembly()
+        var featureTypes = Assembly.GetCallingAssembly()
             .GetTypes()
             .Where(t => t is { IsClass: true, IsAbstract: false, IsPublic: true } && typeof(IFeature).IsAssignableFrom(t));
 

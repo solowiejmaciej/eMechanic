@@ -1,5 +1,6 @@
 namespace eMechanic.API.Features.User.GetCurrent;
 
+using Common.Web;
 using eMechanic.API.Features.User;
 using eMechanic.API.Security;
 using eMechanic.Application.Users.Get.Current;

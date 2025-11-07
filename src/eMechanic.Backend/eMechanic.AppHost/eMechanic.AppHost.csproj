@@ -16,6 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Core\src\eMechanic.API\eMechanic.API.csproj" />
+      <ProjectReference Include="..\Services\src\eMechanic.NotificationService.API\eMechanic.NotificationService.API.csproj" />
       <ProjectReference Include="..\Services\src\eMechanic.OutboxPublisher\eMechanic.OutboxPublisher.csproj" />
     </ItemGroup>
 

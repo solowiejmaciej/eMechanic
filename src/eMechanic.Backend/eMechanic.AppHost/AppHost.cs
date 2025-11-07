@@ -9,14 +9,20 @@ var postgresServer = builder
 
 var postgresDb = postgresServer.AddDatabase("eMechanic");
 var redisCache = builder.AddRedis("emechanic-cache");
+var serviceBus = builder.AddConnectionString("AzureServiceBus");
 
 builder
-    .AddProject<Projects.eMechanic_API>("emechanic-api")
+    .AddProject<Projects.eMechanic_API>("eMechanic-Core")
     .WithReference(postgresDb)
     .WithReference(redisCache)
     .WaitFor(postgresServer);
 
 builder.AddAzureFunctionsProject<Projects.eMechanic_OutboxPublisher>("outbox-publisher")
+    .WithReference(serviceBus)
     .WithReference(postgresDb);
+
+builder
+    .AddProject<Projects.eMechanic_NotificationService_API>("eMechanic-NotificationService")
+    .WithReference(serviceBus);
 
 await builder.Build().RunAsync();

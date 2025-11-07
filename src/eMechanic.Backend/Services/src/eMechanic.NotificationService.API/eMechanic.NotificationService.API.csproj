@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <RootNamespace>eMechanic.NotificationService</RootNamespace>
+    <UserSecretsId>1534f0f3-d225-4868-9e83-f79ca0854aca</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\src\eMechanic.Common\eMechanic.Common.csproj" />
+    <ProjectReference Include="..\..\..\Common\src\eMechanic.Events\eMechanic.Events.csproj" />
+    <ProjectReference Include="..\..\..\eMechanic.ServiceDefaults\eMechanic.ServiceDefaults.csproj" />
+  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="MediatR" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" />
+    </ItemGroup>
+</Project>

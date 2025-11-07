@@ -2,6 +2,7 @@ namespace eMechanic.API.Features.Vehicle.Get;
 
 using Application.Vehicle.Features.Get;
 using Application.Vehicle.Features.Get.ById;
+using Common.Web;
 using eMechanic.API.Security;
 using eMechanic.Common.Result;
 using MediatR;
