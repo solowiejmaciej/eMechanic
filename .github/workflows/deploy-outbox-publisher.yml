@@ -3,42 +3,41 @@ name: Deploy Outbox Publisher to Azure
 on:
   workflow_run:
     workflows: ["Backend CI (Build, Test & Analyze)"]
-    types: [completed]
-    branches: [main]
+    types:
+      - completed
+    branches:
+      - main 
   workflow_dispatch:
 
-env:
-  PACKAGE_PATH: "."
-
 jobs:
-  build-and-deploy:
+  deploy:
+    name: Deploy to Azure (Outbox Publisher)
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} 
     permissions:
-      id-token: write
+      id-token: write 
       contents: read
       actions: read
 
     steps:
-      - name: "Download artifact from CI job"
+      - name: Download artifact from CI job
         uses: actions/download-artifact@v4
         with:
           name: outbox-publisher-app
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: "Login to Azure"
+      - name: 'Login to Azure'
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5E8E43A5C381476B80423BDD5318CDB8 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_14AE3E030703458A96AA056AE659A33A }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_8BD516AB75AD48FCA100F4509CE9DEAF }}
 
-      - name: "Run Azure Functions Action"
-        uses: Azure/functions-action@v1
-        id: fa
-        with:
-          app-name: "emechanic-outbox-publisher"
-          slot-name: "Production"
-
-
+      - name: 'Deploy to Azure Function App using az cli'
+        run: |
+          az functionapp deployment source config-zip \
+            --resource-group <MUSISZ_TU_WPISAC_NAZWE_RESOURCE_GROUP> \
+            --name "emechanic-outbox-publisher" \
+            --src ./outbox-publisher-app.zip
+        shell: bash
