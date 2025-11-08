@@ -60,9 +60,11 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: dotnet publish src/eMechanic.Backend/Services/src/eMechanic.NotificationService.API/eMechanic.NotificationService.API.csproj -c Release -o ./publish-notification
 
-      - name: Publish Outbox Publisher
+      - name: Publish and Zip Outbox Publisher
         if: github.ref == 'refs/heads/main'
-        run: dotnet publish src/eMechanic.Backend/Services/src/eMechanic.OutboxPublisher/eMechanic.OutboxPublisher.csproj -c Release -o ./publish-outbox
+        run: |
+          dotnet publish src/eMechanic.Backend/Services/src/eMechanic.OutboxPublisher/eMechanic.OutboxPublisher.csproj -c Release -o ./publish-outbox
+          (cd ./publish-outbox && zip -r ../outbox-publisher-app.zip .)
 
       - name: Upload Core API Artifact
         if: github.ref == 'refs/heads/main'
@@ -83,8 +85,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: outbox-publisher-app
-          path: ./publish-outbox
-
+          path: ./outbox-publisher-app.zip
+          
   sonar-analysis:
     name: SonarQube Analysis
     runs-on: ubuntu-latest
