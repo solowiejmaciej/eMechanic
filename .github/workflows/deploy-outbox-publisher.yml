@@ -40,5 +40,5 @@ jobs:
         with:
           app-name: "emechanic-outbox-publisher"
           slot-name: "Production"
-          package: ./outbox-publisher-app.zip
+
 
