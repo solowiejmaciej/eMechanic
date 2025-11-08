@@ -52,7 +52,7 @@ jobs:
           retention-days: 1
 
       - name: Publish Core API
-        if: github.ref == 'refs/heads/main' # Uruchom tylko dla push na main
+        if: github.ref == 'refs/heads/main'
         run: dotnet publish src/eMechanic.Backend/Core/src/eMechanic.API/eMechanic.API.csproj -c Release -o ./publish-api
 
       - name: Publish Notification Service
