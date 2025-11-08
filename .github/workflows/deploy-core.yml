@@ -25,6 +25,7 @@ jobs:
         with:
           name: api-app 
           run-id: ${{ github.event.workflow_run.id }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Login to Azure
         uses: azure/login@v2
