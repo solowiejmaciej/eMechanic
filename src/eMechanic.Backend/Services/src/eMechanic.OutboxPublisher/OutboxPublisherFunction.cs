@@ -55,6 +55,12 @@ public class OutboxPublisherFunction
             return;
         }
 
+        if (messages.Count == 0)
+        {
+            _logger.LogInformation("No new messages to publish");
+            return;
+        }
+
         foreach (var message in messages)
         {
             var result = _eventFactory.Create(message.EventType, message.Payload);
