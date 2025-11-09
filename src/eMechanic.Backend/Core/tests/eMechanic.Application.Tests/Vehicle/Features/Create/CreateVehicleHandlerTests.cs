@@ -30,8 +30,18 @@ public class CreateVehicleHandlerTests
     {
         // Arrange
         var command = new CreateVehicleCommand(
-            "V1N123456789ABCDE", "Test Manufacturer", "Test Model", "2023",
-            1.6m,  200, EMileageUnit.Miles, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+            "V1N123456789ABCDE",
+            "Test Manufacturer",
+            "Test Model",
+            "2023",
+            1.6m,
+            200,
+            EMileageUnit.Miles,
+            "PZ1W924",
+            124,
+            EFuelType.Gasoline,
+            EBodyType.Sedan,
+            EVehicleType.Passenger);
 
         _vehicleRepository.AddAsync(Arg.Any<Vehicle>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Guid.NewGuid()));
@@ -54,8 +64,18 @@ public class CreateVehicleHandlerTests
     {
         // Arrange
         var command = new CreateVehicleCommand(
-            "INVALID", "Test Manufacturer", "Test Model", "2023",
-            1.6m,  200, EMileageUnit.Miles, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+            "INVALID",
+            "Test Manufacturer",
+            "Test Model",
+            "2023",
+            1.6m,
+            200,
+            EMileageUnit.Miles,
+            "PZ1W924",
+            124,
+            EFuelType.Gasoline,
+            EBodyType.Sedan,
+            EVehicleType.Passenger);
 
         _userContext.GetUserId().Returns(_currentUserId);
         _userContext.IsAuthenticated.Returns(true);
@@ -75,8 +95,18 @@ public class CreateVehicleHandlerTests
     {
         // Arrange
          var command = new CreateVehicleCommand(
-            "V1N123456789ABCDE", "Test Manufacturer", "Test Model", "2023",
-            1.6m,  200, EMileageUnit.Miles, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+            "V1N123456789ABCDE",
+            "Test Manufacturer",
+            "Test Model",
+            "2023",
+            1.6m,
+            200,
+            EMileageUnit.Miles,
+            "PZ1W924",
+            124,
+            EFuelType.Gasoline,
+            EBodyType.Sedan,
+            EVehicleType.Passenger);
 
          _userContext.GetUserId().ThrowsForAnyArgs<UnauthorizedAccessException>();
 

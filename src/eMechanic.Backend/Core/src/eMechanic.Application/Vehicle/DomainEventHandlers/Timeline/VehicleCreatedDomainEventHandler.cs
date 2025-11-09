@@ -1,9 +1,9 @@
 namespace eMechanic.Application.Vehicle.DomainEventHandlers.Timeline;
 
+using Domain.Vehicle;
 using eMechanic.Application.Abstractions.DomainEvents;
 using eMechanic.Application.Abstractions.VehicleTimeline;
 using eMechanic.Application.Timeline;
-using eMechanic.Domain.Vehicle.DomainEvents;
 using Microsoft.Extensions.Logging;
 
 public class VehicleCreatedDomainEventHandler : BaseTimelineEventHandler , IDomainEventHandler<VehicleCreatedDomainEvent>

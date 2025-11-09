@@ -62,16 +62,10 @@ public sealed class UpdateVehicleHandler : IResultCommandHandler<UpdateVehicleCo
             return fuelTypeResult.Error!;
         }
 
-        var bodyTypeResult = vehicle.ChangeBodyType(request.BodyType);
-        if (bodyTypeResult.HasError())
+        var classificationResult = vehicle.UpdateClassification(request.BodyType, request.VehicleType);
+        if (classificationResult.HasError())
         {
-            return bodyTypeResult.Error!;
-        }
-
-        var vehicleTypeResult = vehicle.ChangeVehicleType(request.VehicleType);
-        if (vehicleTypeResult.HasError())
-        {
-            return vehicleTypeResult.Error!;
+            return classificationResult.Error!;
         }
 
         var millageTypeResult = vehicle.UpdateMileage(request.MillageValue, request.MillageUnit);

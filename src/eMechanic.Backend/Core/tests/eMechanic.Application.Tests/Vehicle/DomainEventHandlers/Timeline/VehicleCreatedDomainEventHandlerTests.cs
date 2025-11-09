@@ -3,7 +3,6 @@ namespace eMechanic.Application.Tests.Vehicle.DomainEventHandlers.Timeline;
 using eMechanic.Application.Abstractions.VehicleTimeline;
 using eMechanic.Application.Vehicle.DomainEventHandlers.Timeline;
 using eMechanic.Domain.Vehicle;
-using eMechanic.Domain.Vehicle.DomainEvents;
 using eMechanic.Domain.Vehicle.Enums;
 using eMechanic.Domain.VehicleTimeline;
 using FluentAssertions;
@@ -31,6 +30,8 @@ public class VehicleCreatedDomainEventHandlerTests
             engineCapacity,
             10000,
             EMileageUnit.Kilometers,
+            "PZ1W924",
+            124,
             EFuelType.Gasoline,
             EBodyType.Sedan,
             EVehicleType.Passenger);

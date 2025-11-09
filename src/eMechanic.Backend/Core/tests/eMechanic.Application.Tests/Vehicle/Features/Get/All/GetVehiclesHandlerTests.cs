@@ -31,8 +31,19 @@ public class GetVehiclesHandlerTests
     private Vehicle CreateTestVehicle(string vin, string manufacturer)
     {
         var result = Vehicle.Create(
-            _currentUserId, vin, manufacturer, "TestModel", "2022",
-            1.5m,  200, EMileageUnit.Miles, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+            _currentUserId,
+            vin,
+            manufacturer,
+            "TestModel",
+            "2022",
+            1.5m,
+            200,
+            EMileageUnit.Miles,
+            "PZ1W924",
+            124,
+            EFuelType.Gasoline,
+            EBodyType.Sedan,
+            EVehicleType.Passenger);
         result.HasError().Should().BeFalse();
         return result.Value!;
     }

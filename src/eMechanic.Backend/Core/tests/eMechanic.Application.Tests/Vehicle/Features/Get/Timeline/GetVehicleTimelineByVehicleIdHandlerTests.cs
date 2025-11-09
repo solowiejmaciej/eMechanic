@@ -28,8 +28,19 @@ public class GetVehicleTimelineByVehicleIdHandlerTests
         _handler = new GetVehicleTimelineByVehicleIdHandler(_vehicleTimelineRepository, _vehicleOwnershipService);
 
         var creationResult = Vehicle.Create(
-            _currentUserId, "V1N123456789ABCDA", "Timeline", "Test", "2021",
-            1.6m, 100, EMileageUnit.Kilometers, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+            _currentUserId,
+            "V1N123456789ABCDA",
+            "Timeline",
+            "Test",
+            "2021",
+            1.6m,
+            100,
+            EMileageUnit.Kilometers,
+            "PZ1W924",
+            124,
+            EFuelType.Gasoline,
+            EBodyType.Sedan,
+            EVehicleType.Passenger);
 
         creationResult.HasError().Should().BeFalse();
         _fakeVehicle = creationResult.Value!;

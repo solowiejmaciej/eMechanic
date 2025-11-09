@@ -6,7 +6,7 @@ using API.Features.Vehicle.Create.Request;
 using API.Features.Vehicle.Update.Request;
 using Application.Vehicle.Features.Get;
 using Common.Result;
-using Domain.Vehicle.DomainEvents;
+using Domain.Vehicle;
 using Domain.Vehicle.Enums;
 using FluentAssertions;
 using Helpers;
@@ -36,6 +36,8 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
             1.4m,
             20000,
             EMileageUnit.Kilometers,
+            "PZ1W924",
+            124,
             EFuelType.Gasoline,
             EBodyType.Hatchback,
             EVehicleType.Passenger);
@@ -80,6 +82,8 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
             2.0m,
             25000,
             EMileageUnit.Kilometers,
+            "PZ1W924",
+            124,
             EFuelType.LPG,
             createRequest.BodyType,
             createRequest.VehicleType
@@ -127,9 +131,9 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
         var (vehicleId, token, createRequest) = await CreateVehicleForTestUser();
         _client.SetBearerToken(token);
 
-        var updateRequest1 = new UpdateVehicleRequest(createRequest.Vin, "Update 1", createRequest.Model, createRequest.ProductionYear, createRequest.EngineCapacity, 21000, createRequest.MileageUnit, createRequest.FuelType, createRequest.BodyType, createRequest.VehicleType);
-        var updateRequest2 = new UpdateVehicleRequest(createRequest.Vin, "Update 1", "Update 2", createRequest.ProductionYear, createRequest.EngineCapacity, 22000, createRequest.MileageUnit, createRequest.FuelType, createRequest.BodyType, createRequest.VehicleType);
-        var updateRequest3 = new UpdateVehicleRequest(createRequest.Vin, "Update 1", "Update 2", createRequest.ProductionYear, createRequest.EngineCapacity, 23000, createRequest.MileageUnit, EFuelType.Diesel, createRequest.BodyType, createRequest.VehicleType);
+        var updateRequest1 = new UpdateVehicleRequest(createRequest.Vin, "Update 1", createRequest.Model, createRequest.ProductionYear, createRequest.EngineCapacity, 21000, createRequest.MileageUnit,"PZ1W924", 124,createRequest.FuelType, createRequest.BodyType, createRequest.VehicleType);
+        var updateRequest2 = new UpdateVehicleRequest(createRequest.Vin, "Update 1", "Update 2", createRequest.ProductionYear, createRequest.EngineCapacity, 22000, createRequest.MileageUnit, "PZ1W924", 124,createRequest.FuelType, createRequest.BodyType, createRequest.VehicleType);
+        var updateRequest3 = new UpdateVehicleRequest(createRequest.Vin, "Update 1", "Update 2", createRequest.ProductionYear, createRequest.EngineCapacity, 23000, createRequest.MileageUnit, "PZ1W924", 124,EFuelType.Diesel, createRequest.BodyType, createRequest.VehicleType);
 
         await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest1);
         await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest2);

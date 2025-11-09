@@ -4,7 +4,6 @@ using Common.DDD;
 using ValueObjects;
 using System;
 using Common.Result;
-using DomainEvents;
 using Enums;
 using References.User;
 
@@ -17,6 +16,8 @@ public class Vehicle : AggregateRoot, IUserReferenced
     public ProductionYear ProductionYear{ get; private set; }
     public EngineCapacity? EngineCapacity { get; private set; }
     public Mileage Mileage { get; private set; }
+    public LicensePlate LicensePlate { get; private set; }
+    public HorsePower HorsePower { get; private set; }
     public EFuelType FuelType { get; private set; }
     public EBodyType BodyType { get; private set; }
     public EVehicleType VehicleType { get; private set; }
@@ -31,6 +32,8 @@ public class Vehicle : AggregateRoot, IUserReferenced
         ProductionYear productionYear,
         EngineCapacity? engineCapacity,
         Mileage mileage,
+        LicensePlate licensePlate,
+        HorsePower horsePower,
         EFuelType fuelType,
         EBodyType bodyType,
         EVehicleType vehicleType)
@@ -47,6 +50,8 @@ public class Vehicle : AggregateRoot, IUserReferenced
         SetProductionYear(productionYear);
         SetMileage(mileage);
         SetEngineCapacity(engineCapacity);
+        SetLicensePlate(licensePlate);
+        SetHorsePower(horsePower);
         SetFuelType(fuelType);
         SetBodyType(bodyType);
         SetVehicleType(vehicleType);
@@ -64,11 +69,19 @@ public class Vehicle : AggregateRoot, IUserReferenced
         decimal? engineCapacityInput,
         int? millageInput,
         EMileageUnit unitInput,
+        string? licensePlateInput,
+        int? horsePowerInput,
         EFuelType fuelType,
         EBodyType bodyType,
         EVehicleType vehicleType)
     {
         var errors = new List<Error>();
+
+        var combinationResult = ValidateTypeCombination(vehicleType, bodyType);
+        if (combinationResult.HasError())
+        {
+            errors.Add(combinationResult.Error!);
+        }
 
         if (userId == Guid.Empty)
         {
@@ -119,6 +132,18 @@ public class Vehicle : AggregateRoot, IUserReferenced
             errors.Add(mileageResult.Error!);
         }
 
+        var licensePlateResult = LicensePlate.Create(licensePlateInput);
+        if (licensePlateResult.HasError())
+        {
+            errors.Add(licensePlateResult.Error!);
+        }
+
+        var horsePowerResult = HorsePower.Create(horsePowerInput);
+        if (horsePowerResult.HasError())
+        {
+            errors.Add(horsePowerResult.Error!);
+        }
+
         if (errors.Count != 0)
         {
             var aggregatedMessage = string.Join("; ", errors.Select(e => e.Message));
@@ -135,6 +160,8 @@ public class Vehicle : AggregateRoot, IUserReferenced
                 yearResult.Value!,
                 engineCapacity,
                 mileageResult.Value!,
+                licensePlateResult.Value!,
+                horsePowerResult.Value!,
                 fuelType,
                 bodyType,
                 vehicleType);
@@ -255,6 +282,50 @@ public class Vehicle : AggregateRoot, IUserReferenced
         return Result.Success;
     }
 
+    public Result<Success, Error> UpdateLicensePlate(string? licensePlateInput)
+    {
+        var newLicensePlateResult = LicensePlate.Create(licensePlateInput);
+        if (newLicensePlateResult.HasError())
+        {
+            return newLicensePlateResult.Error!;
+        }
+
+        if (LicensePlate == newLicensePlateResult.Value)
+        {
+            return Result.Success;
+        }
+
+        var oldLicensePlate = LicensePlate;
+        LicensePlate = newLicensePlateResult.Value!;
+
+        RaiseDomainEvent(new VehicleLicensePlateChangedDomainEvent(Id, oldLicensePlate, LicensePlate));
+        SetUpdatedAt();
+
+        return Result.Success;
+    }
+
+    public Result<Success, Error> UpdateHorsePower(int? horsePowerInput)
+    {
+        var newHorsePowerResult = HorsePower.Create(horsePowerInput);
+        if (newHorsePowerResult.HasError())
+        {
+            return newHorsePowerResult.Error!;
+        }
+
+        if (HorsePower == newHorsePowerResult.Value)
+        {
+            return Result.Success;
+        }
+
+        var oldHorsePower = HorsePower;
+        HorsePower = newHorsePowerResult.Value!;
+
+        RaiseDomainEvent(new VehicleHorsePowerChangedDomainEvent(Id, oldHorsePower, HorsePower));
+        SetUpdatedAt();
+
+        return Result.Success;
+    }
+
     public Result<Success, Error> ChangeFuelType(EFuelType newFuelType)
     {
         if (!Enum.IsDefined(newFuelType) || newFuelType == EFuelType.None)
@@ -270,33 +341,45 @@ public class Vehicle : AggregateRoot, IUserReferenced
         return Result.Success;
     }
 
-    public Result<Success, Error> ChangeBodyType(EBodyType newBodyType)
+    public Result<Success, Error> UpdateClassification(EBodyType newBodyType, EVehicleType newVehicleType)
     {
-        if (!Enum.IsDefined(newBodyType) || newBodyType == EBodyType.None)
+        if (!Enum.IsDefined(newBodyType))
         {
             return new Error(EErrorCode.ValidationError, "Invalid new body type provided.");
         }
-        if (BodyType == newBodyType) return Result.Success;
-
-        var oldBodyType = BodyType;
-        BodyType = newBodyType;
-        RaiseDomainEvent(new VehicleBodyTypeChangedDomainEvent(this.Id, oldBodyType, newBodyType));
-        SetUpdatedAt();
-        return Result.Success;
-    }
-
-    public Result<Success, Error> ChangeVehicleType(EVehicleType newVehicleType)
-    {
         if (!Enum.IsDefined(newVehicleType) || newVehicleType == EVehicleType.None)
         {
             return new Error(EErrorCode.ValidationError, "Invalid new vehicle type provided.");
         }
-        if (VehicleType == newVehicleType) return Result.Success;
 
-        var oldVehicleType = VehicleType;
-        VehicleType = newVehicleType;
-        RaiseDomainEvent(new VehicleTypeChangedDomainEvent(this.Id, oldVehicleType, newVehicleType));
-        SetUpdatedAt();
+        var validationResult = ValidateTypeCombination(newVehicleType, newBodyType);
+        if (validationResult.HasError())
+        {
+            return validationResult.Error!;
+        }
+
+        bool changed = false;
+        if (BodyType != newBodyType)
+        {
+            var oldBodyType = BodyType;
+            BodyType = newBodyType;
+            RaiseDomainEvent(new VehicleBodyTypeChangedDomainEvent(this.Id, oldBodyType, newBodyType));
+            changed = true;
+        }
+
+        if (VehicleType != newVehicleType)
+        {
+            var oldVehicleType = VehicleType;
+            VehicleType = newVehicleType;
+            RaiseDomainEvent(new VehicleTypeChangedDomainEvent(this.Id, oldVehicleType, newVehicleType));
+            changed = true;
+        }
+
+        if (changed)
+        {
+            SetUpdatedAt();
+        }
+
         return Result.Success;
     }
 
@@ -311,6 +394,11 @@ public class Vehicle : AggregateRoot, IUserReferenced
     private void SetManufacturer(Manufacturer manufacturer) => Manufacturer = manufacturer ?? throw new ArgumentNullException(nameof(manufacturer));
 
     private void SetVin(Vin vin) => Vin = vin ?? throw new ArgumentNullException(nameof(vin));
+
+    private void SetLicensePlate(LicensePlate licensePlate) => LicensePlate = licensePlate ?? throw new ArgumentNullException(nameof(licensePlate));
+
+    private void SetHorsePower(HorsePower horsePower) => HorsePower = horsePower ?? throw new ArgumentNullException(nameof(horsePower));
+
 
     private void SetUserId(Guid userId)
     {
@@ -333,7 +421,7 @@ public class Vehicle : AggregateRoot, IUserReferenced
 
     private void SetBodyType(EBodyType bodyType)
     {
-        if (!Enum.IsDefined(bodyType) || bodyType == EBodyType.None)
+        if (!Enum.IsDefined(bodyType))
         {
             throw new ArgumentException("Invalid body type", nameof(bodyType));
         }
@@ -347,5 +435,20 @@ public class Vehicle : AggregateRoot, IUserReferenced
             throw new ArgumentException("Invalid vehicle type", nameof(vehicleType));
         }
         VehicleType = vehicleType;
+    }
+
+    private static Result<Success, Error> ValidateTypeCombination(EVehicleType vehicleType, EBodyType bodyType)
+    {
+        if (vehicleType == EVehicleType.Motorcycle && bodyType != EBodyType.None)
+        {
+            return new Error(EErrorCode.ValidationError, $"BodyType must be {EBodyType.None} when VehicleType is {EVehicleType.Motorcycle}.");
+        }
+
+        if (vehicleType != EVehicleType.Motorcycle && bodyType == EBodyType.None)
+        {
+            return new Error(EErrorCode.ValidationError, $"BodyType must be specified (cannot be {EBodyType.None}) when VehicleType is not {EVehicleType.Motorcycle}.");
+        }
+
+        return Result.Success;
     }
 }

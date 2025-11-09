@@ -30,8 +30,19 @@ public class VehicleOwnershipServiceTests
         _userContext.IsAuthenticated.Returns(true);
 
         var creationResult = Vehicle.Create(
-            _currentUserId, "V1N123456789ABCDE", "Test", "Model", "2020",
-            1.8m, 10000, EMileageUnit.Kilometers, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+            _currentUserId,
+            "V1N123456789ABCDE",
+            "Test",
+            "Model",
+            "2020",
+            1.8m,
+            10000,
+            EMileageUnit.Kilometers,
+            "PZ1W924",
+            124,
+            EFuelType.Gasoline,
+            EBodyType.Sedan,
+            EVehicleType.Passenger);
 
         creationResult.HasError().Should().BeFalse();
         _fakeVehicle = creationResult.Value!;

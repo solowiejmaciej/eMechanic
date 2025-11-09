@@ -25,8 +25,18 @@ public class GetAllVehiclesFeatureTests : IClassFixture<IntegrationTestWebAppFac
     {
         _client.SetBearerToken(token);
         var createRequest = new CreateVehicleRequest(
-            $"V1N{Guid.NewGuid().ToString("N")[..14]}", manufacturer, "GetAll Model", "2021",
-            1.4m,200, EMileageUnit.Miles,EFuelType.Gasoline, EBodyType.Hatchback, EVehicleType.Passenger);
+            $"V1N{Guid.NewGuid().ToString("N")[..14]}",
+            manufacturer,
+            "GetAll Model",
+            "2021",
+            1.4m,
+            200,
+            EMileageUnit.Miles,
+            "PZ1W924",
+            124,
+            EFuelType.Gasoline,
+            EBodyType.Hatchback,
+            EVehicleType.Passenger);
 
         var createResponse = await _client.PostAsJsonAsync("/api/v1/vehicles", createRequest);
         createResponse.EnsureSuccessStatusCode();
@@ -113,7 +123,6 @@ public class GetAllVehiclesFeatureTests : IClassFixture<IntegrationTestWebAppFac
 
         // Act
         var response = await _client.GetAsync("/api/v1/vehicles?pageNumber=2&pageSize=2");
-        var test =response.Content;
 
         // Assert
         response.StatusCode.Should().Match(code =>
