@@ -12,6 +12,8 @@ public sealed record VehicleResponse(
     decimal? EngineCapacity,
     int Mileage,
     EMileageUnit MileageUnit,
+    string LicensePlate,
+    int HorsePower,
     EFuelType FuelType,
     EBodyType BodyType,
     EVehicleType VehicleType,

@@ -34,6 +34,8 @@ public sealed class GetVehicleByIdHandler : IResultQueryHandler<GetVehicleByIdQu
             vehicle.EngineCapacity?.Value,
             vehicle.Mileage.Value,
             vehicle.Mileage.Unit,
+            vehicle.LicensePlate.Value,
+            vehicle.HorsePower.Value,
             vehicle.FuelType,
             vehicle.BodyType,
             vehicle.VehicleType,

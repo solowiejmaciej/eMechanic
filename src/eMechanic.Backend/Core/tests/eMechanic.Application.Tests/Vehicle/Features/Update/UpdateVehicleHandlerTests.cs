@@ -23,8 +23,19 @@ public class UpdateVehicleHandlerTests
         _vehicleRepository = Substitute.For<IVehicleRepository>();
         _ownershipService = Substitute.For<IVehicleOwnershipService>();
         var creationResult = Vehicle.Create(
-            _currentUserId, "V1N123456789ABCDE", "Old Manufacturer", "Old Model", "2020",
-            1.5m, 200, EMileageUnit.Miles, EFuelType.Diesel, EBodyType.Kombi, EVehicleType.Passenger);
+            _currentUserId,
+            "V1N123456789ABCDE",
+            "Old Manufacturer",
+            "Old Model",
+            "2020",
+            1.5m,
+            200,
+            EMileageUnit.Miles,
+            "PZ1W924",
+            124,
+            EFuelType.Diesel,
+            EBodyType.Kombi,
+            EVehicleType.Passenger);
 
         creationResult.HasError().Should().BeFalse();
         _existingVehicle = creationResult.Value!;
@@ -38,8 +49,19 @@ public class UpdateVehicleHandlerTests
     {
         // Arrange
         var command = new UpdateVehicleCommand(
-            _vehicleId, "V1N123456789ABCDE", "New Manufacturer", "New Model", "2024",
-            2.0m, 200, EMileageUnit.Kilometers, EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
+            _vehicleId,
+            "V1N123456789ABCDE",
+            "New Manufacturer",
+            "New Model",
+            "2024",
+            2.0m,
+            200,
+            EMileageUnit.Kilometers,
+            "PZ1W924",
+            124,
+            EFuelType.Electric,
+            EBodyType.SUV,
+            EVehicleType.Passenger);
 
         _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Result<Vehicle, Error>>(_existingVehicle));
@@ -69,8 +91,19 @@ public class UpdateVehicleHandlerTests
     {
         // Arrange
         var command = new UpdateVehicleCommand(
-             _vehicleId, "V1N123456789ABCDE", "New Manufacturer", "New Model", "2024",
-             2.0m, 200, EMileageUnit.Kilometers, EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
+             _vehicleId,
+             "V1N123456789ABCDE",
+             "New Manufacturer",
+             "New Model",
+             "2024",
+             2.0m,
+             200,
+             EMileageUnit.Kilometers,
+             "PZ1W924",
+             124,
+             EFuelType.Electric,
+             EBodyType.SUV,
+             EVehicleType.Passenger);
 
         var notFoundError = new Error(EErrorCode.NotFoundError, "Vehicle not found.");
         _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
@@ -92,8 +125,19 @@ public class UpdateVehicleHandlerTests
     {
         // Arrange
          var command = new UpdateVehicleCommand(
-             _vehicleId, "zly-vin", "New Manufacturer", "New Model", "2024", // <-- Błędny VIN
-             2.0m, 200, EMileageUnit.Kilometers, EFuelType.Electric, EBodyType.SUV, EVehicleType.Passenger);
+             _vehicleId,
+             "zly-vin",
+             "New Manufacturer",
+             "New Model",
+             "2024",
+             2.0m,
+             200,
+             EMileageUnit.Kilometers,
+             "PZ1W924",
+             124,
+             EFuelType.Electric,
+             EBodyType.SUV,
+             EVehicleType.Passenger);
 
         _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Result<Vehicle, Error>>(_existingVehicle));
@@ -114,8 +158,19 @@ public class UpdateVehicleHandlerTests
     {
         // Arrange
          var command = new UpdateVehicleCommand(
-            _vehicleId, "V1N123456789ABCDE", "Test Manufacturer", "Test Model", "2023",
-            1.6m, 200, EMileageUnit.Kilometers, EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+            _vehicleId,
+            "V1N123456789ABCDE",
+            "Test Manufacturer",
+            "Test Model",
+            "2023",
+            1.6m,
+            200,
+            EMileageUnit.Kilometers,
+            "PZ1W924",
+            124,
+            EFuelType.Gasoline,
+            EBodyType.Sedan,
+            EVehicleType.Passenger);
 
         var unauthorizedError = new Error(EErrorCode.UnauthorizedError, "User is not authenticated.");
         _ownershipService.GetAndVerifyOwnershipAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())

@@ -1,6 +1,6 @@
-namespace eMechanic.Domain.Vehicle.DomainEvents;
+namespace eMechanic.Domain.Vehicle;
 
-using Common.DDD;
-using ValueObjects;
+using eMechanic.Common.DDD;
+using eMechanic.Domain.Vehicle.ValueObjects;
 
 public record VehicleMileageChangedDomainEvent(Guid Id, Mileage OldMileage, Mileage Mileage) : IDomainEvent;

@@ -32,6 +32,8 @@ public sealed class CreateVehicleHandler : IResultCommandHandler<CreateVehicleCo
             request.EngineCapacity,
             request.Mileage,
             request.MileageUnit,
+            request.LicensePlate,
+            request.HorsePower,
             request.FuelType,
             request.BodyType,
             request.VehicleType);

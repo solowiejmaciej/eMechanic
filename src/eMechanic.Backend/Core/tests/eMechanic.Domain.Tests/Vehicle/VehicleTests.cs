@@ -3,7 +3,6 @@ namespace eMechanic.Domain.Tests.Vehicle;
 using Domain.Vehicle;
 using Domain.Vehicle.ValueObjects;
 using Domain.Vehicle.Enums;
-using Domain.Vehicle.DomainEvents;
 using Common.Result;
 using System;
 using System.Linq;
@@ -19,6 +18,8 @@ public class VehicleTests
     private const decimal VALID_CAPACITY = 1.9m;
     private const int VALID_MILEAGE_VALUE = 150000;
     private const EMileageUnit VALID_MILEAGE_UNIT = EMileageUnit.Kilometers;
+    private const string VALID_LICENSE_PLATE = "PZ1W924";
+    private const int VALID_HORSE_POWER = 240;
     private const EFuelType VALID_FUEL = EFuelType.Gasoline;
     private const EBodyType VALID_BODY = EBodyType.Sedan;
     private const EVehicleType VALID_TYPE = EVehicleType.Passenger;
@@ -34,6 +35,8 @@ public class VehicleTests
             VALID_CAPACITY,
             VALID_MILEAGE_VALUE,
             VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
             VALID_FUEL,
             VALID_BODY,
             VALID_TYPE);
@@ -56,6 +59,8 @@ public class VehicleTests
             VALID_CAPACITY,
             VALID_MILEAGE_VALUE,
             VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
             VALID_FUEL,
             VALID_BODY,
             VALID_TYPE);
@@ -75,6 +80,8 @@ public class VehicleTests
         vehicle.FuelType.Should().Be(VALID_FUEL);
         vehicle.BodyType.Should().Be(VALID_BODY);
         vehicle.VehicleType.Should().Be(VALID_TYPE);
+        vehicle.LicensePlate.Value.Should().Be(VALID_LICENSE_PLATE);
+        vehicle.HorsePower.Value.Should().Be(VALID_HORSE_POWER);
 
         vehicle.GetDomainEvents().Should().ContainSingle(e => e is VehicleCreatedDomainEvent);
         var domainEvent = (VehicleCreatedDomainEvent)vehicle.GetDomainEvents().First();
@@ -94,6 +101,8 @@ public class VehicleTests
             null,
             VALID_MILEAGE_VALUE,
             VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
             VALID_FUEL,
             VALID_BODY,
             VALID_TYPE);
@@ -107,7 +116,20 @@ public class VehicleTests
     public void Create_Should_ReturnError_WhenOwnerIdIsEmpty()
     {
         // Act
-        var result = Vehicle.Create(Guid.Empty, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY, VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT ,VALID_FUEL, VALID_BODY, VALID_TYPE);
+        var result = Vehicle.Create(
+            Guid.Empty,
+            VALID_VIN,
+            VALID_MANUFACTURER,
+            VALID_MODEL,
+            VALID_YEAR,
+            VALID_CAPACITY,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
+            VALID_FUEL,
+            VALID_BODY,
+            VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -123,7 +145,20 @@ public class VehicleTests
     [InlineData(null)]
     public void Create_Should_ReturnError_WhenVinIsInvalid(string? invalidVin)
     {
-        var result = Vehicle.Create(_validOwnerId, invalidVin, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY, VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_FUEL, VALID_BODY, VALID_TYPE);
+        var result = Vehicle.Create(
+            _validOwnerId,
+            invalidVin,
+            VALID_MANUFACTURER,
+            VALID_MODEL,
+            VALID_YEAR,
+            VALID_CAPACITY,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
+            VALID_FUEL,
+            VALID_BODY,
+            VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -139,7 +174,20 @@ public class VehicleTests
     public void Create_Should_ReturnError_WhenManufacturerIsInvalid(string? invalidManufacturer)
     {
         // Act
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, invalidManufacturer, VALID_MODEL, VALID_YEAR, VALID_CAPACITY,VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_FUEL, VALID_BODY, VALID_TYPE);
+        var result = Vehicle.Create(
+            _validOwnerId,
+            VALID_VIN,
+            invalidManufacturer,
+            VALID_MODEL,
+            VALID_YEAR,
+            VALID_CAPACITY,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
+            VALID_FUEL,
+            VALID_BODY,
+            VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -155,7 +203,20 @@ public class VehicleTests
     public void Create_Should_ReturnError_WhenModelIsInvalid(string? invalidModel)
     {
         // Act
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, invalidModel, VALID_YEAR, VALID_CAPACITY,VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_FUEL, VALID_BODY, VALID_TYPE);
+        var result = Vehicle.Create(
+            _validOwnerId,
+            VALID_VIN,
+            VALID_MANUFACTURER,
+            invalidModel,
+            VALID_YEAR,
+            VALID_CAPACITY,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
+            VALID_FUEL,
+            VALID_BODY,
+            VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -173,7 +234,20 @@ public class VehicleTests
     public void Create_Should_ReturnError_WhenProductionYearIsInvalid(string? invalidYear)
     {
         // Act:
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, invalidYear, VALID_CAPACITY,VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_FUEL, VALID_BODY, VALID_TYPE);
+        var result = Vehicle.Create(
+            _validOwnerId,
+            VALID_VIN,
+            VALID_MANUFACTURER,
+            VALID_MODEL,
+            invalidYear,
+            VALID_CAPACITY,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
+            VALID_FUEL,
+            VALID_BODY,
+            VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -187,7 +261,20 @@ public class VehicleTests
     public void Create_Should_ReturnError_WhenFuelTypeIsInvalid(EFuelType invalidFuel)
     {
         // Act
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY,VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, invalidFuel, VALID_BODY, VALID_TYPE);
+        var result = Vehicle.Create(
+            _validOwnerId,
+            VALID_VIN,
+            VALID_MANUFACTURER,
+            VALID_MODEL,
+            VALID_YEAR,
+            VALID_CAPACITY,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
+            invalidFuel,
+            VALID_BODY,
+            VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -201,12 +288,24 @@ public class VehicleTests
     public void Create_Should_ReturnError_WhenBodyTypeIsInvalid(EBodyType invalidBody)
     {
         // Act
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY,VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_FUEL, invalidBody, VALID_TYPE);
+        var result = Vehicle.Create(
+            _validOwnerId,
+            VALID_VIN,
+            VALID_MANUFACTURER,
+            VALID_MODEL,
+            VALID_YEAR,
+            VALID_CAPACITY,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
+            VALID_FUEL,
+            invalidBody,
+            VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
         result.Error!.Code.Should().Be(EErrorCode.ValidationError);
-        result.Error.Message.Should().Contain("body type");
     }
 
     [Theory]
@@ -215,19 +314,44 @@ public class VehicleTests
     public void Create_Should_ReturnError_WhenVehicleTypeIsInvalid(EVehicleType invalidType)
     {
         // Act
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY,VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_FUEL, VALID_BODY, invalidType);
+        var result = Vehicle.Create(
+            _validOwnerId,
+            VALID_VIN,
+            VALID_MANUFACTURER,
+            VALID_MODEL,
+            VALID_YEAR,
+            VALID_CAPACITY,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
+            VALID_FUEL,
+            VALID_BODY,
+            invalidType);
 
         // Assert
         result.HasError().Should().BeTrue();
         result.Error!.Code.Should().Be(EErrorCode.ValidationError);
-        result.Error.Message.Should().Contain("vehicle type");
     }
 
     [Fact]
     public void Create_Should_ReturnError_WhenEngineCapacityIsInvalid()
     {
         // Act
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, -1.0m,VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_FUEL, VALID_BODY, VALID_TYPE);
+        var result = Vehicle.Create(
+            _validOwnerId,
+            VALID_VIN,
+            VALID_MANUFACTURER,
+            VALID_MODEL,
+            VALID_YEAR,
+            -1.0m,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
+            VALID_FUEL,
+            VALID_BODY,
+            VALID_TYPE);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -247,12 +371,24 @@ public class VehicleTests
         EVehicleType type = invalidEnum is EVehicleType t ? t : VALID_TYPE;
 
         // Act
-        var result = Vehicle.Create(_validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY,  VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, fuel, body, type);
+        var result = Vehicle.Create(
+            _validOwnerId,
+            VALID_VIN,
+            VALID_MANUFACTURER,
+            VALID_MODEL,
+            VALID_YEAR,
+            VALID_CAPACITY,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
+            fuel,
+            body,
+            type);
 
         // Assert
         result.HasError().Should().BeTrue();
         result.Error!.Code.Should().Be(EErrorCode.ValidationError);
-        result.Error.Message.Should().Contain("Invalid");
     }
 
     [Fact]
@@ -268,6 +404,8 @@ public class VehicleTests
             VALID_CAPACITY,
             -100,
             VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
             VALID_FUEL,
             VALID_BODY,
             VALID_TYPE);
@@ -290,6 +428,8 @@ public class VehicleTests
             VALID_CAPACITY,
             VALID_MILEAGE_VALUE,
             EMileageUnit.None,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
             VALID_FUEL,
             VALID_BODY,
             VALID_TYPE);
@@ -711,118 +851,6 @@ public class VehicleTests
     }
 
     [Fact]
-    public void ChangeBodyType_Should_UpdateBodyTypeAndRaiseEvent_WhenNewTypeIsValid()
-    {
-        // Arrange
-        var vehicle = CreateValidVehicle();
-        var newBodyType = EBodyType.Kombi;
-
-        // Act
-        var result = vehicle.ChangeBodyType(newBodyType);
-
-        // Assert
-        result.HasError().Should().BeFalse();
-        vehicle.BodyType.Should().Be(newBodyType);
-        vehicle.GetDomainEvents().Should().ContainSingle(e => e is VehicleBodyTypeChangedDomainEvent);
-        var domainEvent = vehicle.GetDomainEvents().OfType<VehicleBodyTypeChangedDomainEvent>().Single();
-        domainEvent.Id.Should().Be(vehicle.Id);
-        domainEvent.NewBodyType.Should().Be(newBodyType);
-        domainEvent.OldBodyType.Should().Be(VALID_BODY);
-    }
-
-    [Fact]
-    public void ChangeBodyType_Should_ReturnSuccess_AndNotRaiseEvent_WhenBodyTypeIsSame()
-    {
-        // Arrange
-        var vehicle = CreateValidVehicle();
-        vehicle.ClearDomainEvents();
-
-        // Act
-        var result = vehicle.ChangeBodyType(VALID_BODY);
-
-        // Assert
-        result.HasError().Should().BeFalse();
-        vehicle.BodyType.Should().Be(VALID_BODY);
-        vehicle.GetDomainEvents().Should().BeEmpty();
-    }
-
-    [Theory]
-    [InlineData(EBodyType.None)]
-    [InlineData((EBodyType)99)]
-    public void ChangeBodyType_Should_ReturnError_WhenNewTypeIsInvalid(EBodyType invalidType)
-    {
-        // Arrange
-        var vehicle = CreateValidVehicle();
-        vehicle.ClearDomainEvents();
-        var originalType = vehicle.BodyType;
-
-        // Act
-        var result = vehicle.ChangeBodyType(invalidType);
-
-        // Assert
-        result.HasError().Should().BeTrue();
-        result.Error!.Code.Should().Be(EErrorCode.ValidationError);
-        vehicle.BodyType.Should().Be(originalType);
-        vehicle.GetDomainEvents().Should().BeEmpty();
-    }
-
-    [Fact]
-    public void ChangeVehicleType_Should_UpdateVehicleTypeAndRaiseEvent_WhenNewTypeIsValid()
-    {
-        // Arrange
-        var vehicle = CreateValidVehicle();
-        var newVehicleType = EVehicleType.Motorcycle;
-
-        // Act
-        var result = vehicle.ChangeVehicleType(newVehicleType);
-
-        // Assert
-        result.HasError().Should().BeFalse();
-        vehicle.VehicleType.Should().Be(newVehicleType);
-        vehicle.GetDomainEvents().Should().ContainSingle(e => e is VehicleTypeChangedDomainEvent);
-        var domainEvent = vehicle.GetDomainEvents().OfType<VehicleTypeChangedDomainEvent>().Single();
-        domainEvent.Id.Should().Be(vehicle.Id);
-        domainEvent.NewVehicleType.Should().Be(newVehicleType);
-        domainEvent.OldVehicleType.Should().Be(VALID_TYPE);
-    }
-
-    [Fact]
-    public void ChangeVehicleType_Should_ReturnSuccess_AndNotRaiseEvent_WhenVehicleTypeIsSame()
-    {
-        // Arrange
-        var vehicle = CreateValidVehicle();
-        vehicle.ClearDomainEvents();
-
-        // Act
-        var result = vehicle.ChangeVehicleType(VALID_TYPE);
-
-        // Assert
-        result.HasError().Should().BeFalse();
-        vehicle.VehicleType.Should().Be(VALID_TYPE);
-        vehicle.GetDomainEvents().Should().BeEmpty();
-    }
-
-    [Theory]
-    [InlineData(EVehicleType.None)]
-    [InlineData((EVehicleType)99)]
-    public void ChangeVehicleType_Should_ReturnError_WhenNewTypeIsInvalid(EVehicleType invalidType)
-    {
-        // Arrange
-        var vehicle = CreateValidVehicle();
-        vehicle.ClearDomainEvents();
-        var originalType = vehicle.VehicleType;
-
-        // Act
-        var result = vehicle.ChangeVehicleType(invalidType);
-
-        // Assert
-        result.HasError().Should().BeTrue();
-        result.Error!.Code.Should().Be(EErrorCode.ValidationError);
-        vehicle.VehicleType.Should().Be(originalType);
-        vehicle.GetDomainEvents().Should().BeEmpty();
-    }
-
-    [Fact]
     public void UpdateMileage_Should_UpdateMileageAndRaiseEvent_WhenNewValueIsValid()
     {
         // Arrange
@@ -881,6 +909,256 @@ public class VehicleTests
 
         // Assert
         result.HasError().Should().BeFalse();
+        vehicle.GetDomainEvents().Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Create_Should_ReturnSuccess_WhenVehicleTypeIsMotorcycleAndBodyTypeIsNone()
+    {
+        // Act
+        var result = Vehicle.Create(
+            _validOwnerId,
+            VALID_VIN,
+            VALID_MANUFACTURER,
+            VALID_MODEL,
+            VALID_YEAR,
+            null,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
+            VALID_FUEL,
+            EBodyType.None,
+            EVehicleType.Motorcycle
+        );
+
+        // Assert
+        result.HasError().Should().BeFalse();
+        result.Value.Should().NotBeNull();
+        result.Value.VehicleType.Should().Be(EVehicleType.Motorcycle);
+        result.Value.BodyType.Should().Be(EBodyType.None);
+    }
+
+    [Fact]
+    public void Create_Should_ReturnError_WhenVehicleTypeIsMotorcycleAndBodyTypeIsNotNone()
+    {
+        // Act
+        var result = Vehicle.Create(
+            _validOwnerId,
+            VALID_VIN,
+            VALID_MANUFACTURER,
+            VALID_MODEL,
+            VALID_YEAR,
+            null,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
+            VALID_FUEL,
+            EBodyType.Hatchback,
+            EVehicleType.Motorcycle
+        );
+
+        // Assert
+        result.HasError().Should().BeTrue();
+        result.Error!.Code.Should().Be(EErrorCode.ValidationError);
+        result.Error.Message.Should().Contain("BodyType must be None when VehicleType is Motorcycle");
+    }
+
+    [Fact]
+    public void Create_Should_ReturnError_WhenVehicleTypeIsNotMotorcycleAndBodyTypeIsNone()
+    {
+        // Act
+        var result = Vehicle.Create(
+            _validOwnerId,
+            VALID_VIN,
+            VALID_MANUFACTURER,
+            VALID_MODEL,
+            VALID_YEAR,
+            null,
+            VALID_MILEAGE_VALUE,
+            VALID_MILEAGE_UNIT,
+            VALID_LICENSE_PLATE,
+            VALID_HORSE_POWER,
+            VALID_FUEL,
+            EBodyType.None,
+            EVehicleType.Passenger
+        );
+
+        // Assert
+        result.HasError().Should().BeTrue();
+        result.Error!.Code.Should().Be(EErrorCode.ValidationError);
+        result.Error.Message.Should().Contain("BodyType must be specified");
+    }
+
+    [Fact]
+    public void UpdateClassification_Should_ReturnError_WhenChangingPassengerToMotorcycleButKeepingSedan()
+    {
+        // Arrange
+        var vehicle = CreateValidVehicle();
+
+        // Act
+        var result = vehicle.UpdateClassification(EBodyType.Sedan, EVehicleType.Motorcycle);
+
+        // Assert
+        result.HasError().Should().BeTrue();
+        result.Error!.Message.Should().Contain("BodyType must be None when VehicleType is Motorcycle");
+    }
+
+    [Fact]
+    public void UpdateClassification_Should_ReturnError_WhenChangingPassengerToPassengerButSettingBodyToNone()
+    {
+        // Arrange
+        var vehicle = CreateValidVehicle();
+
+        // Act
+        var result = vehicle.UpdateClassification(EBodyType.None, EVehicleType.Passenger);
+
+        // Assert
+        result.HasError().Should().BeTrue();
+        result.Error!.Message.Should().Contain("BodyType must be specified");
+    }
+
+    [Fact]
+    public void UpdateClassification_Should_ReturnSuccess_WhenChangingPassengerSedanToMotorcycleNone()
+    {
+        // Arrange
+        var vehicle = CreateValidVehicle();
+        vehicle.ClearDomainEvents();
+
+        // Act
+        var result = vehicle.UpdateClassification(EBodyType.None, EVehicleType.Motorcycle);
+
+        // Assert
+        result.HasError().Should().BeFalse();
+        vehicle.VehicleType.Should().Be(EVehicleType.Motorcycle);
+        vehicle.BodyType.Should().Be(EBodyType.None);
+
+        vehicle.GetDomainEvents().Count.Should().Be(2);
+        vehicle.GetDomainEvents().Should().ContainItemsAssignableTo<VehicleBodyTypeChangedDomainEvent>();
+        vehicle.GetDomainEvents().Should().ContainItemsAssignableTo<VehicleTypeChangedDomainEvent>();
+    }
+
+    [Fact]
+    public void UpdateClassification_Should_ReturnSuccess_WhenChangingSedanToKombi()
+    {
+        // Arrange
+        var vehicle = CreateValidVehicle();
+        vehicle.ClearDomainEvents();
+
+        // Act
+        var result = vehicle.UpdateClassification(EBodyType.Kombi, EVehicleType.Passenger);
+
+        // Assert
+        result.HasError().Should().BeFalse();
+        vehicle.VehicleType.Should().Be(EVehicleType.Passenger);
+        vehicle.BodyType.Should().Be(EBodyType.Kombi);
+
+        vehicle.GetDomainEvents().Count.Should().Be(1);
+        vehicle.GetDomainEvents().Should().ContainItemsAssignableTo<VehicleBodyTypeChangedDomainEvent>();
+    }
+
+
+    [Fact]
+    public void Create_Should_ReturnError_WhenLicensePlateIsInvalid()
+    {
+        // Act
+        var result = Vehicle.Create(
+            _validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY,
+            VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT,
+            "INVALID PLATE !!!",
+            VALID_HORSE_POWER, VALID_FUEL, VALID_BODY, VALID_TYPE);
+
+        // Assert
+        result.HasError().Should().BeTrue();
+        result.Error!.Code.Should().Be(EErrorCode.ValidationError);
+    }
+
+    [Fact]
+    public void Create_Should_ReturnError_WhenHorsePowerIsInvalid()
+    {
+        // Act
+        var result = Vehicle.Create(
+            _validOwnerId, VALID_VIN, VALID_MANUFACTURER, VALID_MODEL, VALID_YEAR, VALID_CAPACITY,
+            VALID_MILEAGE_VALUE, VALID_MILEAGE_UNIT, VALID_LICENSE_PLATE,
+            -50,
+            VALID_FUEL, VALID_BODY, VALID_TYPE);
+
+        // Assert
+        result.HasError().Should().BeTrue();
+        result.Error!.Code.Should().Be(EErrorCode.ValidationError);
+        result.Error.Message.Should().Contain("HorsePower must be a positive value");
+    }
+
+    [Fact]
+    public void UpdateLicensePlate_Should_UpdatePlateAndRaiseEvent_WhenNewPlateIsValid()
+    {
+        // Arrange
+        var vehicle = CreateValidVehicle();
+        var newPlateInput = "NEW 001";
+        var expectedNewPlate = LicensePlate.Create(newPlateInput).Value!;
+        vehicle.ClearDomainEvents();
+
+        // Act
+        var result = vehicle.UpdateLicensePlate(newPlateInput);
+
+        // Assert
+        result.HasError().Should().BeFalse();
+        vehicle.LicensePlate.Should().Be(expectedNewPlate);
+        vehicle.GetDomainEvents().Should().ContainSingle(e => e is VehicleLicensePlateChangedDomainEvent);
+    }
+
+    [Fact]
+    public void UpdateLicensePlate_Should_ReturnError_WhenNewPlateIsInvalid()
+    {
+        // Arrange
+        var vehicle = CreateValidVehicle();
+        var invalidPlateInput = "BAD!";
+        vehicle.ClearDomainEvents();
+
+        // Act
+        var result = vehicle.UpdateLicensePlate(invalidPlateInput);
+
+        // Assert
+        result.HasError().Should().BeTrue();
+        result.Error!.Message.Should().Contain("invalid characters");
+        vehicle.LicensePlate.Value.Should().Be(VALID_LICENSE_PLATE);
+        vehicle.GetDomainEvents().Should().BeEmpty();
+    }
+
+    [Fact]
+    public void UpdateHorsePower_Should_UpdateHpAndRaiseEvent_WhenNewHpIsValid()
+    {
+        // Arrange
+        var vehicle = CreateValidVehicle();
+        var newHpInput = 200;
+        var expectedNewHp = HorsePower.Create(newHpInput).Value!;
+        vehicle.ClearDomainEvents();
+
+        // Act
+        var result = vehicle.UpdateHorsePower(newHpInput);
+
+        // Assert
+        result.HasError().Should().BeFalse();
+        vehicle.HorsePower.Should().Be(expectedNewHp);
+        vehicle.GetDomainEvents().Should().ContainSingle(e => e is VehicleHorsePowerChangedDomainEvent);
+    }
+
+    [Fact]
+    public void UpdateHorsePower_Should_ReturnError_WhenNewHpIsInvalid()
+    {
+        // Arrange
+        var vehicle = CreateValidVehicle();
+        var invalidHpInput = -10;
+        vehicle.ClearDomainEvents();
+
+        // Act
+        var result = vehicle.UpdateHorsePower(invalidHpInput);
+
+        // Assert
+        result.HasError().Should().BeTrue();
+        result.Error!.Message.Should().Contain("positive value");
+        vehicle.HorsePower.Value.Should().Be(VALID_HORSE_POWER);
         vehicle.GetDomainEvents().Should().BeEmpty();
     }
 }

@@ -35,6 +35,8 @@ public class GetVehiclesHandler : IResultQueryHandler<GetVehiclesQuery, Paginati
             x.EngineCapacity?.Value,
             x.Mileage.Value,
             x.Mileage.Unit,
+            x.LicensePlate.Value,
+            x.HorsePower.Value,
             x.FuelType,
             x.BodyType,
             x.VehicleType,

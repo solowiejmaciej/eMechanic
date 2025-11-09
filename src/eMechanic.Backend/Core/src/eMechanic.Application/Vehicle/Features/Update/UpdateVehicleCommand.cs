@@ -14,6 +14,8 @@ public sealed record UpdateVehicleCommand(
     decimal? EngineCapacity,
     int MillageValue,
     EMileageUnit MillageUnit,
+    string LicensePlate,
+    int HorsePower,
     EFuelType FuelType,
     EBodyType BodyType,
     EVehicleType VehicleType) : IResultCommand<Success>;
@@ -31,7 +33,21 @@ public class UpdateVehicleCommandValidator : AbstractValidator<UpdateVehicleComm
         RuleFor(x => x.MillageValue).GreaterThan(0);
         RuleFor(x => x.MillageUnit).IsInEnum().NotEqual(EMileageUnit.None);
         RuleFor(x => x.FuelType).IsInEnum().NotEqual(EFuelType.None);
-        RuleFor(x => x.BodyType).IsInEnum().NotEqual(EBodyType.None);
-        RuleFor(x => x.VehicleType).IsInEnum().NotEqual(EVehicleType.None);
+        RuleFor(x => x.BodyType)
+            .NotEqual(EBodyType.None)
+            .When(x => x.VehicleType != EVehicleType.Motorcycle)
+            .WithMessage($"BodyType must be specified (cannot be None) when VehicleType is not {EVehicleType.Motorcycle}.");
+        RuleFor(x => x.BodyType)
+            .Equal(EBodyType.None)
+            .When(x => x.VehicleType == EVehicleType.Motorcycle)
+            .WithMessage($"BodyType must be None when VehicleType is {EVehicleType.Motorcycle}.");
+        RuleFor(x => x.LicensePlate)
+            .NotEmpty()
+            .MaximumLength(15)
+            .Matches("^[a-zA-Z0-9 -]*$");
+        RuleFor(x => x.HorsePower)
+            .NotEmpty()
+            .GreaterThan(0)
+            .LessThanOrEqualTo(3000);
     }
 }

@@ -28,8 +28,18 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         _client.SetBearerToken(token);
 
         var createRequest = new CreateVehicleRequest(
-            $"V1N{Guid.NewGuid().ToString("N")[..14]}", $"UpdateTest Manufacturer {suffix}", $"UpdateTest Model {suffix}", "2020",
-            1.9m, 200, EMileageUnit.Miles, EFuelType.Diesel, EBodyType.Sedan, EVehicleType.Passenger);
+            $"V1N{Guid.NewGuid().ToString("N")[..14]}",
+            $"UpdateTest Manufacturer {suffix}",
+            $"UpdateTest Model {suffix}",
+            "2020",
+            1.9m,
+            200,
+            EMileageUnit.Miles,
+            "PZ1W924",
+            124,
+            EFuelType.Diesel,
+            EBodyType.Sedan,
+            EVehicleType.Passenger);
         var createResponse = await _client.PostAsJsonAsync("/api/v1/vehicles", createRequest);
         createResponse.EnsureSuccessStatusCode();
         var createdContent = await createResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();
@@ -40,8 +50,17 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
 
     private UpdateVehicleRequest CreateValidUpdateRequest() => new(
         $"V1N{Guid.NewGuid().ToString("N")[..14]}",
-        "Updated Manufacturer", "Updated Model", "2022",
-        2.5m, 200, EMileageUnit.Kilometers, EFuelType.Electric, EBodyType.Coupe, EVehicleType.Passenger
+        "Updated Manufacturer",
+        "Updated Model",
+        "2022",
+        2.5m,
+        200,
+        EMileageUnit.Kilometers,
+        "PZ1W924",
+        124,
+        EFuelType.Electric,
+        EBodyType.Coupe,
+        EVehicleType.Passenger
     );
 
     [Fact]
@@ -64,6 +83,8 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         updatedVehicle!.Manufacturer.Should().Be("Updated Manufacturer");
         updatedVehicle!.Model.Should().Be("Updated Model");
         updatedVehicle!.Vin.Should().Be(updateRequest.Vin.ToUpperInvariant());
+        updatedVehicle!.LicensePlate.Should().Be("PZ1W924");
+        updatedVehicle!.HorsePower.Should().Be(124);
 
         _client.ClearBearerToken();
     }
@@ -331,12 +352,41 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     }
 
     [Fact]
-    public async Task UpdateVehicle_Should_ReturnBadRequest_WhenVehicleTypeIsNone()
+    public async Task UpdateVehicle_Should_ReturnNoContent_WhenUpdatingToMotorcycleAndBodyTypeNone()
     {
         // Arrange
         var (_, vehicleId, token) = await CreateVehicleForTestUser();
         _client.SetBearerToken(token);
-        var updateRequest = CreateValidUpdateRequest() with { VehicleType = EVehicleType.None };
+
+        var updateRequest = CreateValidUpdateRequest() with
+        {
+            VehicleType = EVehicleType.Motorcycle,
+            BodyType = EBodyType.None
+        };
+
+        // Act
+        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        var getResponse = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}");
+        getResponse.EnsureSuccessStatusCode();
+        var updatedVehicle = await getResponse.Content.ReadFromJsonAsync<VehicleResponse>();
+        updatedVehicle!.VehicleType.Should().Be(EVehicleType.Motorcycle);
+        updatedVehicle!.BodyType.Should().Be(EBodyType.None);
+
+        _client.ClearBearerToken();
+    }
+
+    [Theory]
+    [InlineData("INVALID PLATE !@#")]
+    public async Task UpdateVehicle_Should_ReturnBadRequest_WhenLicensePlateIsInvalid(string invalidPlate)
+    {
+        // Arrange
+        var (_, vehicleId, token) = await CreateVehicleForTestUser();
+        _client.SetBearerToken(token);
+        var updateRequest = CreateValidUpdateRequest() with { LicensePlate = invalidPlate };
 
         // Act
         var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
@@ -344,7 +394,27 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-        problemDetails!.Errors.Should().ContainKey("VehicleType");
+        problemDetails!.Errors.Should().ContainKey("LicensePlate");
+
+        _client.ClearBearerToken();
+    }
+
+    [Theory]
+    [InlineData(-100)]
+    public async Task UpdateVehicle_Should_ReturnBadRequest_WhenHorsePowerIsInvalid(int invalidHp)
+    {
+        // Arrange
+        var (_, vehicleId, token) = await CreateVehicleForTestUser();
+        _client.SetBearerToken(token);
+        var updateRequest = CreateValidUpdateRequest() with { HorsePower = invalidHp };
+
+        // Act
+        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        problemDetails!.Errors.Should().ContainKey("HorsePower");
 
         _client.ClearBearerToken();
     }

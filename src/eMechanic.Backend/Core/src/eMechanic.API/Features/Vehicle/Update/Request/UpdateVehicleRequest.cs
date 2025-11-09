@@ -11,9 +11,11 @@ public sealed record UpdateVehicleRequest(
     decimal? EngineCapacity,
     int MileageValue,
     EMileageUnit MileageUnit,
+    string LicensePlate,
+    int HorsePower,
     EFuelType FuelType,
     EBodyType BodyType,
     EVehicleType VehicleType)
 {
-    public UpdateVehicleCommand ToCommand(Guid vehicleId) => new(vehicleId, Vin, Manufacturer, Model, ProductionYear, EngineCapacity, MileageValue, MileageUnit, FuelType, BodyType, VehicleType);
+    public UpdateVehicleCommand ToCommand(Guid vehicleId) => new(vehicleId, Vin, Manufacturer, Model, ProductionYear, EngineCapacity, MileageValue, MileageUnit, LicensePlate, HorsePower, FuelType, BodyType, VehicleType);
 }

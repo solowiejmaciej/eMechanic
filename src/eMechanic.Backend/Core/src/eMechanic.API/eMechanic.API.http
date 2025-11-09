@@ -6,7 +6,7 @@
 @base_url = {{eMechanic.API_HostAddress}}/api/{{api_version}}
 
 # --- Zmienne przechwytywane (ustawiane automatycznie) ---
-@userToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTlhM2ZhZC1iYzljLTc2NzQtOTdiMy01MzlhODJmZWMxNmMiLCJlbWFpbCI6Im1hY2llai5ub3dha180MkB0ZXN0LmNvbSIsImp0aSI6IjAxOWEzZmFlLWY5ZGEtNzVkYS05NzZkLTdhNTNmZDY2ZDg4NCIsImlkZW50aXR5VHlwZSI6IlVzZXIiLCJ1c2VySWQiOiIwMTlhM2ZhZC1iZWQ0LTdkNDMtYjkxMi05MjA3OTZhNjg2YWUiLCJleHAiOjE3NjIwMDg2MjMsImlzcyI6ImVNZWNoYW5pY0FQSSIsImF1ZCI6ImVNZWNoYW5pY0FQSSJ9.rIj7cY13PZC7qn5mHZ3RpmZZoIM0uTkWJw5ukuKFeUc
+@userToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTlhNWYzMy05MDM4LTdhMjUtOTg0Zi1lMWMxNTMzOWVlZjAiLCJlbWFpbCI6Im1hY2llai5ub3dhazE3QHRlc3QuY29tIiwianRpIjoiMDE5YTY5YTktZDE5Yi03OGUxLWI2OTAtMDQ1MDE5M2YzZWE0IiwiaWRlbnRpdHlUeXBlIjoiVXNlciIsInVzZXJJZCI6IjAxOWE1ZjMzLTkxMzctN2E5Ni1iZTk2LWI4MWFlNmRjOTM5NyIsImV4cCI6MTc2MjcxMjkyOCwiaXNzIjoiZU1lY2hhbmljQVBJIiwiYXVkIjoiZU1lY2hhbmljQVBJIn0._VI-ULSzSB3L3GZSUlbI2IDzi8GGpsLjyXU5Y-9ZcFc
 @workshopToken =
 @userId =
 @vehicleId =
@@ -34,7 +34,7 @@ POST {{base_url}}/users/login
 Content-Type: application/json
 
 {
-    "email": "maciej.nowak_4@test.com",
+    "email": "maciej.nowak17@test.com",
     "password": "Password123!"
 }
 
@@ -98,13 +98,15 @@ Authorization: Bearer {{userToken}}
 Content-Type: application/json
 
 {
-  "vin": "VIN{{$randomInt}}ABC12DS345d6",
+  "vin": "V1N{{$randomInt}}ABC12DS345d6",
   "manufacturer": "Test Manufacturer",
   "model": "Test Model",
   "productionYear": "2023",
   "engineCapacity": 1.9,
   "mileage": 125000,
   "mileageUnit": 1,
+  "licensePlate": "PZ1W924",
+  "horsePower" : 320,
   "fuelType": 1,
   "bodyType": 1,
   "vehicleType": 1
@@ -139,10 +141,11 @@ Content-Type: application/json
   "productionYear": "2024",
   "engineCapacity": 2.5,
   "mileage": 130000,
-  "mileageUnit": "Kilometers",
-  "fuelType": "Electric",
-  "bodyType": "Hatchback",
-  "vehicleType": "Passenger"
+  "licensePlate": "PZ1W924",
+  "horsePower" : 320,
+  "fuelType": 1,
+  "bodyType": 1,
+  "vehicleType": 1
 }
 
 ### Delete Vehicle

@@ -6,7 +6,6 @@ using Application.Abstractions.VehicleTimeline;
 using Application.Vehicle.DomainEventHandlers;
 using Application.Vehicle.DomainEventHandlers.Timeline;
 using Domain.Vehicle;
-using Domain.Vehicle.DomainEvents;
 using Domain.Vehicle.Enums;
 using Domain.Vehicle.ValueObjects;
 using Domain.VehicleTimeline;
@@ -222,5 +221,37 @@ public class VehicleUpdateDomainEventHandlersTests
 
         // Assert
         AssertTimelineEntryWasAdded(nameof(VehicleEngineCapacityChangedDomainEvent), "\"EngineCapacity\":{\"OldValue\":null,\"NewValue\":{\"Value\":2.5}}");
+    }
+
+    [Fact]
+    public async Task Handle_VehicleLicensePlateChanged_Should_CreateTimelineEntry()
+    {
+        // Arrange
+        var handler = new VehicleLicensePlateChangedDomainEventHandler(_vehicleTimelineRepository);
+        var oldVal = LicensePlate.Create("OLD 123").Value!;
+        var newVal = LicensePlate.Create("NEW 456").Value!;
+        var notification = new VehicleLicensePlateChangedDomainEvent(_vehicleId, oldVal, newVal);
+
+        // Act
+        await handler.Handle(notification, CancellationToken.None);
+
+        // Assert
+        AssertTimelineEntryWasAdded(nameof(VehicleLicensePlateChangedDomainEvent), "\"LicensePlate\":{\"OldValue\":{\"Value\":\"OLD 123\"},\"NewValue\":{\"Value\":\"NEW 456\"}}");
+    }
+
+    [Fact]
+    public async Task Handle_VehicleHorsePowerChanged_Should_CreateTimelineEntry()
+    {
+        // Arrange
+        var handler = new VehicleHorsePowerChangedDomainEventHandler(_vehicleTimelineRepository);
+        var oldVal = HorsePower.Create(100).Value!;
+        var newVal = HorsePower.Create(150).Value!;
+        var notification = new VehicleHorsePowerChangedDomainEvent(_vehicleId, oldVal, newVal);
+
+        // Act
+        await handler.Handle(notification, CancellationToken.None);
+
+        // Assert
+        AssertTimelineEntryWasAdded(nameof(VehicleHorsePowerChangedDomainEvent), "\"HorsePower\":{\"OldValue\":{\"Value\":100},\"NewValue\":{\"Value\":150}}");
     }
 }

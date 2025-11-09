@@ -1,4 +1,4 @@
-namespace eMechanic.Domain.Vehicle.DomainEvents;
+namespace eMechanic.Domain.Vehicle;
 
 using eMechanic.Common.DDD;
 using eMechanic.Domain.Vehicle.ValueObjects;

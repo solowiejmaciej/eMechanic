@@ -28,6 +28,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         1.8m,
         200,
         EMileageUnit.Miles,
+        "PZ1W924",
+        124,
         EFuelType.Hybrid,
         EBodyType.SUV,
         EVehicleType.Passenger
@@ -281,12 +283,37 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     }
 
     [Fact]
-    public async Task CreateVehicle_Should_ReturnBadRequest_WhenVehicleTypeIsNone()
+    public async Task CreateVehicle_Should_ReturnCreated_WhenVehicleTypeIsMotorcycleAndBodyTypeIsNone()
     {
         // Arrange
         var (_, token) = await _authHelper.CreateAndLoginUserAsync();
         _client.SetBearerToken(token);
-        var request = CreateValidRequest() with { VehicleType = EVehicleType.None };
+
+        var request = CreateValidRequest() with
+        {
+            VehicleType = EVehicleType.Motorcycle,
+            BodyType = EBodyType.None
+        };
+
+        // Act
+        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        response.Headers.Location.Should().NotBeNull();
+
+        _client.ClearBearerToken();
+    }
+
+    [Theory]
+    [InlineData("INVALID PLATE !@#")]
+    [InlineData("TOOOOOOOOOOOOOLONGPLATE")]
+    public async Task CreateVehicle_Should_ReturnBadRequest_WhenLicensePlateIsInvalid(string invalidPlate)
+    {
+        // Arrange
+        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(token);
+        var request = CreateValidRequest() with { LicensePlate = invalidPlate };
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
@@ -294,7 +321,29 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-        problemDetails!.Errors.Should().ContainKey("VehicleType");
+        problemDetails!.Errors.Should().ContainKey("LicensePlate");
+
+        _client.ClearBearerToken();
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-100)]
+    [InlineData(99999)]
+    public async Task CreateVehicle_Should_ReturnBadRequest_WhenHorsePowerIsInvalid(int invalidHp)
+    {
+        // Arrange
+        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(token);
+        var request = CreateValidRequest() with { HorsePower = invalidHp };
+
+        // Act
+        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        problemDetails!.Errors.Should().ContainKey("HorsePower");
 
         _client.ClearBearerToken();
     }

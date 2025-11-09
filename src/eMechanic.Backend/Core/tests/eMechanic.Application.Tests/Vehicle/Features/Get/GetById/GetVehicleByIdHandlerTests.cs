@@ -21,8 +21,19 @@ public class GetVehicleByIdHandlerTests
     {
         _ownershipService = Substitute.For<IVehicleOwnershipService>();
          var creationResult = Vehicle.Create(
-            _currentUserId, "V1N123456789ABCDE", "GetById", "ModelGet", "2022",
-            3.0m, 5, EMileageUnit.Kilometers ,EFuelType.Hybrid, EBodyType.Hatchback, EVehicleType.Passenger);
+            _currentUserId,
+            "V1N123456789ABCDE",
+            "GetById",
+            "ModelGet",
+            "2022",
+            3.0m,
+            5,
+            EMileageUnit.Kilometers,
+            "PZ1W924",
+            124,
+            EFuelType.Hybrid,
+            EBodyType.Hatchback,
+            EVehicleType.Passenger);
 
         creationResult.HasError().Should().BeFalse();
         _existingVehicle = creationResult.Value!;

@@ -55,6 +55,16 @@ internal sealed class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
                 .IsRequired();
         });
 
+        builder.Property(v => v.HorsePower)
+            .HasConversion(py => py.Value, value => HorsePower.Create(value).Value!)
+            .IsRequired();
+
+        builder.Property(v => v.LicensePlate)
+            .HasConversion(lp => lp!.Value,
+                value => LicensePlate.Create(value).Value!)
+            .HasMaxLength(15)
+            .IsRequired();
+
         builder.Property(v => v.FuelType)
             .HasConversion<string>()
             .HasMaxLength(50)
