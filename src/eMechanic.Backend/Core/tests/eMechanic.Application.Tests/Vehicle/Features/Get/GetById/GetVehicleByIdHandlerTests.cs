@@ -1,7 +1,7 @@
-namespace eMechanic.Application.Tests.Vehicle.Get.GetById;
+namespace eMechanic.Application.Tests.Vehicle.Features.Get.GetById;
 
-using Application.Vehicle.Features.Get.ById;
 using eMechanic.Application.Abstractions.Vehicle;
+using eMechanic.Application.Vehicle.Features.Get.ById;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;
 using eMechanic.Domain.Vehicle.Enums;

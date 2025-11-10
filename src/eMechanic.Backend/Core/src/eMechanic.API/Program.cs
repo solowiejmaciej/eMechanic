@@ -19,28 +19,13 @@ public sealed class Program
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure(builder.Configuration);
         builder.AddInfrastructure();
-        builder.Services.AddOpenApi();
-        builder.Services.AddSwagger("eMechanic API", WebApiConstans.CURRENT_API_VERSION);
+
         builder.AddApi();
         builder.Services.AddApi(builder.Configuration);
 
         var app = builder.Build();
 
-        app.MapDefaultEndpoints();
-
-        app.MapOpenApi();
-        app.UseSwagger();
-        app.UseSwaggerUI();
         app.AddApi();
-
-        app.UseMiddleware<ExceptionHandlingMiddleware>();
-
-        app.UseHttpsRedirection();
-        var apiV1Group = app.MapGroup($"/api/{WebApiConstans.CURRENT_API_VERSION}");
-        apiV1Group.MapFeatures();
-
-        app.Services.ApplyMigrations();
-
         app.Run();
     }
 }

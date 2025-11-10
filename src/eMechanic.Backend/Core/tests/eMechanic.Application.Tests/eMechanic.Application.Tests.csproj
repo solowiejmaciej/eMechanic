@@ -17,7 +17,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Users\Features\" />
       <Folder Include="Vehicle\Features\" />
+      <Folder Include="Workshop\Features\" />
     </ItemGroup>
 
 </Project>

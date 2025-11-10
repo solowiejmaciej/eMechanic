@@ -1,6 +1,6 @@
-namespace eMechanic.Application.Tests.Vehicle.Delete;
+namespace eMechanic.Application.Tests.Vehicle.Features.Delete;
 
-using Application.Vehicle.Features.Delete;
+using eMechanic.Application.Vehicle.Features.Delete;
 using FluentValidation.TestHelper;
 
 public class DeleteVehicleCommandValidatorTests

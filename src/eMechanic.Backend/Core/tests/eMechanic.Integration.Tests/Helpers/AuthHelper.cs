@@ -2,10 +2,10 @@ namespace eMechanic.Integration.Tests.Helpers;
 
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using eMechanic.Application.Users.Login;
-using eMechanic.Application.Users.Register;
-using eMechanic.Application.Workshop.Login;
-using eMechanic.Application.Workshop.Register;
+using Application.Users.Features.Login;
+using Application.Users.Features.Register;
+using Application.Workshop.Features.Login;
+using Application.Workshop.Features.Register;
 using FluentAssertions;
 
 public class AuthHelper

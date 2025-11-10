@@ -2,7 +2,7 @@ namespace eMechanic.Integration.Tests.User;
 
 using System.Net;
 using System.Net.Http.Json;
-using Application.Users.Get.Current;
+using Application.Users.Features.Get.Current;
 using FluentAssertions;
 using Helpers;
 using TestContainers;

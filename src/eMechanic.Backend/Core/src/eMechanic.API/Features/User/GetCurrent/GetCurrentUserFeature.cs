@@ -1,9 +1,9 @@
 namespace eMechanic.API.Features.User.GetCurrent;
 
+using Application.Users.Features.Get.Current;
 using Common.Web;
 using eMechanic.API.Features.User;
 using eMechanic.API.Security;
-using eMechanic.Application.Users.Get.Current;
 using eMechanic.Common.Result;
 using MediatR;
 

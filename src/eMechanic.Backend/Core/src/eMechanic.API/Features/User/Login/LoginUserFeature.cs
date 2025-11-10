@@ -1,8 +1,8 @@
 namespace eMechanic.API.Features.User.Login;
 
+using Application.Users.Features.Login;
 using Common.Web;
 using eMechanic.API.Features.User;
-using eMechanic.Application.Users.Login;
 using eMechanic.Common.Result;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

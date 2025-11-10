@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text.Json;
 using Common.DDD;
 using Domain.User;
+using Domain.UserRepairPreferences;
 using Domain.Vehicle;
 using Domain.VehicleTimeline;
 using Domain.Workshop;
@@ -25,6 +26,7 @@ public class AppDbContext : DbContext
     public DbSet<Workshop> Workshops { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
     public DbSet<VehicleTimeline> VehicleTimelines { get; set; }
+    public DbSet<UserRepairPreferences> UserRepairPreferences { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using eMechanic.Application.Users.Login;
 using eMechanic.Infrastructure.Identity;
 using eMechanic.Integration.Tests.TestContainers;
 using FluentAssertions;
@@ -11,8 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 namespace eMechanic.Integration.Tests.User;
 
 using System.Text.RegularExpressions;
-using Application.Users.Register;
-using Application.Workshop.Register;
+using Application.Users.Features.Login;
+using Application.Users.Features.Register;
+using Application.Workshop.Features.Register;
 
 public class LoginUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory>
 {

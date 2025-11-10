@@ -1,6 +1,6 @@
 namespace eMechanic.API.Features.Workshop.Register;
 
-using Application.Workshop.Register;
+using Application.Workshop.Features.Register;
 
 public sealed record RegisterWorkshopRequest(
     string Email,

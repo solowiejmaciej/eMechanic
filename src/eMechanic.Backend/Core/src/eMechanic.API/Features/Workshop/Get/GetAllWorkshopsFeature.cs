@@ -1,7 +1,7 @@
 namespace eMechanic.API.Features.Workshop.Get;
 
-using Application.Workshop.Get;
-using Application.Workshop.Get.All;
+using Application.Workshop.Features.Get;
+using Application.Workshop.Features.Get.All;
 using Common.Result;
 using Common.Web;
 using MediatR;

@@ -3,6 +3,7 @@ namespace eMechanic.Infrastructure;
 using Application.Abstractions.Identity;
 using Application.Abstractions.Identity.Contexts;
 using Application.Abstractions.User;
+using Application.Abstractions.UserRepairPreferences;
 using Application.Abstractions.Vehicle;
 using Application.Abstractions.VehicleTimeline;
 using Application.Abstractions.Workshop;
@@ -56,6 +57,7 @@ public static class DependencyInjection
         services.AddScoped<IWorkshopRepository, WorkshopRepository>();
         services.AddScoped<IVehicleRepository, VehicleRepository>();
         services.AddScoped<IVehicleTimelineRepository, VehicleTimelineRepository>();
+        services.AddScoped<IUserRepairPreferencesRepository, UserRepairPreferencesRepositoryRepository>();
     }
 
     private static void AddServices(this IServiceCollection services)
