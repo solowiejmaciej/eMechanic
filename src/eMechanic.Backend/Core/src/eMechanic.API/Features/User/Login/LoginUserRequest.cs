@@ -1,6 +1,6 @@
 namespace eMechanic.API.Features.User.Login;
 
-using eMechanic.Application.Users.Login;
+using Application.Users.Features.Login;
 
 public sealed record LoginUserRequest(
     string Email,

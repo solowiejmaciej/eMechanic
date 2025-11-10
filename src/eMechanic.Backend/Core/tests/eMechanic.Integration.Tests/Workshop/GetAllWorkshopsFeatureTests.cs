@@ -8,7 +8,7 @@ using eMechanic.Integration.Tests.TestContainers;
 namespace eMechanic.Integration.Tests.Workshop;
 
 using API.Features.Workshop.Register;
-using Application.Workshop.Get;
+using Application.Workshop.Features.Get;
 using Common.Result;
 
 public class GetAllWorkshopsFeatureTests : IClassFixture<IntegrationTestWebAppFactory>

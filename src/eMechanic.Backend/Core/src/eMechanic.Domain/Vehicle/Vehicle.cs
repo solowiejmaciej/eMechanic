@@ -197,7 +197,6 @@ public class Vehicle : AggregateRoot, IUserReferenced
         var oldVin = Vin;
         Vin = vinResult.Value!;
         RaiseDomainEvent(new VehicleVinChangedDomainEvent(this.Id, oldVin, Vin));
-        SetUpdatedAt();
         return Result.Success;
     }
 
@@ -210,7 +209,6 @@ public class Vehicle : AggregateRoot, IUserReferenced
         var oldManufacturer = Manufacturer;
         Manufacturer = manufacturerResult.Value!;
         RaiseDomainEvent(new VehicleManufacturerChangedDomainEvent(this.Id, oldManufacturer, Manufacturer));
-        SetUpdatedAt();
         return Result.Success;
     }
 
@@ -223,7 +221,6 @@ public class Vehicle : AggregateRoot, IUserReferenced
         var oldModel = Model;
         Model = modelResult.Value!;
         RaiseDomainEvent(new VehicleModelChangedDomainEvent(this.Id, oldModel, Model));
-        SetUpdatedAt();
         return Result.Success;
     }
 
@@ -236,7 +233,6 @@ public class Vehicle : AggregateRoot, IUserReferenced
         var oldYear = ProductionYear;
         ProductionYear = yearResult.Value!;
         RaiseDomainEvent(new VehicleProductionYearChangedDomainEvent(this.Id, oldYear, ProductionYear));
-        SetUpdatedAt();
         return Result.Success;
     }
 
@@ -255,7 +251,6 @@ public class Vehicle : AggregateRoot, IUserReferenced
         var oldCapacity = EngineCapacity;
         EngineCapacity = newEngineCapacity;
         RaiseDomainEvent(new VehicleEngineCapacityChangedDomainEvent(this.Id, oldCapacity, newEngineCapacity));
-        SetUpdatedAt();
         return Result.Success;
     }
 
@@ -277,7 +272,6 @@ public class Vehicle : AggregateRoot, IUserReferenced
         Mileage = newMileageResult.Value!;
 
         RaiseDomainEvent(new VehicleMileageChangedDomainEvent(Id, oldMileage, Mileage));
-        SetUpdatedAt();
 
         return Result.Success;
     }
@@ -299,7 +293,6 @@ public class Vehicle : AggregateRoot, IUserReferenced
         LicensePlate = newLicensePlateResult.Value!;
 
         RaiseDomainEvent(new VehicleLicensePlateChangedDomainEvent(Id, oldLicensePlate, LicensePlate));
-        SetUpdatedAt();
 
         return Result.Success;
     }
@@ -321,7 +314,6 @@ public class Vehicle : AggregateRoot, IUserReferenced
         HorsePower = newHorsePowerResult.Value!;
 
         RaiseDomainEvent(new VehicleHorsePowerChangedDomainEvent(Id, oldHorsePower, HorsePower));
-        SetUpdatedAt();
 
         return Result.Success;
     }
@@ -337,7 +329,7 @@ public class Vehicle : AggregateRoot, IUserReferenced
         var oldFuelType = FuelType;
         FuelType = newFuelType;
         RaiseDomainEvent(new VehicleFuelTypeChangedDomainEvent(this.Id, oldFuelType, newFuelType));
-        SetUpdatedAt();
+
         return Result.Success;
     }
 
@@ -358,13 +350,11 @@ public class Vehicle : AggregateRoot, IUserReferenced
             return validationResult.Error!;
         }
 
-        bool changed = false;
         if (BodyType != newBodyType)
         {
             var oldBodyType = BodyType;
             BodyType = newBodyType;
             RaiseDomainEvent(new VehicleBodyTypeChangedDomainEvent(this.Id, oldBodyType, newBodyType));
-            changed = true;
         }
 
         if (VehicleType != newVehicleType)
@@ -372,12 +362,6 @@ public class Vehicle : AggregateRoot, IUserReferenced
             var oldVehicleType = VehicleType;
             VehicleType = newVehicleType;
             RaiseDomainEvent(new VehicleTypeChangedDomainEvent(this.Id, oldVehicleType, newVehicleType));
-            changed = true;
-        }
-
-        if (changed)
-        {
-            SetUpdatedAt();
         }
 
         return Result.Success;

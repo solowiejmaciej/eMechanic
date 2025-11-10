@@ -1,11 +1,11 @@
-namespace eMechanic.Application.Tests.Vehicle.Delete;
+namespace eMechanic.Application.Tests.Vehicle.Features.Delete;
 
-using Application.Abstractions.Identity.Contexts;
-using Application.Abstractions.Vehicle;
-using Application.Vehicle.Features.Delete;
-using Common.Result;
-using Domain.Vehicle;
-using Domain.Vehicle.Enums;
+using eMechanic.Application.Abstractions.Identity.Contexts;
+using eMechanic.Application.Abstractions.Vehicle;
+using eMechanic.Application.Vehicle.Features.Delete;
+using eMechanic.Common.Result;
+using eMechanic.Domain.Vehicle;
+using eMechanic.Domain.Vehicle.Enums;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;

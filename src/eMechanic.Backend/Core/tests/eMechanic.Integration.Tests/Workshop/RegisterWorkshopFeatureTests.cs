@@ -1,11 +1,12 @@
 using System.Net;
 using System.Net.Http.Json;
-using eMechanic.Application.Workshop.Register;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using eMechanic.Integration.Tests.TestContainers;
 
 namespace eMechanic.Integration.Tests.Workshop;
+
+using Application.Workshop.Features.Register;
 
 public class RegisterWorkshopFeatureTests : IClassFixture<IntegrationTestWebAppFactory>
 {

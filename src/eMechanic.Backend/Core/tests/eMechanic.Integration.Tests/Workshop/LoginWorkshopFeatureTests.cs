@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using eMechanic.Application.Workshop.Login;
 using eMechanic.Integration.Tests.TestContainers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -9,8 +8,9 @@ using System.Text.RegularExpressions;
 namespace eMechanic.Integration.Tests.Workshop;
 
 using System.Text.Json;
-using Application.Users.Register;
-using Application.Workshop.Register;
+using Application.Users.Features.Register;
+using Application.Workshop.Features.Login;
+using Application.Workshop.Features.Register;
 
 public class LoginWorkshopFeatureTests : IClassFixture<IntegrationTestWebAppFactory>
 {

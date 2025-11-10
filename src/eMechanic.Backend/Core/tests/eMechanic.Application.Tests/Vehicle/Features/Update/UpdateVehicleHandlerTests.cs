@@ -1,10 +1,10 @@
-namespace eMechanic.Application.Tests.Vehicle.Update;
+namespace eMechanic.Application.Tests.Vehicle.Features.Update;
 
-using Application.Abstractions.Vehicle;
-using Application.Vehicle.Features.Update;
-using Common.Result;
-using Domain.Vehicle;
-using Domain.Vehicle.Enums;
+using eMechanic.Application.Abstractions.Vehicle;
+using eMechanic.Application.Vehicle.Features.Update;
+using eMechanic.Common.Result;
+using eMechanic.Domain.Vehicle;
+using eMechanic.Domain.Vehicle.Enums;
 using FluentAssertions;
 using NSubstitute;
 

@@ -63,6 +63,39 @@ namespace eMechanic.Infrastructure.Migrations.Core
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("eMechanic.Domain.UserRepairPreferences.UserRepairPreferences", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PartsPreference")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("TimelinePreference")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserRepairPreferences", (string)null);
+                });
+
             modelBuilder.Entity("eMechanic.Domain.Vehicle.Vehicle", b =>
                 {
                     b.Property<Guid>("Id")
