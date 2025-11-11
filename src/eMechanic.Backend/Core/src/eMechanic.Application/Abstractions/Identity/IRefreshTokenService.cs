@@ -5,7 +5,7 @@ using Common.Result;
 
 public interface IRefreshTokenService
 {
-    Task<string> GenerateRefreshTokenAsync(Guid identityId, Guid jti, CancellationToken ct);
+    Task<string> GenerateRefreshTokenAsync(Guid identityId, Guid jti, CancellationToken cancellationToken);
 
     Task<Result<RefreshTokenDTO, Error>> ValidateAndRotateRefreshTokenAsync(
         string expiredAccessToken,

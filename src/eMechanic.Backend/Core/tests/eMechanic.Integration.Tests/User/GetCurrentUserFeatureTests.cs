@@ -22,8 +22,8 @@ public class GetCurrentUserFeatureTests : IClassFixture<IntegrationTestWebAppFac
     public async Task GetCurrentUser_Should_ReturnOkAndUserData_WhenUserIsAuthenticated()
     {
         // Arrange
-        var (userId, token) = await _authHelper.CreateAndLoginUserAsync($"current-user-{Guid.NewGuid()}@int.com");
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync($"current-user-{Guid.NewGuid()}@int.com");
+        _client.SetBearerToken(authResponse.Token);
 
         // Act
         var response = await _client.GetAsync("/api/v1/users/me");
@@ -32,7 +32,7 @@ public class GetCurrentUserFeatureTests : IClassFixture<IntegrationTestWebAppFac
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var userResponse = await response.Content.ReadFromJsonAsync<GetCurrentUserResponse>();
         userResponse.Should().NotBeNull();
-        userResponse!.Id.Should().Be(userId);
+        userResponse!.Id.Should().Be(authResponse.DomainId);
         userResponse.Email.Should().Contain("@int.com");
     }
 
@@ -53,8 +53,8 @@ public class GetCurrentUserFeatureTests : IClassFixture<IntegrationTestWebAppFac
     public async Task GetCurrentUser_Should_ReturnForbidden_WhenWorkshopTokenIsUsed()
     {
         // Arrange
-        var (_, workshopToken) = await _authHelper.CreateAndLoginWorkshopAsync($"workshop-auth-{Guid.NewGuid()}@int.com");
-        _client.SetBearerToken(workshopToken);
+        var authResponse = await _authHelper.CreateAndLoginWorkshopAsync($"workshop-auth-{Guid.NewGuid()}@int.com");
+        _client.SetBearerToken(authResponse.Token);
 
         // Act
         var response = await _client.GetAsync("/api/v1/users/me");

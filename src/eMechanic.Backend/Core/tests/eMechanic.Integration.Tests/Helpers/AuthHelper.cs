@@ -2,10 +2,10 @@ namespace eMechanic.Integration.Tests.Helpers;
 
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using Application.Users.Features.Login;
-using Application.Users.Features.Register;
-using Application.Workshop.Features.Login;
-using Application.Workshop.Features.Register;
+using Application.Token.Features.Create.User;
+using Application.Token.Features.Create.Workshop;
+using Application.Users.Features.Create;
+using Application.Workshop.Features.Create;
 using FluentAssertions;
 
 public class AuthHelper
@@ -17,56 +17,56 @@ public class AuthHelper
         _client = client;
     }
 
-    public async Task<(Guid UserId, string Token)> CreateAndLoginUserAsync(string? email = null, string? password = null)
+    public async Task<FullAuthResponse> CreateAndLoginUserAsync(string? email = null, string? password = null)
     {
         var userEmail = email ?? $"test-user-{Guid.NewGuid()}@integration.com";
         var userPassword = password ?? "Password123!";
 
-        var registerCmd = new RegisterUserCommand("Test", "User", userEmail, userPassword);
-        var registerResponse = await _client.PostAsJsonAsync("/api/v1/users/register", registerCmd);
+        var registerCmd = new CreateUserCommand("Test", "User", userEmail, userPassword);
+        var registerResponse = await _client.PostAsJsonAsync("/api/v1/users", registerCmd);
         registerResponse.EnsureSuccessStatusCode();
 
         var registerContent = await registerResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();
         var userId = registerContent!["userId"];
 
 
-        var loginCmd = new LoginUserCommand(userEmail, userPassword);
-        var loginResponse = await _client.PostAsJsonAsync("/api/v1/users/login", loginCmd);
+        var loginCmd = new CreateUserTokenCommand(userEmail, userPassword);
+        var loginResponse = await _client.PostAsJsonAsync("/api/v1/tokens/user", loginCmd);
         loginResponse.EnsureSuccessStatusCode();
 
-        var loginContent = await loginResponse.Content.ReadFromJsonAsync<LoginUserResponse>();
+        var loginContent = await loginResponse.Content.ReadFromJsonAsync<CreateUserTokenResponse>();
         loginContent.Should().NotBeNull();
         loginContent!.Token.Should().NotBeNullOrWhiteSpace();
 
-        return (userId, loginContent.Token);
+        return new FullAuthResponse(loginContent.UserId, loginContent.Token, loginContent.RefreshToken);
     }
 
-     public async Task<(Guid WorkshopId, string Token)> CreateAndLoginWorkshopAsync(string? email = null, string? password = null)
+     public async Task<FullAuthResponse> CreateAndLoginWorkshopAsync(string? email = null, string? password = null)
     {
         var workshopEmail = email ?? $"test-workshop-{Guid.NewGuid()}@integration.com";
         var workshopPassword = password ?? "Password123!";
         var uniqueSuffix = Guid.NewGuid().ToString("N")[..6];
 
-        var registerCmd = new RegisterWorkshopCommand(
+        var registerCmd = new CreateWorkshopCommand(
             workshopEmail, workshopPassword, $"contact-{uniqueSuffix}@workshop.com",
             $"Test Workshop {uniqueSuffix}", $"TestW-{uniqueSuffix}", "123456789",
             "Test St 1", "Test City", "12-345", "Testland");
-        var registerResponse = await _client.PostAsJsonAsync("/api/v1/workshops/register", registerCmd);
+        var registerResponse = await _client.PostAsJsonAsync("/api/v1/workshops", registerCmd);
         registerResponse.EnsureSuccessStatusCode();
 
          var registerContent = await registerResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();
         var workshopId = registerContent!["workshopId"];
 
 
-        var loginCmd = new LoginWorkshopCommand(workshopEmail, workshopPassword);
-        var loginResponse = await _client.PostAsJsonAsync("/api/v1/workshops/login", loginCmd);
+        var loginCmd = new CreateWorkshopTokenCommand(workshopEmail, workshopPassword);
+        var loginResponse = await _client.PostAsJsonAsync("/api/v1/tokens/workshop", loginCmd);
         loginResponse.EnsureSuccessStatusCode();
 
-        var loginContent = await loginResponse.Content.ReadFromJsonAsync<LoginWorkshopResponse>();
+        var loginContent = await loginResponse.Content.ReadFromJsonAsync<CreateWorkshopTokenResponse>();
         loginContent.Should().NotBeNull();
         loginContent!.Token.Should().NotBeNullOrWhiteSpace();
 
-        return (workshopId, loginContent.Token);
+        return new FullAuthResponse(loginContent.WorkshopId, loginContent.Token, loginContent.RefreshToken);
     }
 
     public void SetAuthHeader(string token) => _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

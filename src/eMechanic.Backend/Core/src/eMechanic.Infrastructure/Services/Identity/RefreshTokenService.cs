@@ -60,14 +60,15 @@ internal sealed class RefreshTokenService : IRefreshTokenService
         };
     }
 
-    public async Task<string> GenerateRefreshTokenAsync(Guid identityId, Guid jti, CancellationToken ct)
+    public async Task<string> GenerateRefreshTokenAsync(Guid identityId, Guid jti, CancellationToken cancellationToken)
     {
         var expiryDays = _configuration.GetValue<int>("Authentication:JwtBearer:RefreshTokenExpiryInDays", 7);
         var expiryDate = DateTime.UtcNow.AddDays(expiryDays);
 
         var refreshToken = RefreshToken.Create(jti, expiryDate, identityId);
 
-        await _identityDbContext.RefreshTokens.AddAsync(refreshToken, ct);
+        await _identityDbContext.RefreshTokens.AddAsync(refreshToken, cancellationToken);
+        await _identityDbContext.SaveChangesAsync(cancellationToken);
 
         return refreshToken.Token;
     }
@@ -86,11 +87,6 @@ internal sealed class RefreshTokenService : IRefreshTokenService
             return Error.Validation(EField.General, "Invalid token.");
         }
 
-        if (principal?.Identity?.Name is null)
-        {
-            return Error.Validation(EField.General, "Invalid token claims.");
-        }
-
         var identityIdStr = principal.FindFirstValue(JwtRegisteredClaimNames.Sub);
         var jtiStr = principal.FindFirstValue(JwtRegisteredClaimNames.Jti);
 
@@ -99,73 +95,71 @@ internal sealed class RefreshTokenService : IRefreshTokenService
 
         RefreshTokenDTO? responseData = null;
 
-        await _transactionalExecutor.ExecuteAsync(async () =>
+        try
         {
-            var dbToken = await _identityDbContext.RefreshTokens
-                .SingleOrDefaultAsync(rt => rt.Token == refreshToken, ct);
-
-            if (dbToken == null)
+            await _transactionalExecutor.ExecuteAsync(async () =>
             {
-                throw new InvalidOperationException("Invalid refresh token.");
-            }
+                var dbToken = await _identityDbContext.RefreshTokens
+                    .SingleOrDefaultAsync(rt => rt.Token == refreshToken, ct);
 
-            if (!dbToken.IsActive)
-            {
-                throw new InvalidOperationException("Refresh token is not active (expired or already used).");
-            }
+                if (dbToken == null)
+                    throw new InvalidOperationException("Invalid refresh token.");
+                if (!dbToken.IsActive)
+                    throw new InvalidOperationException("Refresh token is not active (expired or already used).");
+                if (dbToken.IdentityId != identityId)
+                    throw new InvalidOperationException("Refresh token identity mismatch.");
+                if (dbToken.Jti != jti)
+                    throw new InvalidOperationException("Refresh token JTI mismatch (token reuse suspected).");
 
-            if (dbToken.IdentityId != identityId)
-            {
-                throw new InvalidOperationException("Refresh token identity mismatch.");
-            }
+                dbToken.SetUsed();
 
-            if (dbToken.Jti != jti)
-                throw new InvalidOperationException("Refresh token JTI mismatch (token reuse suspected).");
+                var identityUser = await _userManager.FindByIdAsync(identityId.ToString());
+                if (identityUser == null)
+                    throw new InvalidOperationException("Identity user not found.");
 
-            dbToken.SetUsed();
+                var domainEntityId = await GetDomainEntityIdAsync(identityUser.Id, identityUser.Type, ct);
+                if (domainEntityId == null)
+                    throw new InvalidOperationException("Domain entity not found for identity.");
 
-            var identityUser = await _userManager.FindByIdAsync(identityId.ToString());
-            if (identityUser == null)
-            {
-                throw new InvalidOperationException("Identity user not found.");
-            }
+                var authIdentity = new AuthenticatedIdentity(identityUser.Id, domainEntityId.Value, identityUser.Email!,
+                    identityUser.Type);
+                var newAccessTokenDto = _tokenGenerator.GenerateToken(authIdentity);
 
-            var domainEntityId = await GetDomainEntityIdAsync(identityUser.Id, identityUser.Type, ct);
-            if (domainEntityId == null)
-            {
-                throw new InvalidOperationException("Domain entity not found for identity.");
-            }
+                var newJti = GetJtiFromToken(newAccessTokenDto.AccessToken);
+                if (newJti == Guid.Empty)
+                    throw new InvalidOperationException("Failed to generate JTI for new access token.");
 
-            var authIdentity = new AuthenticatedIdentity(identityUser.Id, domainEntityId.Value, identityUser.Email!, identityUser.Type);
-            var newAccessTokenDto = _tokenGenerator.GenerateToken(authIdentity);
+                var newRefreshToken = await GenerateRefreshTokenAsync(identityUser.Id, newJti, ct);
 
-            var newJti = GetJtiFromToken(newAccessTokenDto.AccessToken);
-            if (newJti == Guid.Empty)
-            {
-                throw new InvalidOperationException("Failed to generate JTI for new access token.");
-            }
+                await _identityDbContext.SaveChangesAsync(ct);
 
-            var newRefreshToken = await GenerateRefreshTokenAsync(identityUser.Id, newJti, ct);
+                responseData = new RefreshTokenDTO(
+                    newAccessTokenDto.AccessToken,
+                    newAccessTokenDto.ExpiresAt,
+                    domainEntityId.Value,
+                    newRefreshToken,
+                    identityUser.Type
+                );
 
+            }, ct);
 
-            await _identityDbContext.SaveChangesAsync(ct);
+            return responseData!;
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogWarning(ex, "Token validation failed");
+            return new Error(EErrorCode.UnauthorizedError, "Unable to authorize identity");
+        }
 
-            responseData = new RefreshTokenDTO(
-                newAccessTokenDto.AccessToken,
-                newAccessTokenDto.ExpiresAt,
-                domainEntityId.Value,
-                newRefreshToken,
-                identityUser.Type
-            );
-
-        }, ct);
-
-        return responseData ?? (Result<RefreshTokenDTO, Error>)new Error(EErrorCode.InternalServerError, "Failed to refresh token.");
     }
 
     private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
+        var tokenHandler = new JwtSecurityTokenHandler
+        {
+            MapInboundClaims = false
+        };
+
         var principal = tokenHandler.ValidateToken(token, _tokenValidationParams, out var securityToken);
 
         if (securityToken is not JwtSecurityToken jwtToken ||
@@ -190,8 +184,12 @@ internal sealed class RefreshTokenService : IRefreshTokenService
     private Guid GetJtiFromToken(string accessToken)
     {
         var handler = new JwtSecurityTokenHandler();
+        handler.MapInboundClaims = false;
+
         if (handler.ReadToken(accessToken) is not JwtSecurityToken jwtToken)
+        {
             return Guid.Empty;
+        }
 
         var jtiClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
 

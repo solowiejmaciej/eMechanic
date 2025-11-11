@@ -39,8 +39,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnCreated_WhenDataIsValidAndUserIsAuthenticated()
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
         var request = CreateValidRequest();
 
         // Act
@@ -74,8 +74,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnForbidden_WhenWorkshopTokenIsUsed()
     {
         // Arrange
-        var (_, workshopToken) = await _authHelper.CreateAndLoginWorkshopAsync();
-        _client.SetBearerToken(workshopToken);
+        var authResponse = await _authHelper.CreateAndLoginWorkshopAsync();
+        _client.SetBearerToken(authResponse.Token);
         var request = CreateValidRequest();
 
         // Act
@@ -97,8 +97,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnBadRequest_WhenVinIsInvalid(string invalidVin)
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
         var request = CreateValidRequest() with { Vin = invalidVin };
 
         // Act
@@ -121,8 +121,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnBadRequest_WhenManufacturerIsEmpty(string? invalidManufacturer)
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
         var request = CreateValidRequest() with { Manufacturer = invalidManufacturer! };
 
         // Act
@@ -140,8 +140,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnBadRequest_WhenManufacturerIsTooLong()
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
         var longManufacturer = new string('a', 101);
         var request = CreateValidRequest() with { Manufacturer = longManufacturer };
 
@@ -164,8 +164,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnBadRequest_WhenModelIsEmpty(string? invalidModel)
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
         var request = CreateValidRequest() with { Model = invalidModel! };
 
         // Act
@@ -183,8 +183,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnBadRequest_WhenModelIsTooLong()
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
         var longModel = new string('b', 101);
         var request = CreateValidRequest() with { Model = longModel };
 
@@ -209,8 +209,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnBadRequest_WhenProductionYearIsInvalid(string? invalidYear)
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
         var request = CreateValidRequest() with { ProductionYear = invalidYear! };
 
         // Act
@@ -229,8 +229,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnBadRequest_WhenEngineCapacityIsInvalid(decimal invalidCapacity)
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
         var request = CreateValidRequest() with { EngineCapacity = invalidCapacity };
 
         // Act
@@ -248,8 +248,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnBadRequest_WhenFuelTypeIsNone()
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse= await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
         var request = CreateValidRequest() with { FuelType = EFuelType.None };
 
         // Act
@@ -267,8 +267,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnBadRequest_WhenBodyTypeIsNone()
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
         var request = CreateValidRequest() with { BodyType = EBodyType.None };
 
         // Act
@@ -286,8 +286,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnCreated_WhenVehicleTypeIsMotorcycleAndBodyTypeIsNone()
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
 
         var request = CreateValidRequest() with
         {
@@ -311,8 +311,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnBadRequest_WhenLicensePlateIsInvalid(string invalidPlate)
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
         var request = CreateValidRequest() with { LicensePlate = invalidPlate };
 
         // Act
@@ -333,8 +333,8 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnBadRequest_WhenHorsePowerIsInvalid(int invalidHp)
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
         var request = CreateValidRequest() with { HorsePower = invalidHp };
 
         // Act

@@ -8,6 +8,7 @@ public static class ErrorMapper
     {
         EErrorCode.NotFoundError => Results.NotFound(error),
         EErrorCode.ValidationError => HandleValidationError(error),
+        EErrorCode.UnauthorizedError => Results.Unauthorized(),
 
         _ => Results.Problem(
             title: error.Code.ToString(),

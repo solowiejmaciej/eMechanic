@@ -3,8 +3,8 @@ namespace eMechanic.Integration.Tests.User;
 using System.Net;
 using System.Net.Http.Json;
 using API.Features.User.Update.Request;
+using Application.Token.Features.Create.User;
 using Application.Users.Features.Get.Current;
-using Application.Users.Features.Login;
 using Common.Result.Fields;
 using FluentAssertions;
 using Helpers;
@@ -26,8 +26,8 @@ public class UpdateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
     public async Task UpdateUser_Should_ReturnNoContent_And_SuccessfullyUpdateAllData()
     {
         // Arrange
-        var (originalUserId, originalToken) = await _authHelper.CreateAndLoginUserAsync("original@test.com", "Password123!");
-        _client.SetBearerToken(originalToken);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync("original@test.com", "Password123!");
+        _client.SetBearerToken(authResponse.Token);
 
         var updateRequest = new UpdateUserRequest("Jan", "Kowalski", "new-email@test.com");
 
@@ -42,21 +42,21 @@ public class UpdateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
 
         var userDto = await getResponse.Content.ReadFromJsonAsync<GetCurrentUserResponse>();
         userDto.Should().NotBeNull();
-        userDto!.Id.Should().Be(originalUserId);
+        userDto!.Id.Should().Be(authResponse.DomainId);
         userDto.FirstName.Should().Be("Jan");
         userDto.LastName.Should().Be("Kowalski");
         userDto.Email.Should().Be("new-email@test.com");
 
         _client.ClearBearerToken();
-        var loginCmd = new LoginUserCommand("new-email@test.com", "Password123!");
-        var loginResponse = await _client.PostAsJsonAsync("/api/v1/users/login", loginCmd);
+        var loginCmd = new CreateUserTokenCommand("new-email@test.com", "Password123!");
+        var loginResponse = await _client.PostAsJsonAsync("/api/v1/tokens/user", loginCmd);
 
         loginResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        var loginDto = await loginResponse.Content.ReadFromJsonAsync<LoginUserResponse>();
-        loginDto!.UserId.Should().Be(originalUserId);
+        var loginDto = await loginResponse.Content.ReadFromJsonAsync<CreateUserTokenResponse>();
+        loginDto!.UserId.Should().Be(authResponse.DomainId);
 
-        var oldLoginCmd = new LoginUserCommand("original@test.com", "Password123!");
-        var oldLoginResponse = await _client.PostAsJsonAsync("/api/v1/users/login", oldLoginCmd);
+        var oldLoginCmd = new CreateUserTokenCommand("original@test.com", "Password123!");
+        var oldLoginResponse = await _client.PostAsJsonAsync("/api/v1/tokens/user", oldLoginCmd);
         oldLoginResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
         _client.ClearBearerToken();
@@ -69,8 +69,8 @@ public class UpdateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
         await _authHelper.CreateAndLoginUserAsync("taken@test.com");
         _client.ClearBearerToken();
 
-        var (userBId, tokenB) = await _authHelper.CreateAndLoginUserAsync("user-b@test.com");
-        _client.SetBearerToken(tokenB);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync("user-b@test.com");
+        _client.SetBearerToken(authResponse.Token);
 
         var updateRequest = new UpdateUserRequest("UserB", "LastNameB", "taken@test.com");
 
@@ -105,8 +105,8 @@ public class UpdateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
     public async Task UpdateUser_Should_ReturnForbidden_WhenWorkshopTokenIsUsed()
     {
         // Arrange
-        var (_, workshopToken) = await _authHelper.CreateAndLoginWorkshopAsync();
-        _client.SetBearerToken(workshopToken);
+        var authResponse = await _authHelper.CreateAndLoginWorkshopAsync();
+        _client.SetBearerToken(authResponse.Token);
         var updateRequest = new UpdateUserRequest("Test", "Test", "test@test.com");
 
         // Act
@@ -127,8 +127,8 @@ public class UpdateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
         string firstName, string lastName, string email, string expectedErrorField)
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
 
         var updateRequest = new UpdateUserRequest(firstName, lastName, email);
 

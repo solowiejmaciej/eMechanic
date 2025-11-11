@@ -48,14 +48,14 @@ public class GetAllVehiclesFeatureTests : IClassFixture<IntegrationTestWebAppFac
     public async Task GetAllVehicles_Should_ReturnOkAndPaginatedList_WhenUserIsAuthenticated()
     {
         // Arrange
-        var (_, tokenA) = await _authHelper.CreateAndLoginUserAsync("userA-getall@int.com");
-        await CreateVehicleForUser("ManufacturerA1", tokenA);
-        await CreateVehicleForUser("ManufacturerA2", tokenA);
+        var authResponseA = await _authHelper.CreateAndLoginUserAsync("userA-getall@int.com");
+        await CreateVehicleForUser("ManufacturerA1", authResponseA.Token);
+        await CreateVehicleForUser("ManufacturerA2", authResponseA.Token);
 
-        var (_, tokenB) = await _authHelper.CreateAndLoginUserAsync("userB-getall@int.com");
-        await CreateVehicleForUser("ManufacturerB1", tokenB);
+        var authResponseB = await _authHelper.CreateAndLoginUserAsync("userB-getall@int.com");
+        await CreateVehicleForUser("ManufacturerB1", authResponseB.Token);
 
-        _client.SetBearerToken(tokenA);
+        _client.SetBearerToken(authResponseA.Token);
 
         // Act
         var response = await _client.GetAsync("/api/v1/vehicles?pageNumber=1&pageSize=5");
@@ -78,12 +78,12 @@ public class GetAllVehiclesFeatureTests : IClassFixture<IntegrationTestWebAppFac
     public async Task GetAllVehicles_Should_HandlePaginationCorrectly()
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync("userC-getall@int.com");
-        await CreateVehicleForUser("CarA", token);
-        await CreateVehicleForUser("CarB", token);
-        await CreateVehicleForUser("CarC", token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync("userC-getall@int.com");
+        await CreateVehicleForUser("CarA", authResponse.Token);
+        await CreateVehicleForUser("CarB", authResponse.Token);
+        await CreateVehicleForUser("CarC", authResponse.Token);
 
-        _client.SetBearerToken(token);
+        _client.SetBearerToken(authResponse.Token);
 
         // Act
         var response = await _client.GetAsync("/api/v1/vehicles?pageNumber=2&pageSize=2");
@@ -118,8 +118,8 @@ public class GetAllVehiclesFeatureTests : IClassFixture<IntegrationTestWebAppFac
     public async Task GetAllVehicles_Should_ReturnForbiddenOrUnauthorized_WhenWorkshopTokenIsUsed()
     {
         // Arrange
-        var (_, workshopToken) = await _authHelper.CreateAndLoginWorkshopAsync();
-        _client.SetBearerToken(workshopToken);
+        var authResponse = await _authHelper.CreateAndLoginWorkshopAsync();
+        _client.SetBearerToken(authResponse.Token);
 
         // Act
         var response = await _client.GetAsync("/api/v1/vehicles?pageNumber=2&pageSize=2");

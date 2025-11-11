@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using API.Features.Workshop.Update.Request;
-using Application.Workshop.Features.Login;
+using Application.Token.Features.Create.Workshop;
 using Common.Result.Fields;
 using FluentAssertions;
 using Helpers;
@@ -38,8 +38,8 @@ public class UpdateWorkshopFeatureTests : IClassFixture<IntegrationTestWebAppFac
     {
         // Arrange
         var originalEmail = $"original-ws-{Guid.NewGuid()}@int.com";
-        var (workshopId, token) = await _authHelper.CreateAndLoginWorkshopAsync(originalEmail, "Password123!");
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginWorkshopAsync(originalEmail, "Password123!");
+        _client.SetBearerToken(authResponse.Token);
 
         var newEmail = $"new-ws-{Guid.NewGuid()}@int.com";
         var updateRequest = CreateValidRequest(newEmail);
@@ -51,15 +51,15 @@ public class UpdateWorkshopFeatureTests : IClassFixture<IntegrationTestWebAppFac
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         _client.ClearBearerToken();
-        var loginCmd = new LoginWorkshopCommand(newEmail, "Password123!");
-        var loginResponse = await _client.PostAsJsonAsync("/api/v1/workshops/login", loginCmd);
+        var loginCmd = new CreateWorkshopTokenCommand(newEmail, "Password123!");
+        var loginResponse = await _client.PostAsJsonAsync("/api/v1/tokens/workshop", loginCmd);
 
         loginResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        var loginDto = await loginResponse.Content.ReadFromJsonAsync<LoginWorkshopResponse>();
-        loginDto!.WorkshopId.Should().Be(workshopId);
+        var loginDto = await loginResponse.Content.ReadFromJsonAsync<CreateWorkshopTokenResponse>();
+        loginDto!.WorkshopId.Should().Be(authResponse.DomainId);
 
-        var oldLoginCmd = new LoginWorkshopCommand(originalEmail, "Password123!");
-        var oldLoginResponse = await _client.PostAsJsonAsync("/api/v1/workshops/login", oldLoginCmd);
+        var oldLoginCmd = new CreateWorkshopTokenCommand(originalEmail, "Password123!");
+        var oldLoginResponse = await _client.PostAsJsonAsync("/api/v1/tokens/workshop", oldLoginCmd);
         oldLoginResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
         _client.ClearBearerToken();
@@ -69,8 +69,8 @@ public class UpdateWorkshopFeatureTests : IClassFixture<IntegrationTestWebAppFac
     public async Task UpdateWorkshop_Should_ReturnForbidden_WhenUserTokenIsUsed()
     {
         // Arrange
-        var (_, userToken) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(userToken);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
 
         var updateRequest = CreateValidRequest("test@test.com");
 
@@ -90,8 +90,8 @@ public class UpdateWorkshopFeatureTests : IClassFixture<IntegrationTestWebAppFac
         await _authHelper.CreateAndLoginWorkshopAsync(takenEmail);
         _client.ClearBearerToken();
 
-        var (_, tokenB) = await _authHelper.CreateAndLoginWorkshopAsync($"workshop-b-{Guid.NewGuid()}@int.com");
-        _client.SetBearerToken(tokenB);
+        var authResponse = await _authHelper.CreateAndLoginWorkshopAsync($"workshop-b-{Guid.NewGuid()}@int.com");
+        _client.SetBearerToken(authResponse.Token);
 
         var updateRequest = CreateValidRequest(takenEmail);
 
@@ -112,8 +112,8 @@ public class UpdateWorkshopFeatureTests : IClassFixture<IntegrationTestWebAppFac
     public async Task UpdateWorkshop_Should_ReturnBadRequest_WhenValidationFails()
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginWorkshopAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginWorkshopAsync();
+        _client.SetBearerToken(authResponse.Token);
 
         var updateRequest = CreateValidRequest("new@email.com") with { Name = "" };
 

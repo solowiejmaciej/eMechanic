@@ -25,8 +25,8 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
 
     private async Task<(Guid VehicleId, string Token, CreateVehicleRequest CreateRequest)> CreateVehicleForTestUser()
     {
-        var (userId, token) = await _authHelper.CreateAndLoginUserAsync($"user-timeline-{Guid.NewGuid()}@int.com");
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync($"user-timeline-{Guid.NewGuid()}@int.com");
+        _client.SetBearerToken(authResponse.Token);
 
         var createRequest = new CreateVehicleRequest(
             $"V1N{Guid.NewGuid().ToString("N")[..14]}",
@@ -47,7 +47,7 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
         var createdContent = await createResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();
         var vehicleId = createdContent!["vehicleId"];
 
-        return (vehicleId, token, createRequest);
+        return (vehicleId, authResponse.Token, createRequest);
     }
 
     [Fact]
@@ -162,8 +162,8 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
         var (vehicleId, _, _) = await CreateVehicleForTestUser();
         _client.ClearBearerToken();
 
-        var (_, otherUserToken) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(otherUserToken);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
 
         // Act
         var response = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}/timeline?pageNumber=1&pageSize=3");
@@ -195,8 +195,8 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
         var (vehicleId, _, _) = await CreateVehicleForTestUser();
         _client.ClearBearerToken();
 
-        var (_, workshopToken) = await _authHelper.CreateAndLoginWorkshopAsync();
-        _client.SetBearerToken(workshopToken);
+        var authResponse = await _authHelper.CreateAndLoginWorkshopAsync();
+        _client.SetBearerToken(authResponse.Token);
 
         // Act
         var response = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}/timeline");
