@@ -52,7 +52,6 @@ internal sealed class WorkshopConfiguration : IEntityTypeConfiguration<Workshop>
             .IsRequired();
 
         builder.HasIndex(w => w.Email).IsUnique();
-        builder.HasIndex(w => w.DisplayName).IsUnique();
 
         builder.HasIndex(w => w.IdentityId).IsUnique();
     }

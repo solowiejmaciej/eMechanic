@@ -60,11 +60,11 @@ POST {{base_url}}/workshops/register
 Content-Type: application/json
 
 {
-  "email": "workshop_{{$randomInt}}@example.com",
+  "email": "workshop_2@example.com",
   "password": "Password123!",
   "contactEmail": "contact_{{$randomInt}}@workshop.com",
   "name": "Super Warsztat",
-  "displayName": "SuperW_{{$randomInt}}",
+  "displayName": "SuperW_2",
   "phoneNumber": "123456789",
   "address": "ul. Testowa 1",
   "city": "Poznań",
@@ -78,7 +78,7 @@ POST {{base_url}}/workshops/login
 Content-Type: application/json
 
 {
-    "email": "workshop_1@example.com",
+    "email": "workshop_2@example.com",
     "password": "Password123!"
 }
 

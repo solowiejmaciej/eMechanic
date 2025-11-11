@@ -1,9 +1,9 @@
 namespace eMechanic.Application.Users.Features.Get.Current;
 
 using eMechanic.Application.Abstractions.Identity.Contexts;
-using eMechanic.Application.Abstractions.User;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
+using Repositories;
 
 public sealed class GetCurrentUserHandler : IResultQueryHandler<GetCurrentUserQuery, GetCurrentUserResponse>
 {

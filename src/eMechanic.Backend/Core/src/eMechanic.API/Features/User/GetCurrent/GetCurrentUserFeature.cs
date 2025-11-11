@@ -16,7 +16,7 @@ public sealed class GetCurrentUserFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet(UserPrefix.ENDPOINT, async (
+        app.MapGet(UserPrefix.ENDPOINT + "/me", async (
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
@@ -30,6 +30,7 @@ public sealed class GetCurrentUserFeature : IFeature
             .Produces<GetCurrentUserResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
+            .WithSummary("Returns current logged user")
             .RequireAuthorization(AuthorizationPolicies.MUST_BE_USER);
     }
 }

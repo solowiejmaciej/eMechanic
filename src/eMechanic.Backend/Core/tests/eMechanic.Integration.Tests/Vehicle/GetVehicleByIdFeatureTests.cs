@@ -23,8 +23,8 @@ public class GetVehicleByIdFeatureTests : IClassFixture<IntegrationTestWebAppFac
 
      private async Task<(Guid UserId, Guid VehicleId, string Token)> CreateVehicleForTestUser()
      {
-         var (userId, token) = await _authHelper.CreateAndLoginUserAsync();
-         _client.SetBearerToken(token);
+         var authResponse = await _authHelper.CreateAndLoginUserAsync();
+         _client.SetBearerToken(authResponse.Token);
 
          var createRequest = new CreateVehicleRequest(
              $"V1N{Guid.NewGuid().ToString("N")[..14]}",
@@ -44,7 +44,7 @@ public class GetVehicleByIdFeatureTests : IClassFixture<IntegrationTestWebAppFac
          var createdContent = await createResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();
          var vehicleId = createdContent!["vehicleId"];
 
-         return (userId, vehicleId, token);
+         return (authResponse.DomainId, vehicleId, authResponse.Token);
      }
 
     [Fact]
@@ -71,8 +71,8 @@ public class GetVehicleByIdFeatureTests : IClassFixture<IntegrationTestWebAppFac
     public async Task GetVehicleById_Should_ReturnNotFound_WhenVehicleDoesNotExist()
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
         var nonExistentVehicleId = Guid.NewGuid();
 
         // Act
@@ -91,8 +91,8 @@ public class GetVehicleByIdFeatureTests : IClassFixture<IntegrationTestWebAppFac
         var (_, vehicleId, _) = await CreateVehicleForTestUser();
         _client.ClearBearerToken();
 
-         var (_, otherUserToken) = await _authHelper.CreateAndLoginUserAsync();
-         _client.SetBearerToken(otherUserToken);
+         var authResponse = await _authHelper.CreateAndLoginUserAsync();
+         _client.SetBearerToken(authResponse.Token);
 
         // Act
         var response = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}");
@@ -124,8 +124,8 @@ public class GetVehicleByIdFeatureTests : IClassFixture<IntegrationTestWebAppFac
         var (_, vehicleId, _) = await CreateVehicleForTestUser();
         _client.ClearBearerToken();
 
-        var (_, workshopToken) = await _authHelper.CreateAndLoginWorkshopAsync();
-        _client.SetBearerToken(workshopToken);
+        var authResponse = await _authHelper.CreateAndLoginWorkshopAsync();
+        _client.SetBearerToken(authResponse.Token);
 
         // Act
         var response = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}");

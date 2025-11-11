@@ -1,9 +1,9 @@
 namespace eMechanic.Application.Vehicle.Services;
 
 using eMechanic.Application.Abstractions.Identity.Contexts;
-using eMechanic.Application.Abstractions.Vehicle;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;
+using Repostories;
 
 public sealed class VehicleOwnershipService : IVehicleOwnershipService
 {

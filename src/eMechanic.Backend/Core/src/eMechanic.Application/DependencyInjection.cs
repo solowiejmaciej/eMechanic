@@ -1,7 +1,6 @@
 namespace eMechanic.Application;
 
 using System.Reflection;
-using Abstractions.Vehicle;
 using Behaviors;
 using Caching;
 using FluentValidation;

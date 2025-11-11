@@ -1,7 +1,6 @@
 namespace eMechanic.Application.Tests.UserPreferences.Features.Get;
 
 using eMechanic.Application.Abstractions.Identity.Contexts;
-using eMechanic.Application.Abstractions.UserRepairPreferences;
 using eMechanic.Application.UserRepairPreferences.Features.Get;
 using eMechanic.Common.Result;
 using eMechanic.Domain.UserRepairPreferences;
@@ -9,6 +8,7 @@ using eMechanic.Domain.UserRepairPreferences.Enums;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using UserRepairPreferences.Repositories;
 
 public class GetCurrentUserRepairPreferencesHandlerTests
 {

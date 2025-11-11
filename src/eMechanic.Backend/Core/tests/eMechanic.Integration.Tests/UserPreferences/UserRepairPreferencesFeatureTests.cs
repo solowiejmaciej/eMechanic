@@ -26,8 +26,8 @@ public class UserRepairPreferencesFeatureTests : IClassFixture<IntegrationTestWe
     public async Task GetAndUpdate_Preferences_Should_Succeed_When_FlowIsCorrect()
     {
         // ARRANGE
-        var (userId, token) = await _authHelper.CreateAndLoginUserAsync($"prefs-user-{Guid.NewGuid()}@int.com");
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync($"prefs-user-{Guid.NewGuid()}@int.com");
+        _client.SetBearerToken(authResponse.Token);
 
         // ACT (GET)
         var getResponse = await _client.GetAsync(API_URL);
@@ -37,7 +37,7 @@ public class UserRepairPreferencesFeatureTests : IClassFixture<IntegrationTestWe
         var preferences = await getResponse.Content.ReadFromJsonAsync<UserRepairPreferencesResponse>();
 
         preferences.Should().NotBeNull();
-        preferences!.UserId.Should().Be(userId);
+        preferences!.UserId.Should().Be(authResponse.DomainId);
         preferences.PartsPreference.Should().Be(EPartsPreference.Balanced);
         preferences.TimelinePreference.Should().Be(ETimelinePreference.Standard);
 
@@ -96,8 +96,8 @@ public class UserRepairPreferencesFeatureTests : IClassFixture<IntegrationTestWe
     public async Task GetPreferences_Should_ReturnForbidden_When_WorkshopTokenIsUsed()
     {
         // Arrange
-        var (_, workshopToken) = await _authHelper.CreateAndLoginWorkshopAsync();
-        _client.SetBearerToken(workshopToken);
+        var authResponse = await _authHelper.CreateAndLoginWorkshopAsync();
+        _client.SetBearerToken(authResponse.Token);
 
         // Act
         var response = await _client.GetAsync(API_URL);
@@ -112,8 +112,8 @@ public class UserRepairPreferencesFeatureTests : IClassFixture<IntegrationTestWe
     public async Task UpdatePreferences_Should_ReturnForbidden_When_WorkshopTokenIsUsed()
     {
         // Arrange
-        var (_, workshopToken) = await _authHelper.CreateAndLoginWorkshopAsync();
-        _client.SetBearerToken(workshopToken);
+        var authResponse = await _authHelper.CreateAndLoginWorkshopAsync();
+        _client.SetBearerToken(authResponse.Token);
         var updateRequest = new UpdateUserRepairPreferencesRequest(EPartsPreference.Premium, ETimelinePreference.Urgent);
 
         // Act
@@ -133,8 +133,8 @@ public class UserRepairPreferencesFeatureTests : IClassFixture<IntegrationTestWe
         EPartsPreference partsPref, ETimelinePreference timelinePref)
     {
         // Arrange
-        var (userId, token) = await _authHelper.CreateAndLoginUserAsync($"prefs-validation-{Guid.NewGuid()}@int.com");
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync($"prefs-validation-{Guid.NewGuid()}@int.com");
+        _client.SetBearerToken(authResponse.Token);
 
         var updateRequest = new UpdateUserRepairPreferencesRequest(partsPref, timelinePref);
 

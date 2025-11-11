@@ -1,6 +1,5 @@
 namespace eMechanic.Application.Tests.UserPreferences.Features.Update;
 
-using Abstractions.UserRepairPreferences;
 using Domain.UserRepairPreferences;
 using Domain.UserRepairPreferences.Enums;
 using eMechanic.Application.Abstractions.Identity.Contexts;
@@ -8,6 +7,7 @@ using eMechanic.Common.Result;
 using FluentAssertions;
 using NSubstitute;
 using UserRepairPreferences.Features.Update;
+using UserRepairPreferences.Repositories;
 
 public class UpdateUserRepairPreferencesHandlerTests
 {

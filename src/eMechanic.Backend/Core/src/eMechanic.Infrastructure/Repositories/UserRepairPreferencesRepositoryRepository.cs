@@ -1,6 +1,6 @@
 namespace eMechanic.Infrastructure.Repositories;
 
-using Application.Abstractions.UserRepairPreferences;
+using Application.UserRepairPreferences.Repositories;
 using Base;
 using DAL;
 using Domain.UserRepairPreferences;

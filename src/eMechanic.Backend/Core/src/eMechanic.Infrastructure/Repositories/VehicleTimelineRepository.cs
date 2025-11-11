@@ -1,6 +1,6 @@
 namespace eMechanic.Infrastructure.Repositories;
 
-using Application.Abstractions.VehicleTimeline;
+using Application.Vehicle.Repostories;
 using Base;
 using Common.Result;
 using DAL;

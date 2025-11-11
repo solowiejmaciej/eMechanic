@@ -7,7 +7,7 @@ using eMechanic.Integration.Tests.TestContainers;
 
 namespace eMechanic.Integration.Tests.Workshop;
 
-using API.Features.Workshop.Register;
+using API.Features.Workshop.Create;
 using Application.Workshop.Features.Get;
 using Common.Result;
 
@@ -75,7 +75,7 @@ public class GetAllWorkshopsFeatureTests : IClassFixture<IntegrationTestWebAppFa
 
     private async Task CreateTestWorkshop(string email)
     {
-        var command = new RegisterWorkshopRequest(
+        var command = new CreateWorkshopRequest(
             email,
             "Password123!",
             $"contact-{Guid.NewGuid()}@workshop.com",
@@ -87,7 +87,7 @@ public class GetAllWorkshopsFeatureTests : IClassFixture<IntegrationTestWebAppFa
             "00-000",
             "Polska");
 
-        var resp = await _client.PostAsJsonAsync("/api/v1/workshops/register", command);
+        var resp = await _client.PostAsJsonAsync("/api/v1/workshops", command);
         resp.EnsureSuccessStatusCode();
     }
 }

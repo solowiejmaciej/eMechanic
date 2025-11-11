@@ -221,6 +221,44 @@ namespace eMechanic.Infrastructure.Migrations.Identity
                     b.ToTable("AspNetUsers", "identity");
                 });
 
+            modelBuilder.Entity("eMechanic.Infrastructure.Identity.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("IdentityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("InvalidatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Jti")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UsedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdentityId");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.ToTable("RefreshTokens", "identity");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -268,6 +306,15 @@ namespace eMechanic.Infrastructure.Migrations.Identity
                     b.HasOne("eMechanic.Infrastructure.Identity.Identity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("eMechanic.Infrastructure.Identity.RefreshToken", b =>
+                {
+                    b.HasOne("eMechanic.Infrastructure.Identity.Identity", null)
+                        .WithMany()
+                        .HasForeignKey("IdentityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

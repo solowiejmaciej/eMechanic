@@ -254,9 +254,6 @@ namespace eMechanic.Infrastructure.Migrations.Core
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DisplayName")
-                        .IsUnique();
-
                     b.HasIndex("Email")
                         .IsUnique();
 

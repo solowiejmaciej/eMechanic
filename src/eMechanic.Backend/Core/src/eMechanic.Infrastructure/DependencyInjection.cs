@@ -2,11 +2,12 @@ namespace eMechanic.Infrastructure;
 
 using Application.Abstractions.Identity;
 using Application.Abstractions.Identity.Contexts;
-using Application.Abstractions.User;
-using Application.Abstractions.UserRepairPreferences;
-using Application.Abstractions.Vehicle;
-using Application.Abstractions.VehicleTimeline;
-using Application.Abstractions.Workshop;
+using Application.UserRepairPreferences.Repositories;
+using Application.Users.Repositories;
+using Application.Users.Services;
+using Application.Vehicle.Repostories;
+using Application.Workshop.Repositories;
+using Application.Workshop.Services;
 using DAL;
 using DAL.Transactions;
 using Domain.Vehicle;
@@ -62,8 +63,8 @@ public static class DependencyInjection
 
     private static void AddServices(this IServiceCollection services)
     {
-        services.AddScoped<IUserCreatorService, UserCreatorService>();
-        services.AddScoped<IWorkshopCreatorService, WorkshopCreatorService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IWorkshopService, WorkshopService>();
         services.AddScoped<ITransactionalExecutor, TransactionalExecutor>();
         services.AddScoped<IPaginationService, PaginationService>();
         services.AddScoped<ITokenGenerator, TokenGenerator>();
@@ -71,6 +72,7 @@ public static class DependencyInjection
         services.AddHttpContextAccessor();
         services.AddScoped<IUserContext, UserContext>();
         services.AddScoped<IWorkshopContext, WorkshopContext>();
+        services.AddScoped<IRefreshTokenService, RefreshTokenService>();
     }
 
     public static void ApplyMigrations(this IServiceProvider services)

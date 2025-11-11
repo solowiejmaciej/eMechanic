@@ -1,9 +1,9 @@
 namespace eMechanic.Application.UserRepairPreferences.Features.Update;
 
 using eMechanic.Application.Abstractions.Identity.Contexts;
-using eMechanic.Application.Abstractions.UserRepairPreferences;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
+using Repositories;
 
 internal sealed class UpdateUserRepairPreferencesHandler
     : IResultCommandHandler<UpdateUserRepairPreferencesCommand, Success>

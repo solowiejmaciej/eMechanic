@@ -1,7 +1,5 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Get.Timeline;
 
-using Application.Abstractions.Vehicle;
-using Application.Abstractions.VehicleTimeline;
 using Common.Result;
 using Domain.Vehicle;
 using Domain.Vehicle.Enums;
@@ -10,6 +8,8 @@ using FluentAssertions;
 using NSubstitute;
 using System.Text.Json;
 using Application.Vehicle.Features.Get.Timeline;
+using Application.Vehicle.Repostories;
+using Application.Vehicle.Services;
 
 public class GetVehicleTimelineByVehicleIdHandlerTests
 {

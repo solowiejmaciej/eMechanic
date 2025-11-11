@@ -24,8 +24,8 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
 
     private async Task<(Guid UserId, Guid VehicleId, string Token)> CreateVehicleForTestUser(string suffix = "update")
     {
-        var (userId, token) = await _authHelper.CreateAndLoginUserAsync($"user-{suffix}-{Guid.NewGuid()}@int.com");
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync($"user-{suffix}-{Guid.NewGuid()}@int.com");
+        _client.SetBearerToken(authResponse.Token);
 
         var createRequest = new CreateVehicleRequest(
             $"V1N{Guid.NewGuid().ToString("N")[..14]}",
@@ -45,7 +45,7 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var createdContent = await createResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();
         var vehicleId = createdContent!["vehicleId"];
 
-        return (userId, vehicleId, token);
+        return (authResponse.DomainId, vehicleId, authResponse.Token);
     }
 
     private UpdateVehicleRequest CreateValidUpdateRequest() => new(
@@ -93,8 +93,8 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task UpdateVehicle_Should_ReturnNotFound_WhenVehicleDoesNotExist()
     {
         // Arrange
-        var (_, token) = await _authHelper.CreateAndLoginUserAsync();
-        _client.SetBearerToken(token);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
+        _client.SetBearerToken(authResponse.Token);
         var nonExistentVehicleId = Guid.NewGuid();
         var updateRequest = CreateValidUpdateRequest();
 
@@ -114,8 +114,8 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var (_, vehicleId, _) = await CreateVehicleForTestUser("owner1");
         _client.ClearBearerToken();
 
-        var (_, otherToken) = await _authHelper.CreateAndLoginUserAsync("owner2@gmail.com");
-        _client.SetBearerToken(otherToken);
+        var authResponse = await _authHelper.CreateAndLoginUserAsync("owner2@gmail.com");
+        _client.SetBearerToken(authResponse.Token);
         var updateRequest = CreateValidUpdateRequest();
 
         // Act
@@ -132,7 +132,7 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     {
         // Arrange
         var (_, vehicleId, _) = await CreateVehicleForTestUser();
-        _client.ClearBearerToken(); // Wyloguj
+        _client.ClearBearerToken();
         var updateRequest = CreateValidUpdateRequest();
 
         // Act
@@ -149,8 +149,8 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var (_, vehicleId, _) = await CreateVehicleForTestUser();
         _client.ClearBearerToken();
 
-        var (_, workshopToken) = await _authHelper.CreateAndLoginWorkshopAsync();
-        _client.SetBearerToken(workshopToken);
+        var authResponse = await _authHelper.CreateAndLoginWorkshopAsync();
+        _client.SetBearerToken(authResponse.Token);
         var updateRequest = CreateValidUpdateRequest();
 
 
