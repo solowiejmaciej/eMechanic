@@ -1,8 +1,8 @@
 namespace eMechanic.Application.Workshop.Features.Get.All;
 
-using eMechanic.Application.Abstractions.Workshop;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
+using Repositories;
 
 public class GetWorkshopsHandler : IResultQueryHandler<GetWorkshopsQuery, PaginationResult<WorkshopResponse>>
 {

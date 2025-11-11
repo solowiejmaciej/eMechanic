@@ -19,4 +19,7 @@
         <ProjectReference Include="..\eMechanic.Application\eMechanic.Application.csproj" />
         <ProjectReference Include="..\eMechanic.Infrastructure\eMechanic.Infrastructure.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Features\Shared\Request\" />
+    </ItemGroup>
 </Project>

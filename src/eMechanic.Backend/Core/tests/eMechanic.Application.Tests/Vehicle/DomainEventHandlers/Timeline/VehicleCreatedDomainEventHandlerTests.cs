@@ -1,6 +1,6 @@
 namespace eMechanic.Application.Tests.Vehicle.DomainEventHandlers.Timeline;
 
-using eMechanic.Application.Abstractions.VehicleTimeline;
+using Application.Vehicle.Repostories;
 using eMechanic.Application.Vehicle.DomainEventHandlers.Timeline;
 using eMechanic.Domain.Vehicle;
 using eMechanic.Domain.Vehicle.Enums;

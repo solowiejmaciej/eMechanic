@@ -1,9 +1,9 @@
 namespace eMechanic.Application.Vehicle.Features.Delete;
 
 using eMechanic.Application.Abstractions.Identity.Contexts;
-using eMechanic.Application.Abstractions.Vehicle;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
+using Repostories;
 
 public sealed class DeleteVehicleHandler : IResultCommandHandler<DeleteVehicleCommand, Success>
 {

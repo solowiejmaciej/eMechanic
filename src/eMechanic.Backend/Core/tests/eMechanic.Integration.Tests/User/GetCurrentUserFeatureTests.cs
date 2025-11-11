@@ -26,7 +26,7 @@ public class GetCurrentUserFeatureTests : IClassFixture<IntegrationTestWebAppFac
         _client.SetBearerToken(token);
 
         // Act
-        var response = await _client.GetAsync("/api/v1/users");
+        var response = await _client.GetAsync("/api/v1/users/me");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -43,7 +43,7 @@ public class GetCurrentUserFeatureTests : IClassFixture<IntegrationTestWebAppFac
         _client.ClearBearerToken();
 
         // Act
-        var response = await _client.GetAsync("/api/v1/users");
+        var response = await _client.GetAsync("/api/v1/users/me");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -57,7 +57,7 @@ public class GetCurrentUserFeatureTests : IClassFixture<IntegrationTestWebAppFac
         _client.SetBearerToken(workshopToken);
 
         // Act
-        var response = await _client.GetAsync("/api/v1/users");
+        var response = await _client.GetAsync("/api/v1/users/me");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);

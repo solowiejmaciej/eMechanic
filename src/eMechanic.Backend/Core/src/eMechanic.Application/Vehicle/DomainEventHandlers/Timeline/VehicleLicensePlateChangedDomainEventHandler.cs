@@ -1,9 +1,9 @@
 namespace eMechanic.Application.Vehicle.DomainEventHandlers.Timeline;
 
 using Abstractions.DomainEvents;
-using Abstractions.VehicleTimeline;
 using Application.Timeline;
 using Domain.Vehicle;
+using Repostories;
 
 public class VehicleLicensePlateChangedDomainEventHandler : BaseTimelineEventHandler , IDomainEventHandler<VehicleLicensePlateChangedDomainEvent>
 {

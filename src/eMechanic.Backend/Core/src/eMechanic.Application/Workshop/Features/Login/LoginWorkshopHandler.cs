@@ -9,11 +9,16 @@ public class LoginWorkshopHandler : IResultCommandHandler<LoginWorkshopCommand, 
 {
     private readonly IAuthenticator _authenticator;
     private readonly ITokenGenerator _tokenGenerator;
+    private readonly IRefreshTokenService _refreshTokenService;
 
-    public LoginWorkshopHandler(IAuthenticator authenticator, ITokenGenerator tokenGenerator)
+    public LoginWorkshopHandler(
+        IAuthenticator authenticator,
+        ITokenGenerator tokenGenerator,
+        IRefreshTokenService refreshTokenService)
     {
         _authenticator = authenticator;
         _tokenGenerator = tokenGenerator;
+        _refreshTokenService = refreshTokenService;
     }
 
     public async Task<Result<LoginWorkshopResponse, Error>> Handle(LoginWorkshopCommand request, CancellationToken cancellationToken)
@@ -34,7 +39,8 @@ public class LoginWorkshopHandler : IResultCommandHandler<LoginWorkshopCommand, 
         }
 
         var token = _tokenGenerator.GenerateToken(authResult.Value);
+        var refreshToken = await _refreshTokenService.GenerateRefreshTokenAsync(authResult.Value.IdentityId, token.Jti, cancellationToken);
 
-        return new LoginWorkshopResponse(token.AccessToken, token.ExpiresAt, authResult.Value!.DomainEntityId);
+        return new LoginWorkshopResponse(token.AccessToken, token.ExpiresAt, authResult.Value!.DomainEntityId, refreshToken);
     }
 }

@@ -23,11 +23,12 @@ public sealed class TokenGenerator : ITokenGenerator
 
     public TokenDTO GenerateToken(AuthenticatedIdentity identity)
     {
+        var jti = GuidFactory.Create();
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, identity.IdentityId.ToString()),
             new(JwtRegisteredClaimNames.Email, identity.Email!),
-            new(JwtRegisteredClaimNames.Jti, GuidFactory.Create().ToString()),
+            new(JwtRegisteredClaimNames.Jti, jti.ToString()),
             new(ClaimConstants.IDENTITY_TYPE, identity.Type.ToString())
         };
 
@@ -59,7 +60,7 @@ public sealed class TokenGenerator : ITokenGenerator
 
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-        return new TokenDTO(tokenString, expires);
+        return new TokenDTO(tokenString, expires, jti);
     }
 
 }

@@ -1,10 +1,10 @@
 namespace eMechanic.Application.Vehicle.DomainEventHandlers.Timeline;
 
 using eMechanic.Application.Abstractions.DomainEvents;
-using eMechanic.Application.Abstractions.VehicleTimeline;
 using eMechanic.Application.Timeline;
 using eMechanic.Domain.Vehicle;
 using Microsoft.Extensions.Logging;
+using Repostories;
 
 public class VehicleProductionYearChangedDomainEventHandler : BaseTimelineEventHandler, IDomainEventHandler<VehicleProductionYearChangedDomainEvent>
 {

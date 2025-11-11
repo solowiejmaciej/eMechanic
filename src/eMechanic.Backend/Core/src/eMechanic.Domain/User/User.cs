@@ -32,6 +32,15 @@ public class User : AggregateRoot, IIdentityReference
         return user;
     }
 
+    public void Update(string email, string firstName, string lastName)
+    {
+        SetEmail(email);
+        SetFirstName(firstName);
+        SetLastName(lastName);
+
+        RaiseDomainEvent(new UserUpdatedDomainEvent(this));
+    }
+
     private void SetEmail(string email)
     {
         if (string.IsNullOrWhiteSpace(email))

@@ -5,19 +5,26 @@ using eMechanic.Application.Identity;
 using eMechanic.Application.Users.Features.Login;
 using eMechanic.Common.Result;
 using eMechanic.Common.Result.Fields;
+using FluentAssertions;
 using NSubstitute;
 
 public class LoginUserHandlerTests
 {
     private readonly IAuthenticator _authenticator;
     private readonly ITokenGenerator _tokenGenerator;
+    private readonly IRefreshTokenService _refreshTokenService;
     private readonly LoginUserHandler _handler;
 
     public LoginUserHandlerTests()
     {
         _authenticator = Substitute.For<IAuthenticator>();
         _tokenGenerator = Substitute.For<ITokenGenerator>();
-        _handler = new LoginUserHandler(_authenticator, _tokenGenerator);
+        _refreshTokenService = Substitute.For<IRefreshTokenService>();
+
+        _handler = new LoginUserHandler(
+            _authenticator,
+            _tokenGenerator,
+            _refreshTokenService);
     }
 
     [Fact]
@@ -27,11 +34,14 @@ public class LoginUserHandlerTests
         var command = new LoginUserCommand("test@user.com", "Password123");
         var identityId = Guid.NewGuid();
         var domainEntityId = Guid.NewGuid();
+        var jti = Guid.NewGuid();
+        var expectedRefreshToken = "test-refresh-token"; // Testowy refresh token
 
         var authenticatedIdentity = new AuthenticatedIdentity(
             identityId, domainEntityId, command.Email, EIdentityType.User);
 
-        var tokenDto = new TokenDTO("generated-token-string", DateTime.UtcNow.AddHours(1));
+        // Zaktualizowano DTO, aby zawierało JTI
+        var tokenDto = new TokenDTO("generated-token-string", DateTime.UtcNow.AddHours(1), jti);
 
         _authenticator.AuthenticateAsync(command.Email, command.Password, EIdentityType.User)
             .Returns(authenticatedIdentity);
@@ -39,15 +49,20 @@ public class LoginUserHandlerTests
         _tokenGenerator.GenerateToken(authenticatedIdentity)
             .Returns(tokenDto);
 
+        // Mock dla nowego serwisu
+        _refreshTokenService.GenerateRefreshTokenAsync(identityId, jti, Arg.Any<CancellationToken>())
+            .Returns(expectedRefreshToken);
+
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.False(result.HasError());
-        Assert.NotNull(result.Value);
-        Assert.Equal(tokenDto.AccessToken, result.Value.Token);
-        Assert.Equal(tokenDto.ExpiresAt, result.Value.ExpiresAtUtc);
-        Assert.Equal(domainEntityId, result.Value.UserId);
+        result.HasError().Should().BeFalse();
+        result.Value.Should().NotBeNull();
+        result.Value.Token.Should().Be(tokenDto.AccessToken);
+        result.Value.ExpiresAtUtc.Should().Be(tokenDto.ExpiresAt);
+        result.Value.UserId.Should().Be(domainEntityId);
+        result.Value.RefreshToken.Should().Be(expectedRefreshToken); // NOWA ASERCJA
     }
 
     [Fact]
@@ -64,9 +79,10 @@ public class LoginUserHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.HasError());
-        Assert.Equal(authError, result.Error);
+        result.HasError().Should().BeTrue();
+        result.Error.Should().Be(authError);
         _tokenGenerator.DidNotReceiveWithAnyArgs().GenerateToken(default!);
+        await _refreshTokenService.DidNotReceiveWithAnyArgs().GenerateRefreshTokenAsync(default, default, default);
     }
 
     [Fact]
@@ -82,8 +98,9 @@ public class LoginUserHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.HasError());
-        Assert.Equal(EErrorCode.InternalServerError, result.Error!.Code);
+        result.HasError().Should().BeTrue();
+        result.Error!.Code.Should().Be(EErrorCode.InternalServerError);
         _tokenGenerator.DidNotReceiveWithAnyArgs().GenerateToken(default!);
+        await _refreshTokenService.DidNotReceiveWithAnyArgs().GenerateRefreshTokenAsync(default, default, default);
     }
 }

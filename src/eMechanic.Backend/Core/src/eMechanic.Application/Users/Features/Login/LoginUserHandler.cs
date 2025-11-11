@@ -9,11 +9,16 @@ public class LoginUserHandler : IResultCommandHandler<LoginUserCommand, LoginUse
 {
     private readonly IAuthenticator _authenticator;
     private readonly ITokenGenerator _tokenGenerator;
+    private readonly IRefreshTokenService _refreshTokenService;
 
-    public LoginUserHandler(IAuthenticator authenticator, ITokenGenerator tokenGenerator)
+    public LoginUserHandler(
+        IAuthenticator authenticator,
+        ITokenGenerator tokenGenerator,
+        IRefreshTokenService refreshTokenService)
     {
         _authenticator = authenticator;
         _tokenGenerator = tokenGenerator;
+        _refreshTokenService = refreshTokenService;
     }
 
     public async Task<Result<LoginUserResponse, Error>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
@@ -34,7 +39,8 @@ public class LoginUserHandler : IResultCommandHandler<LoginUserCommand, LoginUse
         }
 
         var token = _tokenGenerator.GenerateToken(authResult.Value);
+        var refreshToken = await _refreshTokenService.GenerateRefreshTokenAsync(authResult.Value.IdentityId, token.Jti, cancellationToken);
 
-        return new LoginUserResponse(token.AccessToken, token.ExpiresAt, authResult.Value.DomainEntityId);
+        return new LoginUserResponse(token.AccessToken, token.ExpiresAt, authResult.Value.DomainEntityId, refreshToken);
     }
 }

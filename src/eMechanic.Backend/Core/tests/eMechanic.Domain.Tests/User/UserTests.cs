@@ -2,6 +2,7 @@ namespace eMechanic.Domain.Tests.User;
 
 using eMechanic.Domain.User;
 using eMechanic.Domain.User.DomainEvents;
+using FluentAssertions;
 
 public class UserTests
 {
@@ -56,4 +57,72 @@ public class UserTests
             User.Create("test@user.pl", "Test", "User", Guid.Empty)
         );
     }
+
+    [Fact]
+    public void Update_Should_UpdateAllFields_And_RaiseUserUpdatedDomainEvent()
+    {
+        // Arrange
+        var user = CreateValidUser();
+        var newEmail = "nowy@email.com";
+        var newFirstName = "Jan";
+        var newLastName = "Kowalski";
+
+        user.ClearDomainEvents();
+
+        // Act
+        user.Update(newEmail, newFirstName, newLastName);
+
+        // Assert
+        user.Email.Should().Be(newEmail);
+        user.FirstName.Should().Be(newFirstName);
+        user.LastName.Should().Be(newLastName);
+
+        var domainEvents = user.GetDomainEvents();
+        domainEvents.Should().HaveCount(1);
+        domainEvents.First().Should().BeOfType<UserUpdatedDomainEvent>();
+    }
+
+    [Fact]
+    public void Update_Should_RaiseEvent_EvenIfValuesAreTheSame()
+    {
+        // Arrange
+        var user = CreateValidUser();
+        var oldEmail = user.Email;
+        var oldFirstName = user.FirstName;
+        var oldLastName = user.LastName;
+
+        user.ClearDomainEvents();
+
+        // Act
+        user.Update(oldEmail, oldFirstName, oldLastName);
+
+        // Assert
+        user.GetDomainEvents().Should().HaveCount(1);
+        user.GetDomainEvents().First().Should().BeOfType<UserUpdatedDomainEvent>();
+    }
+
+    [Theory]
+    [InlineData("", "Jan", "Kowalski")]
+    [InlineData("   ", "Jan", "Kowalski")]
+    [InlineData("valid@email.com", "", "Kowalski")]
+    [InlineData("valid@email.com", "   ", "Kowalski")]
+    [InlineData("valid@email.com", "Jan", "")]
+    [InlineData("valid@email.com", "Jan", "   ")]
+    public void Update_Should_ThrowArgumentException_WhenAnyFieldIsInvalid(string email, string firstName, string lastName)
+    {
+        // Arrange
+        var user = CreateValidUser();
+
+        user.ClearDomainEvents();
+
+        // Act
+        Action act = () => user.Update(email, firstName, lastName);
+
+        // Assert
+        act.Should().Throw<ArgumentException>();
+
+        user.GetDomainEvents().Should().BeEmpty();
+    }
+
+    private User CreateValidUser() => User.Create("test@user.pl", "Test", "User", Guid.NewGuid());
 }

@@ -1,19 +1,19 @@
 namespace eMechanic.Application.Tests.Workshop.Features.Register;
 
-using eMechanic.Application.Abstractions.Workshop;
+using Application.Workshop.Services;
 using eMechanic.Application.Workshop.Features.Register;
 using eMechanic.Common.Result;
 using NSubstitute;
 
 public class RegisterWorkshopHandlerTests
 {
-    private readonly IWorkshopCreatorService _workshopCreatorService;
+    private readonly IWorkshopService _workshopService;
     private readonly RegisterWorkshopHandler _handler;
 
     public RegisterWorkshopHandlerTests()
     {
-        _workshopCreatorService = Substitute.For<IWorkshopCreatorService>();
-        _handler = new RegisterWorkshopHandler(_workshopCreatorService);
+        _workshopService = Substitute.For<IWorkshopService>();
+        _handler = new RegisterWorkshopHandler(_workshopService);
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class RegisterWorkshopHandlerTests
 
         var newWorkshopId = Guid.NewGuid();
 
-        _workshopCreatorService.CreateWorkshopWithIdentityAsync(
+        _workshopService.CreateWorkshopWithIdentityAsync(
             command.Email, command.Password, command.ContactEmail,
             command.Name, command.DisplayName, command.PhoneNumber,
             command.Address, command.City, command.PostalCode,
@@ -53,7 +53,7 @@ public class RegisterWorkshopHandlerTests
 
         var error = new Error(EErrorCode.ValidationError, "Identity with given email already exists.");
 
-        _workshopCreatorService.CreateWorkshopWithIdentityAsync(
+        _workshopService.CreateWorkshopWithIdentityAsync(
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),

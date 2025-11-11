@@ -72,6 +72,30 @@ public class Workshop : AggregateRoot, IIdentityReference
         RaiseDomainEvent(new WorkshopCreatedDomainEvent(this));
     }
 
+    public void Update(
+        string email,
+        string contactEmail,
+        string name,
+        string displayName,
+        string phoneNumber,
+        string address,
+        string city,
+        string postalCode,
+        string country)
+    {
+        SetEmail(email);
+        SetContactEmail(contactEmail);
+        SetName(name);
+        SetDisplayName(displayName);
+        SetPhoneNumber(phoneNumber);
+        SetAddress(address);
+        SetCity(city);
+        SetPostalCode(postalCode);
+        SetCountry(country);
+
+        RaiseDomainEvent(new WorkshopUpdatedDomainEvent(this));
+    }
+
     private void SetIdentityId(Guid identityId)
     {
         if (identityId == Guid.Empty)

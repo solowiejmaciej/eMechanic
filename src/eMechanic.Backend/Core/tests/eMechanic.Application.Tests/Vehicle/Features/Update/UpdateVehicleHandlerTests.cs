@@ -1,6 +1,7 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Update;
 
-using eMechanic.Application.Abstractions.Vehicle;
+using Application.Vehicle.Repostories;
+using Application.Vehicle.Services;
 using eMechanic.Application.Vehicle.Features.Update;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;

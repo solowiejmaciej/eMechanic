@@ -120,6 +120,6 @@ dotnet_analyzer_diagnostic.category-Style.severity = none
 dotnet_diagnostic.CA1002.severity = none
 dotnet_diagnostic.CA1711.severity = none
 dotnet_diagnostic.CA2234.severity = none
-
+dotnet_diagnostic.CA5404.severity = none
 
 

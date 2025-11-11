@@ -1,19 +1,19 @@
 namespace eMechanic.Application.Tests.Users.Features.Register;
 
-using eMechanic.Application.Abstractions.User;
+using Application.Users.Services;
 using eMechanic.Application.Users.Features.Register;
 using eMechanic.Common.Result;
 using NSubstitute;
 
 public class RegisterUserHandlerTests
 {
-    private readonly IUserCreatorService _userCreatorService;
+    private readonly IUserService _userService;
     private readonly RegisterUserHandler _handler;
 
     public RegisterUserHandlerTests()
     {
-        _userCreatorService = Substitute.For<IUserCreatorService>();
-        _handler = new RegisterUserHandler(_userCreatorService);
+        _userService = Substitute.For<IUserService>();
+        _handler = new RegisterUserHandler(_userService);
     }
 
     [Fact]
@@ -23,7 +23,7 @@ public class RegisterUserHandlerTests
         var command = new RegisterUserCommand("Jan", "Kowalski", "jan@kowalski.pl", "Password123");
         var newUserId = Guid.NewGuid();
 
-        _userCreatorService.CreateUserWithIdentityAsync(
+        _userService.CreateUserWithIdentityAsync(
             command.Email,
             command.Password,
             command.FirstName,
@@ -46,7 +46,7 @@ public class RegisterUserHandlerTests
         var command = new RegisterUserCommand("Jan", "Kowalski", "jan@kowalski.pl", "Password123");
         var error = new Error(EErrorCode.ValidationError, "Email already exists.");
 
-        _userCreatorService.CreateUserWithIdentityAsync(
+        _userService.CreateUserWithIdentityAsync(
             command.Email,
             command.Password,
             command.FirstName,

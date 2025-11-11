@@ -1,6 +1,6 @@
 namespace eMechanic.Infrastructure.Repositories;
 
-using Application.Abstractions.User;
+using Application.Users.Repositories;
 using Base;
 using DAL;
 using Domain.User;

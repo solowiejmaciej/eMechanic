@@ -5,8 +5,8 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain.VehicleTimeline;
-using eMechanic.Application.Abstractions.VehicleTimeline;
 using Microsoft.Extensions.Logging;
+using Vehicle.Repostories;
 
 public abstract class BaseTimelineEventHandler
 {

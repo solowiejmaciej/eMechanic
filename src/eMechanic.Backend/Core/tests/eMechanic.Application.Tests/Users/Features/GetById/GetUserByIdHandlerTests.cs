@@ -1,7 +1,7 @@
 namespace eMechanic.Application.Tests.Users.Features.GetById;
 
+using Application.Users.Repositories;
 using eMechanic.Application.Abstractions.Identity.Contexts;
-using eMechanic.Application.Abstractions.User;
 using eMechanic.Application.Users.Features.Get.Current;
 using eMechanic.Common.Result;
 using eMechanic.Domain.User;

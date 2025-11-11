@@ -1,7 +1,7 @@
 namespace eMechanic.Infrastructure.Services.Identity;
 
-using Application.Abstractions.User;
-using Application.Abstractions.Workshop;
+using Application.Users.Repositories;
+using Application.Workshop.Repositories;
 using eMechanic.Application.Abstractions.Identity;
 using eMechanic.Application.Identity;
 using eMechanic.Common.Result;

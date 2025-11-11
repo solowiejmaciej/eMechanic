@@ -1,10 +1,10 @@
 namespace eMechanic.Application.Vehicle.Features.Create;
 
 using eMechanic.Application.Abstractions.Identity.Contexts;
-using eMechanic.Application.Abstractions.Vehicle;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;
+using Repostories;
 
 public sealed class CreateVehicleHandler : IResultCommandHandler<CreateVehicleCommand, Guid>
 {

@@ -1,21 +1,21 @@
 namespace eMechanic.Application.Workshop.Features.Register;
 
-using eMechanic.Application.Abstractions.Workshop;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
+using Services;
 
 public class RegisterWorkshopHandler : IResultCommandHandler<RegisterWorkshopCommand, Guid>
 {
-    private readonly IWorkshopCreatorService _workshopCreatorService;
+    private readonly IWorkshopService _workshopService;
 
-    public RegisterWorkshopHandler(IWorkshopCreatorService workshopCreatorService)
+    public RegisterWorkshopHandler(IWorkshopService workshopService)
     {
-        _workshopCreatorService = workshopCreatorService;
+        _workshopService = workshopService;
     }
 
     public async Task<Result<Guid, Error>> Handle(RegisterWorkshopCommand request, CancellationToken cancellationToken)
     {
-        var result = await _workshopCreatorService.CreateWorkshopWithIdentityAsync(
+        var result = await _workshopService.CreateWorkshopWithIdentityAsync(
             request.Email,
             request.Password,
             request.ContactEmail,
