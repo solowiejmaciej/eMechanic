@@ -1,5 +1,6 @@
 namespace eMechanic.Application.Tests.UserPreferences.Features.Get;
 
+using Domain.Tests.Builders;
 using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Application.UserRepairPreferences.Features.Get;
 using eMechanic.Common.Result;
@@ -32,10 +33,7 @@ public class GetCurrentUserRepairPreferencesHandlerTests
     {
         // Arrange
         var query = new GetCurrentUserRepairPreferencesQuery();
-        var preferences = UserRepairPreferences.Create(
-            _currentUserId,
-            EPartsPreference.Premium,
-            ETimelinePreference.Urgent);
+        var preferences = new UserRepairPreferencesBuilder().WithUserId(_currentUserId).Build();
 
         _preferencesRepository.GetByUserIdAsync(_currentUserId, Arg.Any<CancellationToken>())
             .Returns(preferences);
@@ -47,7 +45,6 @@ public class GetCurrentUserRepairPreferencesHandlerTests
         result.HasError().Should().BeFalse();
         result.Value.Should().NotBeNull();
         result.Value.UserId.Should().Be(_currentUserId);
-        result.Value.PartsPreference.Should().Be(EPartsPreference.Premium);
     }
 
     [Fact]

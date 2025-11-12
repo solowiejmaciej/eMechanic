@@ -6,6 +6,7 @@ using Application.Workshop.Features.Update;
 using Application.Workshop.Repositories;
 using Common.Result;
 using Common.Result.Fields;
+using Domain.Tests.Builders;
 using Domain.Workshop;
 using eMechanic.Infrastructure.Identity;
 using eMechanic.Infrastructure.Services.Creators;
@@ -48,7 +49,7 @@ public class WorkshopServiceTests
         _transactionalExecutor = Substitute.For<ITransactionalExecutor>();
         _logger = Substitute.For<ILogger<WorkshopService>>();
 
-        _workshopService = new WorkshopService( // Zmiana
+        _workshopService = new WorkshopService(
             _userManager,
             _workshopRepository,
             _transactionalExecutor,
@@ -62,9 +63,7 @@ public class WorkshopServiceTests
                 await operation();
             });
 
-        _fakeWorkshop = Workshop.Create(
-            TEST_CONTACT_EMAIL, TEST_EMAIL, TEST_DISPLAY_NAME, TEST_NAME,
-            TEST_PHONE, TEST_ADDRESS, TEST_CITY, TEST_POSTAL_CODE, TEST_COUNTRY, _identityId);
+        _fakeWorkshop = new WorkshopBuilder().WithIdentityId(_identityId).Build();
 
         _fakeIdentity = Identity.Create(TEST_EMAIL, EIdentityType.Workshop);
         _fakeIdentity.Id = _identityId;
@@ -179,7 +178,7 @@ public class WorkshopServiceTests
     public async Task UpdateWorkshopWithIdentityAsync_Should_ReturnSuccess_WhenEmailIsUnchanged()
     {
         // Arrange
-        var command = CreateValidUpdateCommand(TEST_EMAIL); // Używamy starego emaila
+        var command = CreateValidUpdateCommand(TEST_EMAIL);
 
         _workshopRepository.GetByIdAsync(_domainWorkshopId, Arg.Any<CancellationToken>()).Returns(_fakeWorkshop);
         _userManager.FindByIdAsync(_identityId.ToString()).Returns(_fakeIdentity);

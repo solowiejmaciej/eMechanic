@@ -4,6 +4,7 @@ using Application.Abstractions.Identity.Contexts;
 using Application.Vehicle.Repostories;
 using Application.Vehicle.Services;
 using Common.Result;
+using Domain.Tests.Builders;
 using Domain.Vehicle;
 using Domain.Vehicle.Enums;
 using FluentAssertions;
@@ -29,20 +30,7 @@ public class VehicleOwnershipServiceTests
         _userContext.GetUserId().Returns(_currentUserId);
         _userContext.IsAuthenticated.Returns(true);
 
-        var creationResult = Vehicle.Create(
-            _currentUserId,
-            "V1N123456789ABCDE",
-            "Test",
-            "Model",
-            "2020",
-            1.8m,
-            10000,
-            EMileageUnit.Kilometers,
-            "PZ1W924",
-            124,
-            EFuelType.Gasoline,
-            EBodyType.Sedan,
-            EVehicleType.Passenger);
+        var creationResult = new VehicleBuilder().WithOwnerId(_currentUserId).BuildResult();
 
         creationResult.HasError().Should().BeFalse();
         _fakeVehicle = creationResult.Value!;

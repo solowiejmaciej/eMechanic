@@ -1,5 +1,6 @@
 namespace eMechanic.Application.Tests.Workshop.Features.Create
 {
+    using Application.Tests.Builders;
     using Application.Workshop.Features.Create;
     using FluentValidation.TestHelper;
 
@@ -15,10 +16,7 @@ namespace eMechanic.Application.Tests.Workshop.Features.Create
         [Fact]
         public void Should_NotHaveError_WhenCommandIsValid()
         {
-            var command = new CreateWorkshopCommand(
-                "login@warsztat.pl", "ValidPassword123", "kontakt@warsztat.pl",
-                "Auto-Serwis Jan", "Janex", "123456789",
-                "ul. Warsztatowa 1", "Warszawa", "00-001", "Polska");
+            var command = new CreateWorkshopCommandBuilder().Build();
 
             var result = _validator.TestValidate(command);
 
@@ -31,9 +29,7 @@ namespace eMechanic.Application.Tests.Workshop.Features.Create
         [InlineData("nie-email")]
         public void Should_HaveError_WhenEmailIsInvalid(string email)
         {
-            var command = new CreateWorkshopCommand(
-                email, "ValidPassword123", "kontakt@warsztat.pl", "Nazwa", "Display",
-                "123", "Adres", "Miasto", "Kod", "Kraj");
+            var command = new CreateWorkshopCommandBuilder().WithEmail(email).Build();
 
             var result = _validator.TestValidate(command);
 
@@ -45,9 +41,7 @@ namespace eMechanic.Application.Tests.Workshop.Features.Create
         [InlineData("passwordbezcyfry")]
         public void Should_HaveError_WhenPasswordIsInvalid(string password)
         {
-            var command = new CreateWorkshopCommand(
-                "login@warsztat.pl", password, "kontakt@warsztat.pl", "Nazwa", "Display",
-                "123", "Adres", "Miasto", "Kod", "Kraj");
+            var command = new CreateWorkshopCommandBuilder().WithPassword(password).Build();
 
             var result = _validator.TestValidate(command);
 
@@ -57,9 +51,7 @@ namespace eMechanic.Application.Tests.Workshop.Features.Create
         [Fact]
         public void Should_HaveError_WhenNameIsEmpty()
         {
-            var command = new CreateWorkshopCommand(
-                "login@warsztat.pl", "ValidPassword123", "kontakt@warsztat.pl", "", "Display",
-                "123", "Adres", "Miasto", "Kod", "Kraj");
+            var command = new CreateWorkshopCommandBuilder().WithName("").Build();
 
             var result = _validator.TestValidate(command);
 
@@ -73,9 +65,7 @@ namespace eMechanic.Application.Tests.Workshop.Features.Create
         [InlineData("nie-email")]
         public void Should_HaveError_WhenContactEmailIsInvalid(string contactEmail)
         {
-            var command = new CreateWorkshopCommand(
-                "login@warsztat.pl", "ValidPassword123", contactEmail, "Nazwa", "Display",
-                "123", "Adres", "Miasto", "Kod", "Kraj");
+            var command = new CreateWorkshopCommandBuilder().WithContactEmail(contactEmail).Build();
 
             var result = _validator.TestValidate(command);
 
@@ -97,9 +87,7 @@ namespace eMechanic.Application.Tests.Workshop.Features.Create
         [InlineData("   ")]
         public void Should_HaveError_WhenDisplayNameIsEmpty(string displayName)
         {
-            var command = new CreateWorkshopCommand(
-                "login@warsztat.pl", "ValidPassword123", "kontakt@warsztat.pl", "Nazwa", displayName,
-                "123", "Adres", "Miasto", "Kod", "Kraj");
+            var command = new CreateWorkshopCommandBuilder().WithDisplayName(displayName).Build();
 
             var result = _validator.TestValidate(command);
 
@@ -112,9 +100,7 @@ namespace eMechanic.Application.Tests.Workshop.Features.Create
         [InlineData("   ")]
         public void Should_HaveError_WhenPhoneNumberIsEmpty(string phone)
         {
-            var command = new CreateWorkshopCommand(
-                "login@warsztat.pl", "ValidPassword123", "kontakt@warsztat.pl", "Nazwa", "Display",
-                phone, "Adres", "Miasto", "Kod", "Kraj");
+            var command = new CreateWorkshopCommandBuilder().WithPhoneNumber(phone).Build();
 
             var result = _validator.TestValidate(command);
 
@@ -127,9 +113,7 @@ namespace eMechanic.Application.Tests.Workshop.Features.Create
         [InlineData("   ")]
         public void Should_HaveError_WhenAddressIsEmpty(string address)
         {
-            var command = new CreateWorkshopCommand(
-                "login@warsztat.pl", "ValidPassword123", "kontakt@warsztat.pl", "Nazwa", "Display",
-                "123", address, "Miasto", "Kod", "Kraj");
+            var command = new CreateWorkshopCommandBuilder().WithAddress(address).Build();
 
             var result = _validator.TestValidate(command);
 
@@ -142,9 +126,7 @@ namespace eMechanic.Application.Tests.Workshop.Features.Create
         [InlineData("   ")]
         public void Should_HaveError_WhenCityIsEmpty(string city)
         {
-            var command = new CreateWorkshopCommand(
-                "login@warsztat.pl", "ValidPassword123", "kontakt@warsztat.pl", "Nazwa", "Display",
-                "123", "Adres", city, "Kod", "Kraj");
+            var command = new CreateWorkshopCommandBuilder().WithCity(city).Build();
 
             var result = _validator.TestValidate(command);
 
@@ -157,9 +139,7 @@ namespace eMechanic.Application.Tests.Workshop.Features.Create
         [InlineData("   ")]
         public void Should_HaveError_WhenPostalCodeIsEmpty(string postal)
         {
-            var command = new CreateWorkshopCommand(
-                "login@warsztat.pl", "ValidPassword123", "kontakt@warsztat.pl", "Nazwa", "Display",
-                "123", "Adres", "Miasto", postal, "Kraj");
+            var command = new CreateWorkshopCommandBuilder().WithPostalCode(postal).Build();
 
             var result = _validator.TestValidate(command);
 
@@ -172,9 +152,7 @@ namespace eMechanic.Application.Tests.Workshop.Features.Create
         [InlineData("   ")]
         public void Should_HaveError_WhenCountryIsEmpty(string country)
         {
-            var command = new CreateWorkshopCommand(
-                "login@warsztat.pl", "ValidPassword123", "kontakt@warsztat.pl", "Nazwa", "Display",
-                "123", "Adres", "Miasto", "Kod", country);
+            var command = new CreateWorkshopCommandBuilder().WithCountry(country).Build();
 
             var result = _validator.TestValidate(command);
 

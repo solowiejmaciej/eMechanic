@@ -10,6 +10,7 @@ using System.Text.Json;
 using Application.Vehicle.Features.Get.Timeline;
 using Application.Vehicle.Repostories;
 using Application.Vehicle.Services;
+using Domain.Tests.Builders;
 
 public class GetVehicleTimelineByVehicleIdHandlerTests
 {
@@ -27,20 +28,7 @@ public class GetVehicleTimelineByVehicleIdHandlerTests
         _vehicleOwnershipService = Substitute.For<IVehicleOwnershipService>();
         _handler = new GetVehicleTimelineByVehicleIdHandler(_vehicleTimelineRepository, _vehicleOwnershipService);
 
-        var creationResult = Vehicle.Create(
-            _currentUserId,
-            "V1N123456789ABCDA",
-            "Timeline",
-            "Test",
-            "2021",
-            1.6m,
-            100,
-            EMileageUnit.Kilometers,
-            "PZ1W924",
-            124,
-            EFuelType.Gasoline,
-            EBodyType.Sedan,
-            EVehicleType.Passenger);
+        var creationResult = new VehicleBuilder().WithOwnerId(_currentUserId).BuildResult();
 
         creationResult.HasError().Should().BeFalse();
         _fakeVehicle = creationResult.Value!;

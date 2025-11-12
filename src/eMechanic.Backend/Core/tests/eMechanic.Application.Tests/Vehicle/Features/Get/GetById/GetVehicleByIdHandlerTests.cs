@@ -1,6 +1,7 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Get.GetById;
 
 using Application.Vehicle.Services;
+using Domain.Tests.Builders;
 using eMechanic.Application.Vehicle.Features.Get.ById;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;
@@ -20,20 +21,7 @@ public class GetVehicleByIdHandlerTests
     public GetVehicleByIdHandlerTests()
     {
         _ownershipService = Substitute.For<IVehicleOwnershipService>();
-         var creationResult = Vehicle.Create(
-            _currentUserId,
-            "V1N123456789ABCDE",
-            "GetById",
-            "ModelGet",
-            "2022",
-            3.0m,
-            5,
-            EMileageUnit.Kilometers,
-            "PZ1W924",
-            124,
-            EFuelType.Hybrid,
-            EBodyType.Hatchback,
-            EVehicleType.Passenger);
+        var creationResult = new VehicleBuilder().WithOwnerId(_currentUserId).BuildResult();
 
         creationResult.HasError().Should().BeFalse();
         _existingVehicle = creationResult.Value!;
