@@ -1,5 +1,6 @@
 namespace eMechanic.Application.Tests.Tokens.Features.Create;
 
+using Application.Tests.Builders;
 using eMechanic.Application.Token.Features.Create.User;
 using FluentValidation.TestHelper;
 
@@ -16,7 +17,7 @@ public class CreateUserTokenValidatorTests
     public void Should_NotHaveError_WhenCommandIsValid()
     {
         // Arrange
-        var command = new CreateUserTokenCommand("test@user.com", "Password123");
+        var command = new CreateUserTokenCommandBuilder().Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -31,7 +32,7 @@ public class CreateUserTokenValidatorTests
     public void Should_HaveError_WhenEmailIsEmpty(string email)
     {
         // Arrange
-        var command = new CreateUserTokenCommand(email, "Password123");
+        var command = new CreateUserTokenCommandBuilder().WithEmail(email).Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -44,7 +45,7 @@ public class CreateUserTokenValidatorTests
     public void Should_HaveError_WhenEmailIsInvalid()
     {
         // Arrange
-        var command = new CreateUserTokenCommand("not-an-email", "Password123");
+        var command = new CreateUserTokenCommandBuilder().WithEmail("not-an-email").Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -59,7 +60,7 @@ public class CreateUserTokenValidatorTests
     public void Should_HaveError_WhenPasswordIsEmpty(string password)
     {
         // Arrange
-        var command = new CreateUserTokenCommand("test@user.com", password);
+        var command = new CreateUserTokenCommandBuilder().WithPassword(password).Build();
 
         // Act
         var result = _validator.TestValidate(command);

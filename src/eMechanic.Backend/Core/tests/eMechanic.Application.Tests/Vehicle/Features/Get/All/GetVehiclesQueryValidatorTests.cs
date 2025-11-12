@@ -1,5 +1,6 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Get.All;
 
+using Application.Tests.Builders;
 using eMechanic.Application.Vehicle.Features.Get.All;
 using eMechanic.Common.Result;
 using FluentValidation.TestHelper;
@@ -12,7 +13,7 @@ public class GetVehiclesQueryValidatorTests
     public void Should_NotHaveError_WhenParametersAreValid()
     {
         // Arrange
-        var parameters = new PaginationParameters { PageNumber = 1, PageSize = 10 };
+        var parameters = new PaginationParametersBuilder().Build();
         var query = new GetVehiclesQuery(parameters);
 
         // Act
@@ -26,7 +27,7 @@ public class GetVehiclesQueryValidatorTests
     public void Should_HaveError_WhenPageNumberIsInvalid()
     {
         // Arrange
-        var parameters = new PaginationParameters { PageNumber = 0, PageSize = 10 };
+        var parameters = new PaginationParametersBuilder().WithPageNumber(0).Build();
         var query = new GetVehiclesQuery(parameters);
 
         // Act
@@ -40,7 +41,7 @@ public class GetVehiclesQueryValidatorTests
     public void Should_HaveError_WhenPageSizeIsInvalid()
     {
         // Arrange
-        var parameters = new PaginationParameters { PageNumber = 1, PageSize = 0 };
+        var parameters = new PaginationParametersBuilder().WithPageSize(0).Build();
         var query = new GetVehiclesQuery(parameters);
 
         // Act

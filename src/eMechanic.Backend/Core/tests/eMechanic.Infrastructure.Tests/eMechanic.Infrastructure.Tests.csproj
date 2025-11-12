@@ -14,6 +14,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\eMechanic.Infrastructure\eMechanic.Infrastructure.csproj" />
+        <ProjectReference Include="..\eMechanic.Domain.Tests\eMechanic.Domain.Tests.csproj" />
     </ItemGroup>
 
 </Project>

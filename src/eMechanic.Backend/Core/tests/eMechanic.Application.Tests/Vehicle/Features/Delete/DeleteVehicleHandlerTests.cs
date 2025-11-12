@@ -1,6 +1,8 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Delete;
 
+using Application.Tests.Builders;
 using Application.Vehicle.Repostories;
+using Domain.Tests.Builders;
 using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Application.Vehicle.Features.Delete;
 using eMechanic.Common.Result;
@@ -27,20 +29,7 @@ public class DeleteVehicleHandlerTests
         _userContext.GetUserId().Returns(_currentUserId);
         _userContext.IsAuthenticated.Returns(true);
 
-        var creationResult = Vehicle.Create(
-            _currentUserId,
-            "V1N123456789ABCDE",
-            "ToDelete",
-            "ToDelete",
-            "2021",
-            1.0m,
-            200,
-            EMileageUnit.Miles,
-            "PZ1W924",
-            124,
-            EFuelType.LPG,
-            EBodyType.Van,
-            EVehicleType.Passenger);
+        var creationResult = new VehicleBuilder().WithOwnerId(_currentUserId).BuildResult();
         creationResult.HasError().Should().BeFalse();
         _existingVehicle = creationResult.Value!;
         typeof(Vehicle).GetProperty("Id")!.SetValue(_existingVehicle, _vehicleId);
@@ -53,7 +42,7 @@ public class DeleteVehicleHandlerTests
     public async Task Handle_Should_ReturnSuccess_WhenVehicleExistsForUserAndIsDeleted()
     {
         // Arrange
-        var command = new DeleteVehicleCommand(_vehicleId);
+        var command = new DeleteVehicleCommandBuilder().WithId(_vehicleId).Build();
 
         _vehicleRepository.GetForUserById(_vehicleId, _currentUserId, Arg.Any<CancellationToken>())
              .Returns(Task.FromResult<Vehicle?>(_existingVehicle));
@@ -71,7 +60,7 @@ public class DeleteVehicleHandlerTests
     public async Task Handle_Should_ReturnNotFoundError_WhenVehicleDoesNotExistForUser()
     {
         // Arrange
-        var command = new DeleteVehicleCommand(_vehicleId);
+        var command = new DeleteVehicleCommandBuilder().WithId(_vehicleId).Build();
 
         _vehicleRepository.GetForUserById(_vehicleId, _currentUserId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Vehicle?>(null));
@@ -90,7 +79,7 @@ public class DeleteVehicleHandlerTests
     public async Task Handle_Should_ThrowUnauthorizedAccessException_WhenUserIsNotAuthenticated()
     {
         // Arrange
-        var command = new DeleteVehicleCommand(_vehicleId);
+        var command = new DeleteVehicleCommandBuilder().WithId(_vehicleId).Build();
         _userContext.GetUserId().ThrowsForAnyArgs<UnauthorizedAccessException>();
 
         // Act & Assert

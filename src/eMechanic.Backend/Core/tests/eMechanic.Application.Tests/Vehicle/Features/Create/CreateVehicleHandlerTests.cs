@@ -1,5 +1,6 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Create;
 
+using Application.Tests.Builders;
 using Application.Vehicle.Repostories;
 using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Application.Vehicle.Features.Create;
@@ -29,19 +30,7 @@ public class CreateVehicleHandlerTests
     public async Task Handle_Should_ReturnSuccessResultWithVehicleId_WhenCommandIsValid()
     {
         // Arrange
-        var command = new CreateVehicleCommand(
-            "V1N123456789ABCDE",
-            "Test Manufacturer",
-            "Test Model",
-            "2023",
-            1.6m,
-            200,
-            EMileageUnit.Miles,
-            "PZ1W924",
-            124,
-            EFuelType.Gasoline,
-            EBodyType.Sedan,
-            EVehicleType.Passenger);
+        var command = new CreateVehicleCommandBuilder().Build();
 
         _vehicleRepository.AddAsync(Arg.Any<Vehicle>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Guid.NewGuid()));
@@ -63,19 +52,7 @@ public class CreateVehicleHandlerTests
     public async Task Handle_Should_ReturnErrorResult_WhenVehicleCreationFailsInDomain()
     {
         // Arrange
-        var command = new CreateVehicleCommand(
-            "INVALID",
-            "Test Manufacturer",
-            "Test Model",
-            "2023",
-            1.6m,
-            200,
-            EMileageUnit.Miles,
-            "PZ1W924",
-            124,
-            EFuelType.Gasoline,
-            EBodyType.Sedan,
-            EVehicleType.Passenger);
+        var command = new CreateVehicleCommandBuilder().WithVin("INVALID").Build();
 
         _userContext.GetUserId().Returns(_currentUserId);
         _userContext.IsAuthenticated.Returns(true);
@@ -94,21 +71,9 @@ public class CreateVehicleHandlerTests
     public async Task Handle_Should_ThrowUnauthorizedAccessException_WhenUserIsNotAuthenticated()
     {
         // Arrange
-         var command = new CreateVehicleCommand(
-            "V1N123456789ABCDE",
-            "Test Manufacturer",
-            "Test Model",
-            "2023",
-            1.6m,
-            200,
-            EMileageUnit.Miles,
-            "PZ1W924",
-            124,
-            EFuelType.Gasoline,
-            EBodyType.Sedan,
-            EVehicleType.Passenger);
+        var command = new CreateVehicleCommandBuilder().Build();
 
-         _userContext.GetUserId().ThrowsForAnyArgs<UnauthorizedAccessException>();
+        _userContext.GetUserId().ThrowsForAnyArgs<UnauthorizedAccessException>();
 
         // Act & Assert
         await Assert.ThrowsAsync<UnauthorizedAccessException>(() => _handler.Handle(command, CancellationToken.None));

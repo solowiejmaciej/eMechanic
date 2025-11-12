@@ -22,9 +22,9 @@ public record Mileage
             return new Error(EErrorCode.ValidationError, $"{nameof(Mileage)} cannot be null");
         }
 
-        if (value < MIN_VALUE)
+        if (value <= MIN_VALUE)
         {
-            return new Error(EErrorCode.ValidationError, $"{nameof(Mileage)} must be positive integer");
+            return new Error(EErrorCode.ValidationError, $"{nameof(Mileage)} must be a positive integer");
         }
 
         if (unit == EMileageUnit.None)

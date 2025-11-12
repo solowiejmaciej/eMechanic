@@ -1,5 +1,6 @@
 namespace eMechanic.Domain.Tests.User;
 
+using eMechanic.Domain.Tests.Builders;
 using eMechanic.Domain.User;
 using eMechanic.Domain.User.DomainEvents;
 using FluentAssertions;
@@ -16,7 +17,12 @@ public class UserTests
         var identityId = Guid.NewGuid();
 
         // Act
-        var user = User.Create(email, firstName, lastName, identityId);
+        var user = new UserBuilder()
+            .WithEmail(email)
+            .WithFirstName(firstName)
+            .WithLastName(lastName)
+            .WithIdentityId(identityId)
+            .Build();
 
         // Assert
         Assert.NotNull(user);
@@ -29,7 +35,7 @@ public class UserTests
     public void Create_Should_RaiseUserCreatedDomainEvent_WhenCreated()
     {
         // Act
-        var user = User.Create("test@user.pl", "Test", "User", Guid.NewGuid());
+        var user = new UserBuilder().Build();
         var domainEvents = user.GetDomainEvents();
 
         // Assert
@@ -45,7 +51,7 @@ public class UserTests
     {
         // Act & Assert
         Assert.Throws<ArgumentException>(() =>
-            User.Create(invalidEmail, "Test", "User", Guid.NewGuid())
+            new UserBuilder().WithEmail(invalidEmail).Build()
         );
     }
 
@@ -54,7 +60,7 @@ public class UserTests
     {
         // Act & Assert
         Assert.Throws<ArgumentException>(() =>
-            User.Create("test@user.pl", "Test", "User", Guid.Empty)
+            new UserBuilder().WithIdentityId(Guid.Empty).Build()
         );
     }
 
@@ -62,7 +68,7 @@ public class UserTests
     public void Update_Should_UpdateAllFields_And_RaiseUserUpdatedDomainEvent()
     {
         // Arrange
-        var user = CreateValidUser();
+        var user = new UserBuilder().Build();
         var newEmail = "nowy@email.com";
         var newFirstName = "Jan";
         var newLastName = "Kowalski";
@@ -86,7 +92,7 @@ public class UserTests
     public void Update_Should_RaiseEvent_EvenIfValuesAreTheSame()
     {
         // Arrange
-        var user = CreateValidUser();
+        var user = new UserBuilder().Build();
         var oldEmail = user.Email;
         var oldFirstName = user.FirstName;
         var oldLastName = user.LastName;
@@ -111,7 +117,7 @@ public class UserTests
     public void Update_Should_ThrowArgumentException_WhenAnyFieldIsInvalid(string email, string firstName, string lastName)
     {
         // Arrange
-        var user = CreateValidUser();
+        var user = new UserBuilder().Build();
 
         user.ClearDomainEvents();
 
@@ -123,6 +129,4 @@ public class UserTests
 
         user.GetDomainEvents().Should().BeEmpty();
     }
-
-    private User CreateValidUser() => User.Create("test@user.pl", "Test", "User", Guid.NewGuid());
 }

@@ -7,6 +7,7 @@ using Common.Result;
 using Common.Result.Fields;
 using Domain.User;
 using Domain.Workshop;
+using eMechanic.Domain.Tests.Builders;
 using eMechanic.Infrastructure.Identity;
 using eMechanic.Infrastructure.Services.Identity;
 using FluentAssertions;
@@ -40,13 +41,11 @@ public class AuthenticatorTests
 
         _fakeUserIdentity = Identity.Create(TEST_USER_EMAIL, EIdentityType.User);
         _fakeUserIdentity.Id = Guid.NewGuid();
-        _fakeUserDomain = User.Create(TEST_USER_EMAIL, "Test", "User", _fakeUserIdentity.Id);
+        _fakeUserDomain = new UserBuilder().WithEmail(TEST_USER_EMAIL).WithIdentityId(_fakeUserIdentity.Id).Build();
 
         _fakeWorkshopIdentity = Identity.Create(TEST_WORKSHOP_EMAIL, EIdentityType.Workshop);
         _fakeWorkshopIdentity.Id = Guid.NewGuid();
-        _fakeWorkshopDomain = Workshop.Create(
-            "contact@workshop.com", TEST_WORKSHOP_EMAIL, "Display", "Workshop Name",
-            "123", "Addr", "City", "PC", "PL", _fakeWorkshopIdentity.Id);
+        _fakeWorkshopDomain = new WorkshopBuilder().WithEmail(TEST_WORKSHOP_EMAIL).WithIdentityId(_fakeWorkshopIdentity.Id).Build();
     }
 
     [Fact]

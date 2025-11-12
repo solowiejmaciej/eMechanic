@@ -1,5 +1,6 @@
 namespace eMechanic.Application.Tests.Users.Features.Create;
 
+using Application.Tests.Builders;
 using eMechanic.Application.Users.Features.Create;
 using eMechanic.Application.Users.Services;
 using eMechanic.Common.Result;
@@ -20,7 +21,7 @@ public class CreateUserHandlerTests
     public async Task Handle_Should_ReturnSuccessResult_WhenUserIsCreatedSuccessfully()
     {
         // Arrange
-        var command = new CreateUserCommand("Jan", "Kowalski", "jan@kowalski.pl", "Password123");
+        var command = new CreateUserCommandBuilder().Build();
         var newUserId = Guid.NewGuid();
 
         _userService.CreateUserWithIdentityAsync(
@@ -43,7 +44,7 @@ public class CreateUserHandlerTests
     public async Task Handle_Should_ReturnErrorResult_WhenCreatorServiceFails()
     {
         // Arrange
-        var command = new CreateUserCommand("Jan", "Kowalski", "jan@kowalski.pl", "Password123");
+        var command = new CreateUserCommandBuilder().Build();
         var error = new Error(EErrorCode.ValidationError, "Email already exists.");
 
         _userService.CreateUserWithIdentityAsync(

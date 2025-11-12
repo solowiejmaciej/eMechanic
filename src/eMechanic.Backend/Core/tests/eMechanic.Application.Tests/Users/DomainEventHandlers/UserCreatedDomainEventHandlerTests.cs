@@ -5,6 +5,7 @@ using eMechanic.Domain.User;
 using eMechanic.Domain.User.DomainEvents;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using eMechanic.Domain.Tests.Builders;
 
 public class UserCreatedDomainEventHandlerTests
 {
@@ -21,7 +22,7 @@ public class UserCreatedDomainEventHandlerTests
     public async Task Handle_Should_LogInformation_WhenEventIsReceived()
     {
         // Arrange
-        var fakeUser = User.Create("test@test.pl", "Jan", "Kowalski", Guid.NewGuid());
+        var fakeUser = new UserBuilder().Build();
         var domainEvent = new UserCreatedDomainEvent(fakeUser);
 
         // Act

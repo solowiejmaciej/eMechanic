@@ -1,5 +1,6 @@
 namespace eMechanic.Application.Tests.Users.Features.Create;
 
+using Application.Tests.Builders;
 using eMechanic.Application.Users.Features.Create;
 using FluentValidation.TestHelper;
 
@@ -16,7 +17,7 @@ public class CreateUserCommandValidatorTests
     public void Should_HaveError_WhenEmailIsEmpty()
     {
         // Arrange
-        var command = new CreateUserCommand("Jan", "Kowalski", "", "Password123");
+        var command = new CreateUserCommandBuilder().WithEmail("").Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -29,7 +30,7 @@ public class CreateUserCommandValidatorTests
     public void Should_HaveError_WhenEmailIsInvalid()
     {
         // Arrange
-        var command = new CreateUserCommand("Jan", "Kowalski", "this-is-not-email", "Password123");
+        var command = new CreateUserCommandBuilder().WithEmail("this-is-not-email").Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -42,7 +43,7 @@ public class CreateUserCommandValidatorTests
     public void Should_HaveError_WhenPasswordIsTooShort()
     {
         // Arrange
-        var command = new CreateUserCommand("Jan", "Kowalski", "jan@kowalski.pl", "pass");
+        var command = new CreateUserCommandBuilder().WithPassword("pass").Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -55,7 +56,7 @@ public class CreateUserCommandValidatorTests
     public void Should_NotHaveError_WhenCommandIsValid()
     {
         // Arrange
-        var command = new CreateUserCommand("Jan", "Kowalski", "jan@kowalski.pl", "Password123");
+        var command = new CreateUserCommandBuilder().Build();
 
         // Act
         var result = _validator.TestValidate(command);
