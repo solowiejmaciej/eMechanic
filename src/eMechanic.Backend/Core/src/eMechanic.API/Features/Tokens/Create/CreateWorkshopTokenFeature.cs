@@ -14,7 +14,7 @@ public sealed class CreateWorkshopTokenFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost(TokenPrefix.ENDPOINT + "/workshop",  async (
+        app.MapPost(TokenPrefix.CREATE_WORKSHOP_TOKEN_ENDPOINT, async (
                 CreateWorkshopTokenRequest tokenRequest,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>

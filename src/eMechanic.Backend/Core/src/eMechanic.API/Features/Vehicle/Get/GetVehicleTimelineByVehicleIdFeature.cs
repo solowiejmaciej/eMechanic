@@ -14,7 +14,7 @@ public sealed class GetVehicleTimelineByVehicleIdFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet(VehiclePrefix.ENDPOINT + "/{id:guid}/timeline", async (
+        app.MapGet(VehiclePrefix.GET_TIMELINE_ENDPOINT, async (
                 Guid id,
                 [AsParameters] PaginationParameters paginationParameters,
                 IMediator mediator,

@@ -8,7 +8,7 @@ public sealed class GetVehicleByIdHandler : IResultQueryHandler<GetVehicleByIdQu
 {
     private readonly IVehicleOwnershipService _vehicleOwnershipService;
 
-    public GetVehicleByIdHandler( IVehicleOwnershipService vehicleOwnershipService)
+    public GetVehicleByIdHandler(IVehicleOwnershipService vehicleOwnershipService)
     {
         _vehicleOwnershipService = vehicleOwnershipService;
     }

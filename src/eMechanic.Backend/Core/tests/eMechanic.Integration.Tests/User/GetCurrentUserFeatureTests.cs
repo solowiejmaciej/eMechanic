@@ -3,6 +3,8 @@ namespace eMechanic.Integration.Tests.User;
 using System.Net;
 using System.Net.Http.Json;
 using Application.Users.Features.Get.Current;
+using eMechanic.API.Constans;
+using eMechanic.API.Features.User;
 using FluentAssertions;
 using Helpers;
 using TestContainers;
@@ -11,6 +13,7 @@ public class GetCurrentUserFeatureTests : IClassFixture<IntegrationTestWebAppFac
 {
     private readonly HttpClient _client;
     private readonly AuthHelper _authHelper;
+    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}";
 
     public GetCurrentUserFeatureTests(IntegrationTestWebAppFactory factory)
     {
@@ -26,7 +29,7 @@ public class GetCurrentUserFeatureTests : IClassFixture<IntegrationTestWebAppFac
         _client.SetBearerToken(authResponse.Token);
 
         // Act
-        var response = await _client.GetAsync("/api/v1/users/me");
+        var response = await _client.GetAsync($"{BASE_API_URL}{UserPrefix.GET_CURRENT_USER_ENDPOINT}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -40,10 +43,8 @@ public class GetCurrentUserFeatureTests : IClassFixture<IntegrationTestWebAppFac
     public async Task GetCurrentUser_Should_ReturnUnauthorized_WhenTokenIsMissing()
     {
         // Arrange
-        _client.ClearBearerToken();
-
         // Act
-        var response = await _client.GetAsync("/api/v1/users/me");
+        var response = await _client.GetAsync($"{BASE_API_URL}{UserPrefix.GET_CURRENT_USER_ENDPOINT}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -57,7 +58,7 @@ public class GetCurrentUserFeatureTests : IClassFixture<IntegrationTestWebAppFac
         _client.SetBearerToken(authResponse.Token);
 
         // Act
-        var response = await _client.GetAsync("/api/v1/users/me");
+        var response = await _client.GetAsync($"{BASE_API_URL}{UserPrefix.GET_CURRENT_USER_ENDPOINT}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);

@@ -1,10 +1,10 @@
 namespace eMechanic.Architecture.Tests;
 
-using NetArchTest.Rules;
-using MediatR;
-using Common.Result;
 using System.Reflection;
 using Common.CQRS;
+using Common.Result;
+using MediatR;
+using NetArchTest.Rules;
 
 public class MediatRUsageTests
 {

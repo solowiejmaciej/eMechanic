@@ -98,11 +98,11 @@ public class UpdateVehicleHandlerTests
         await _vehicleRepository.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
     }
 
-     [Fact]
+    [Fact]
     public async Task Handle_Should_ReturnValidationError_WhenDomainUpdateFails()
     {
         // Arrange
-         var command = new UpdateVehicleCommandBuilder().WithId(_vehicleId).WithVin("zly-vin").Build();
+        var command = new UpdateVehicleCommandBuilder().WithId(_vehicleId).WithVin("zly-vin").Build();
 
         _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Result<Vehicle, Error>>(_existingVehicle));
@@ -122,7 +122,7 @@ public class UpdateVehicleHandlerTests
     public async Task Handle_Should_ReturnUnauthorizedError_WhenOwnershipServiceReturnsUnauthorized()
     {
         // Arrange
-         var command = new UpdateVehicleCommandBuilder().WithId(_vehicleId).Build();
+        var command = new UpdateVehicleCommandBuilder().WithId(_vehicleId).Build();
 
         var unauthorizedError = new Error(EErrorCode.UnauthorizedError, "User is not authenticated.");
         _ownershipService.GetAndVerifyOwnershipAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())

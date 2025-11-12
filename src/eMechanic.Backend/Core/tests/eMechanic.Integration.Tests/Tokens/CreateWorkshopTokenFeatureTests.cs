@@ -2,6 +2,10 @@ namespace eMechanic.Integration.Tests.Tokens;
 
 using System.Net;
 using System.Net.Http.Json;
+using eMechanic.API.Constans;
+using eMechanic.API.Features.Tokens;
+using eMechanic.API.Features.User;
+using eMechanic.API.Features.Workshop;
 using eMechanic.Application.Token.Features.Create.Workshop;
 using eMechanic.Application.Users.Features.Create;
 using eMechanic.Application.Workshop.Features.Create;
@@ -12,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 public class CreateWorkshopTokenFeatureTests : IClassFixture<IntegrationTestWebAppFactory>
 {
     private readonly HttpClient _client;
+    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}";
     private const string TEST_EMAIL = "workshop-login@test.com";
     private const string TEST_PASSWORD = "Password123!";
 
@@ -28,7 +33,7 @@ public class CreateWorkshopTokenFeatureTests : IClassFixture<IntegrationTestWebA
         var command = new CreateWorkshopTokenCommand(TEST_EMAIL, TEST_PASSWORD);
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/tokens/workshop", command);
+        var response = await _client.PostAsJsonAsync($"{BASE_API_URL}{TokenPrefix.CREATE_WORKSHOP_TOKEN_ENDPOINT}", command);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -46,7 +51,7 @@ public class CreateWorkshopTokenFeatureTests : IClassFixture<IntegrationTestWebA
         var command = new CreateWorkshopTokenCommand("wrong-pass@test.com", "WrongPassword!");
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/tokens/workshop", command);
+        var response = await _client.PostAsJsonAsync($"{BASE_API_URL}{TokenPrefix.CREATE_WORKSHOP_TOKEN_ENDPOINT}", command);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -62,7 +67,7 @@ public class CreateWorkshopTokenFeatureTests : IClassFixture<IntegrationTestWebA
         var command = new CreateWorkshopTokenCommand("non-existent@test.com", TEST_PASSWORD);
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/tokens/workshop", command);
+        var response = await _client.PostAsJsonAsync($"{BASE_API_URL}{TokenPrefix.CREATE_WORKSHOP_TOKEN_ENDPOINT}", command);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -77,7 +82,7 @@ public class CreateWorkshopTokenFeatureTests : IClassFixture<IntegrationTestWebA
         var command = new CreateWorkshopTokenCommand("user-account@test.com", TEST_PASSWORD);
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/tokens/workshop", command);
+        var response = await _client.PostAsJsonAsync($"{BASE_API_URL}{TokenPrefix.CREATE_WORKSHOP_TOKEN_ENDPOINT}", command);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -99,7 +104,7 @@ public class CreateWorkshopTokenFeatureTests : IClassFixture<IntegrationTestWebA
             "60-123",
             "Polska");
 
-        await _client.PostAsJsonAsync("/api/v1/workshops", command);
+        await _client.PostAsJsonAsync($"{BASE_API_URL}{WorkshopPrefix.CREATE_ENDPOINT}", command);
     }
     private async Task CreateTestUser(string email, string password)
     {
@@ -109,7 +114,7 @@ public class CreateWorkshopTokenFeatureTests : IClassFixture<IntegrationTestWebA
             email,
             password);
 
-        await _client.PostAsJsonAsync("/api/v1/users", command);
+        await _client.PostAsJsonAsync($"{BASE_API_URL}{UserPrefix.CREATE_USER_ENDPOINT}", command);
     }
 
 }

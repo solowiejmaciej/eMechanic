@@ -70,7 +70,7 @@ public class OutboxPublisherFunction
                 continue;
             }
 
-            if(result.Event is null || result.Type is null)
+            if (result.Event is null || result.Type is null)
             {
                 _logger.LogWarning("Event of type {MessageEventType} was null.", message.EventType);
                 continue;

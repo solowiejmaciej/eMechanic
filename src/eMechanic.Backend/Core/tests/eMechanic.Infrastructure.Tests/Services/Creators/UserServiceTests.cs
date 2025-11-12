@@ -1,7 +1,11 @@
 namespace eMechanic.Infrastructure.Tests.Services.Creators;
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Application.Abstractions.Identity;
 using Application.Identity;
+using Application.Users.Repositories;
 using Common.Result;
 using Common.Result.Fields;
 using Domain.User;
@@ -13,10 +17,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Application.Users.Repositories;
 
 public class UserServiceTests
 {

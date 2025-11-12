@@ -14,7 +14,7 @@ public sealed class CreateUserFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost(UserPrefix.ENDPOINT, async (
+        app.MapPost(UserPrefix.CREATE_USER_ENDPOINT, async (
                 CreateUserRequest request,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
@@ -22,7 +22,7 @@ public sealed class CreateUserFeature : IFeature
                 var result = await mediator.Send(request.MapToCommand(), cancellationToken);
 
                 return result.ToStatusCode(
-                    id => Results.Created($"{WebApiConstans.CURRENT_API_VERSION}{UserPrefix.ENDPOINT}/{id}", new { UserId = id }),
+                    id => Results.Created($"{WebApiConstans.CURRENT_API_VERSION}{UserPrefix.CREATE_USER_ENDPOINT}/{id}", new { UserId = id }),
                     MapError);
             })
             .WithName("RegisterUser")

@@ -1,5 +1,6 @@
 namespace eMechanic.Application.Tests.Workshop.Features.Create;
 
+using Application.Tests.Builders;
 using Application.Workshop.Features.Create;
 using eMechanic.Application.Workshop.Services;
 using eMechanic.Common.Result;
@@ -20,10 +21,7 @@ public class CreateWorkshopHandlerTests
     public async Task Handle_Should_ReturnSuccessResult_WhenWorkshopIsCreatedSuccessfully()
     {
         // Arrange
-        var command = new CreateWorkshopCommand(
-            "login@warsztat.pl", "Password123", "kontakt@warsztat.pl",
-            "Auto-Serwis Jan", "Janex", "123456789",
-            "ul. Warsztatowa 1", "Warszawa", "00-001", "Polska");
+        var command = new CreateWorkshopCommandBuilder().Build();
 
         var newWorkshopId = Guid.NewGuid();
 
@@ -46,10 +44,7 @@ public class CreateWorkshopHandlerTests
     public async Task Handle_Should_ReturnErrorResult_WhenCreatorServiceFails()
     {
         // Arrange
-        var command = new CreateWorkshopCommand(
-            "login@warsztat.pl", "Password123", "kontakt@warsztat.pl",
-            "Auto-Serwis Jan", "Janex", "123456789",
-            "ul. Warsztatowa 1", "Warszawa", "00-001", "Polska");
+        var command = new CreateWorkshopCommandBuilder().Build();
 
         var error = new Error(EErrorCode.ValidationError, "Identity with given email already exists.");
 

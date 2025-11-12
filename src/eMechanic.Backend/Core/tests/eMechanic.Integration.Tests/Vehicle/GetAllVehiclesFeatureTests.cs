@@ -2,6 +2,8 @@ namespace eMechanic.Integration.Tests.Vehicle;
 
 using System.Net;
 using System.Net.Http.Json;
+using API.Constans;
+using API.Features.Vehicle;
 using API.Features.Vehicle.Create.Request;
 using Application.Vehicle.Features.Get;
 using Common.Result;
@@ -14,6 +16,7 @@ public class GetAllVehiclesFeatureTests : IClassFixture<IntegrationTestWebAppFac
 {
     private readonly HttpClient _client;
     private readonly AuthHelper _authHelper;
+    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.GET_ALL_ENDPOINT}";
 
     public GetAllVehiclesFeatureTests(IntegrationTestWebAppFactory factory)
     {
@@ -38,7 +41,7 @@ public class GetAllVehiclesFeatureTests : IClassFixture<IntegrationTestWebAppFac
             EBodyType.Hatchback,
             EVehicleType.Passenger);
 
-        var createResponse = await _client.PostAsJsonAsync("/api/v1/vehicles", createRequest);
+        var createResponse = await _client.PostAsJsonAsync(BASE_API_URL, createRequest);
         createResponse.EnsureSuccessStatusCode();
         var createdContent = await createResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();
         return createdContent!["vehicleId"];
@@ -58,7 +61,7 @@ public class GetAllVehiclesFeatureTests : IClassFixture<IntegrationTestWebAppFac
         _client.SetBearerToken(authResponseA.Token);
 
         // Act
-        var response = await _client.GetAsync("/api/v1/vehicles?pageNumber=1&pageSize=5");
+        var response = await _client.GetAsync($"{BASE_API_URL}?pageNumber=1&pageSize=5");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -86,7 +89,7 @@ public class GetAllVehiclesFeatureTests : IClassFixture<IntegrationTestWebAppFac
         _client.SetBearerToken(authResponse.Token);
 
         // Act
-        var response = await _client.GetAsync("/api/v1/vehicles?pageNumber=2&pageSize=2");
+        var response = await _client.GetAsync($"{BASE_API_URL}?pageNumber=2&pageSize=2");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -108,7 +111,7 @@ public class GetAllVehiclesFeatureTests : IClassFixture<IntegrationTestWebAppFac
         _client.ClearBearerToken();
 
         // Act
-        var response = await _client.GetAsync("/api/v1/vehicles");
+        var response = await _client.GetAsync(BASE_API_URL);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -122,7 +125,7 @@ public class GetAllVehiclesFeatureTests : IClassFixture<IntegrationTestWebAppFac
         _client.SetBearerToken(authResponse.Token);
 
         // Act
-        var response = await _client.GetAsync("/api/v1/vehicles?pageNumber=2&pageSize=2");
+        var response = await _client.GetAsync($"{BASE_API_URL}?pageNumber=2&pageSize=2");
 
         // Assert
         response.StatusCode.Should().Match(code =>

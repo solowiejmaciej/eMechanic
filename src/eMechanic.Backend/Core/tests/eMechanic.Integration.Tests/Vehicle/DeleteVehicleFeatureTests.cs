@@ -2,6 +2,8 @@ namespace eMechanic.Integration.Tests.Vehicle;
 
 using System.Net;
 using System.Net.Http.Json;
+using API.Constans;
+using API.Features.Vehicle;
 using API.Features.Vehicle.Create.Request;
 using Domain.Vehicle.Enums;
 using FluentAssertions;
@@ -12,14 +14,14 @@ public class DeleteVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
 {
     private readonly HttpClient _client;
     private readonly AuthHelper _authHelper;
-
+    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.DELETE_ENDPOINT}";
     public DeleteVehicleFeatureTests(IntegrationTestWebAppFactory factory)
     {
         _client = factory.CreateClient();
         _authHelper = new AuthHelper(_client);
     }
 
-     private async Task<(Guid UserId, Guid VehicleId, string Token)> CreateVehicleForTestUser(string suffix = "delete")
+    private async Task<(Guid UserId, Guid VehicleId, string Token)> CreateVehicleForTestUser(string suffix = "delete")
     {
         var authResponse = await _authHelper.CreateAndLoginUserAsync($"user-{suffix}-{Guid.NewGuid()}@int.com");
         _client.SetBearerToken(authResponse.Token);
@@ -53,12 +55,12 @@ public class DeleteVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         _client.SetBearerToken(token);
 
         // Act
-        var response = await _client.DeleteAsync($"/api/v1/vehicles/{vehicleId}");
+        var response = await _client.DeleteAsync($"{BASE_API_URL.Replace("{id:guid}", vehicleId.ToString())}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var getResponse = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}");
+        var getResponse = await _client.GetAsync($"{BASE_API_URL}{vehicleId}");
         getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
         _client.ClearBearerToken();
@@ -73,7 +75,7 @@ public class DeleteVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var nonExistentVehicleId = Guid.NewGuid();
 
         // Act
-        var response = await _client.DeleteAsync($"/api/v1/vehicles/{nonExistentVehicleId}");
+        var response = await _client.DeleteAsync($"{BASE_API_URL.Replace("{id:guid}", nonExistentVehicleId.ToString())}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -81,7 +83,7 @@ public class DeleteVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         _client.ClearBearerToken();
     }
 
-     [Fact]
+    [Fact]
     public async Task DeleteVehicle_Should_ReturnNotFound_WhenVehicleBelongsToAnotherUser()
     {
         // Arrange
@@ -92,7 +94,7 @@ public class DeleteVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         _client.SetBearerToken(authResponse.Token);
 
         // Act
-        var response = await _client.DeleteAsync($"/api/v1/vehicles/{vehicleId}");
+        var response = await _client.DeleteAsync($"{BASE_API_URL.Replace("{id:guid}", vehicleId.ToString())}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -109,7 +111,7 @@ public class DeleteVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         _client.ClearBearerToken();
 
         // Act
-        var response = await _client.DeleteAsync($"/api/v1/vehicles/{vehicleId}");
+        var response = await _client.DeleteAsync($"{BASE_API_URL.Replace("{id:guid}", vehicleId.ToString())}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -126,7 +128,7 @@ public class DeleteVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         _client.SetBearerToken(authResponse.Token);
 
         // Act
-        var response = await _client.DeleteAsync($"/api/v1/vehicles/{vehicleId}");
+        var response = await _client.DeleteAsync($"{BASE_API_URL.Replace("{id:guid}", vehicleId.ToString())}");
 
         // Assert
         response.StatusCode.Should().Match(code =>

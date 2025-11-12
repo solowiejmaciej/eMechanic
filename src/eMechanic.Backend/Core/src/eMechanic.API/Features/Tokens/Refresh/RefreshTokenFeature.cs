@@ -13,7 +13,7 @@ public sealed class RefreshTokenFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost(TokenPrefix.ENDPOINT + "/refresh",  async (
+        app.MapPost(TokenPrefix.REFRESH_TOKEN_ENDPOINT, async (
                 RefreshTokenRequest request,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>

@@ -75,62 +75,62 @@ public class VehicleBuilder
         _vin = vin;
         return this;
     }
-    
+
     public VehicleBuilder WithManufacturer(string manufacturer)
     {
         _manufacturer = manufacturer;
         return this;
     }
-    
+
     public VehicleBuilder WithModel(string model)
     {
         _model = model;
         return this;
     }
-    
+
     public VehicleBuilder WithProductionYear(string year)
     {
         _year = year;
         return this;
     }
-    
+
     public VehicleBuilder WithEngineCapacity(decimal? capacity)
     {
         _capacity = capacity;
         return this;
     }
-    
+
     public VehicleBuilder WithMileage(int value, EMileageUnit unit)
     {
         _mileageValue = value;
         _mileageUnit = unit;
         return this;
     }
-    
+
     public VehicleBuilder WithLicensePlate(string licensePlate)
     {
         _licensePlate = licensePlate;
         return this;
     }
-    
+
     public VehicleBuilder WithHorsePower(int horsePower)
     {
         _horsePower = horsePower;
         return this;
     }
-    
+
     public VehicleBuilder WithFuelType(EFuelType fuelType)
     {
         _fuel = fuelType;
         return this;
     }
-    
+
     public VehicleBuilder WithBodyType(EBodyType bodyType)
     {
         _body = bodyType;
         return this;
     }
-    
+
     public VehicleBuilder WithVehicleType(EVehicleType vehicleType)
     {
         _type = vehicleType;

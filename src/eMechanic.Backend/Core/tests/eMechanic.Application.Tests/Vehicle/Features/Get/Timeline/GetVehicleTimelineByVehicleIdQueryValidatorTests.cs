@@ -1,10 +1,10 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Get.Timeline;
 
+using System;
 using Application.Tests.Builders;
 using eMechanic.Application.Vehicle.Features.Get.Timeline;
 using eMechanic.Common.Result;
 using FluentValidation.TestHelper;
-using System;
 
 public class GetVehicleTimelineByVehicleIdQueryValidatorTests
 {

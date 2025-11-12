@@ -1,7 +1,7 @@
 namespace eMechanic.API.Features.Workshop.Update;
 
-using Common.Web;
 using Common.Result;
+using Common.Web;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Request;
@@ -13,7 +13,7 @@ public sealed class UpdateWorkshopFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut(WorkshopPrefix.ENDPOINT, async (
+        app.MapPut(WorkshopPrefix.UPDATE_ENDPOINT, async (
                 [FromBody] UpdateWorkshopRequest request,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>

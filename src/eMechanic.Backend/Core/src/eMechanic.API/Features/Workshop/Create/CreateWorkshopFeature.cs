@@ -12,7 +12,7 @@ public sealed class CreateWorkshopFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost(WorkshopPrefix.ENDPOINT, async (
+        app.MapPost(WorkshopPrefix.CREATE_ENDPOINT, async (
                 CreateWorkshopRequest request,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
@@ -20,7 +20,7 @@ public sealed class CreateWorkshopFeature : IFeature
                 var result = await mediator.Send(request.MapToCommand(), cancellationToken);
 
                 return result.ToStatusCode(
-                    id => Results.Created($"{WebApiConstans.CURRENT_API_VERSION}/{WorkshopPrefix.ENDPOINT}/{id}", new { WorkshopId = id }),
+                    id => Results.Created($"{WebApiConstans.CURRENT_API_VERSION}{WorkshopPrefix.CREATE_ENDPOINT}/{id}", new { WorkshopId = id }),
                     MapError);
             })
             .WithName("CreateWorkshop")

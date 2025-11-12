@@ -14,7 +14,7 @@ public class RefreshToken
         IdentityId = identityId;
     }
 
-    private RefreshToken() {}
+    private RefreshToken() { }
 
     public Guid Id { get; private set; }
     public string Token { get; private set; }

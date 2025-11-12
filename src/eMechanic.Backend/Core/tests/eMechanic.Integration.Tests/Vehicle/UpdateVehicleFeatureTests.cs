@@ -2,6 +2,8 @@ namespace eMechanic.Integration.Tests.Vehicle;
 
 using System.Net;
 using System.Net.Http.Json;
+using API.Constans;
+using API.Features.Vehicle;
 using API.Features.Vehicle.Create.Request;
 using API.Features.Vehicle.Update.Request;
 using Application.Vehicle.Features.Get;
@@ -15,6 +17,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
 {
     private readonly HttpClient _client;
     private readonly AuthHelper _authHelper;
+
+    private const string CREATE_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.CREATE_ENDPOINT}";
+    private const string UPDATE_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.UPDATE_ENDPOINT}";
+    private const string GET_BY_ID_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.GET_BY_ID_ENDPOINT}";
 
     public UpdateVehicleFeatureTests(IntegrationTestWebAppFactory factory)
     {
@@ -40,7 +46,8 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
             EFuelType.Diesel,
             EBodyType.Sedan,
             EVehicleType.Passenger);
-        var createResponse = await _client.PostAsJsonAsync("/api/v1/vehicles", createRequest);
+
+        var createResponse = await _client.PostAsJsonAsync(CREATE_BASE_API_URL, createRequest);
         createResponse.EnsureSuccessStatusCode();
         var createdContent = await createResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();
         var vehicleId = createdContent!["vehicleId"];
@@ -70,14 +77,16 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var (_, vehicleId, token) = await CreateVehicleForTestUser();
         _client.SetBearerToken(token);
         var updateRequest = CreateValidUpdateRequest();
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
+        var getUrl = GET_BY_ID_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var getResponse = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}");
+        var getResponse = await _client.GetAsync(getUrl);
         getResponse.EnsureSuccessStatusCode();
         var updatedVehicle = await getResponse.Content.ReadFromJsonAsync<VehicleResponse>();
         updatedVehicle!.Manufacturer.Should().Be("Updated Manufacturer");
@@ -97,9 +106,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         _client.SetBearerToken(authResponse.Token);
         var nonExistentVehicleId = Guid.NewGuid();
         var updateRequest = CreateValidUpdateRequest();
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", nonExistentVehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{nonExistentVehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -117,9 +127,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var authResponse = await _authHelper.CreateAndLoginUserAsync("owner2@gmail.com");
         _client.SetBearerToken(authResponse.Token);
         var updateRequest = CreateValidUpdateRequest();
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -134,9 +145,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var (_, vehicleId, _) = await CreateVehicleForTestUser();
         _client.ClearBearerToken();
         var updateRequest = CreateValidUpdateRequest();
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -152,10 +164,11 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var authResponse = await _authHelper.CreateAndLoginWorkshopAsync();
         _client.SetBearerToken(authResponse.Token);
         var updateRequest = CreateValidUpdateRequest();
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Match(code =>
@@ -174,9 +187,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var (_, vehicleId, token) = await CreateVehicleForTestUser();
         _client.SetBearerToken(token);
         var updateRequest = CreateValidUpdateRequest() with { Vin = invalidVin };
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -196,9 +210,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var (_, vehicleId, token) = await CreateVehicleForTestUser();
         _client.SetBearerToken(token);
         var updateRequest = CreateValidUpdateRequest() with { Manufacturer = invalidManufacturer! };
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -216,9 +231,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         _client.SetBearerToken(token);
         var longManufacturer = new string('a', 101);
         var updateRequest = CreateValidUpdateRequest() with { Manufacturer = longManufacturer };
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -238,9 +254,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var (_, vehicleId, token) = await CreateVehicleForTestUser();
         _client.SetBearerToken(token);
         var updateRequest = CreateValidUpdateRequest() with { Model = invalidModel! };
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -258,9 +275,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         _client.SetBearerToken(token);
         var longModel = new string('b', 101);
         var updateRequest = CreateValidUpdateRequest() with { Model = longModel };
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -282,9 +300,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var (_, vehicleId, token) = await CreateVehicleForTestUser();
         _client.SetBearerToken(token);
         var updateRequest = CreateValidUpdateRequest() with { ProductionYear = invalidYear };
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -301,9 +320,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var (_, vehicleId, token) = await CreateVehicleForTestUser();
         _client.SetBearerToken(token);
         var updateRequest = CreateValidUpdateRequest() with { EngineCapacity = invalidCapacity };
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -320,9 +340,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var (_, vehicleId, token) = await CreateVehicleForTestUser();
         _client.SetBearerToken(token);
         var updateRequest = CreateValidUpdateRequest() with { FuelType = EFuelType.None };
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -339,9 +360,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var (_, vehicleId, token) = await CreateVehicleForTestUser();
         _client.SetBearerToken(token);
         var updateRequest = CreateValidUpdateRequest() with { BodyType = EBodyType.None };
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -363,14 +385,16 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
             VehicleType = EVehicleType.Motorcycle,
             BodyType = EBodyType.None
         };
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
+        var getUrl = GET_BY_ID_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var getResponse = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}");
+        var getResponse = await _client.GetAsync(getUrl);
         getResponse.EnsureSuccessStatusCode();
         var updatedVehicle = await getResponse.Content.ReadFromJsonAsync<VehicleResponse>();
         updatedVehicle!.VehicleType.Should().Be(EVehicleType.Motorcycle);
@@ -387,9 +411,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var (_, vehicleId, token) = await CreateVehicleForTestUser();
         _client.SetBearerToken(token);
         var updateRequest = CreateValidUpdateRequest() with { LicensePlate = invalidPlate };
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -407,9 +432,10 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var (_, vehicleId, token) = await CreateVehicleForTestUser();
         _client.SetBearerToken(token);
         var updateRequest = CreateValidUpdateRequest() with { HorsePower = invalidHp };
+        var updateUrl = UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString());
 
         // Act
-        var response = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var response = await _client.PutAsJsonAsync(updateUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);

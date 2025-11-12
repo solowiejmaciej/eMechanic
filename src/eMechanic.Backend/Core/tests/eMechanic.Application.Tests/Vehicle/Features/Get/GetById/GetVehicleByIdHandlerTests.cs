@@ -1,6 +1,7 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Get.GetById;
 
 using Application.Vehicle.Services;
+using Domain.Tests.Builders;
 using eMechanic.Application.Vehicle.Features.Get.ById;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;
@@ -20,20 +21,7 @@ public class GetVehicleByIdHandlerTests
     public GetVehicleByIdHandlerTests()
     {
         _ownershipService = Substitute.For<IVehicleOwnershipService>();
-         var creationResult = Vehicle.Create(
-            _currentUserId,
-            "V1N123456789ABCDE",
-            "GetById",
-            "ModelGet",
-            "2022",
-            3.0m,
-            5,
-            EMileageUnit.Kilometers,
-            "PZ1W924",
-            124,
-            EFuelType.Hybrid,
-            EBodyType.Hatchback,
-            EVehicleType.Passenger);
+        var creationResult = new VehicleBuilder().WithOwnerId(_currentUserId).BuildResult();
 
         creationResult.HasError().Should().BeFalse();
         _existingVehicle = creationResult.Value!;
@@ -48,8 +36,8 @@ public class GetVehicleByIdHandlerTests
         // Arrange
         var query = new GetVehicleByIdQuery(_vehicleId);
 
-         _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<Result<Vehicle, Error>>(_existingVehicle));
+        _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
+           .Returns(Task.FromResult<Result<Vehicle, Error>>(_existingVehicle));
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
@@ -63,7 +51,7 @@ public class GetVehicleByIdHandlerTests
         result.Value.Manufacturer.Should().Be(_existingVehicle.Manufacturer.Value);
     }
 
-     [Fact]
+    [Fact]
     public async Task Handle_Should_ReturnNotFoundError_WhenOwnershipServiceFails()
     {
         // Arrange
@@ -81,7 +69,7 @@ public class GetVehicleByIdHandlerTests
         result.Error!.Code.Should().Be(EErrorCode.NotFoundError);
     }
 
-     [Fact]
+    [Fact]
     public async Task Handle_Should_ReturnUnauthorizedError_WhenOwnershipServiceReturnsUnauthorized()
     {
         // Arrange

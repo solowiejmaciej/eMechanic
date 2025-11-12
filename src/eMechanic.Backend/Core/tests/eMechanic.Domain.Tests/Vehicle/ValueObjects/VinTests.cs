@@ -1,7 +1,7 @@
 namespace eMechanic.Domain.Tests.Vehicle.ValueObjects;
 
-using Domain.Vehicle.ValueObjects;
 using Common.Result;
+using Domain.Vehicle.ValueObjects;
 using FluentAssertions;
 
 public class VinTests

@@ -3,12 +3,15 @@ namespace eMechanic.Integration.Tests.User;
 using System.Net;
 using System.Net.Http.Json;
 using Application.Users.Features.Create;
+using eMechanic.API.Constans;
+using eMechanic.API.Features.User;
 using FluentAssertions;
 using TestContainers;
 
 public class CreateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory>
 {
     private readonly HttpClient _client;
+    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}";
 
     public CreateUserFeatureTests(IntegrationTestWebAppFactory factory)
     {
@@ -26,7 +29,7 @@ public class CreateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
             "zaq1@WSX");
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/users", command);
+        var response = await _client.PostAsJsonAsync($"{BASE_API_URL}{UserPrefix.CREATE_USER_ENDPOINT}", command);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -44,7 +47,7 @@ public class CreateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
             "zaq1@WSX");
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/users", command);
+        var response = await _client.PostAsJsonAsync($"{BASE_API_URL}{UserPrefix.CREATE_USER_ENDPOINT}", command);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -61,7 +64,7 @@ public class CreateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
             "short");
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/users", command);
+        var response = await _client.PostAsJsonAsync($"{BASE_API_URL}{UserPrefix.CREATE_USER_ENDPOINT}", command);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -85,8 +88,8 @@ public class CreateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
             "zaq1@WSX");
 
         // Act
-        var response1 = await _client.PostAsJsonAsync("/api/v1/users", command1);
-        var response2 = await _client.PostAsJsonAsync("/api/v1/users", command2);
+        var response1 = await _client.PostAsJsonAsync($"{BASE_API_URL}{UserPrefix.CREATE_USER_ENDPOINT}", command1);
+        var response2 = await _client.PostAsJsonAsync($"{BASE_API_URL}{UserPrefix.CREATE_USER_ENDPOINT}", command2);
 
         // Assert
         response1.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -103,7 +106,7 @@ public class CreateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
             $"test-{Guid.NewGuid()}@integration.com",
             "zaq1@WSX");
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/users", command);
+        var response = await _client.PostAsJsonAsync($"{BASE_API_URL}{UserPrefix.CREATE_USER_ENDPOINT}", command);
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }

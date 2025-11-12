@@ -22,7 +22,7 @@ public class DeleteVehicleHandlerTests
     private readonly Guid _vehicleId = Guid.NewGuid();
     private readonly Vehicle _existingVehicle;
 
-     public DeleteVehicleHandlerTests()
+    public DeleteVehicleHandlerTests()
     {
         _vehicleRepository = Substitute.For<IVehicleRepository>();
         _userContext = Substitute.For<IUserContext>();
@@ -75,7 +75,7 @@ public class DeleteVehicleHandlerTests
         await _vehicleRepository.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
     }
 
-     [Fact]
+    [Fact]
     public async Task Handle_Should_ThrowUnauthorizedAccessException_WhenUserIsNotAuthenticated()
     {
         // Arrange

@@ -4,6 +4,8 @@ using System.Net;
 using System.Net.Http.Json;
 using API.Features.Vehicle.Create.Request;
 using Domain.Vehicle.Enums;
+using eMechanic.API.Constans;
+using eMechanic.API.Features.Vehicle;
 using FluentAssertions;
 using Helpers;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +15,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
 {
     private readonly HttpClient _client;
     private readonly AuthHelper _authHelper;
+    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.CREATE_ENDPOINT}";
 
     public CreateVehicleFeatureTests(IntegrationTestWebAppFactory factory)
     {
@@ -20,20 +23,20 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         _authHelper = new AuthHelper(_client);
     }
 
-     private CreateVehicleRequest CreateValidRequest() => new(
-        $"V1N{Guid.NewGuid().ToString("N")[..14]}",
-        "Integration Test Manufacturer",
-        "Integration Test Model",
-        "2024",
-        1.8m,
-        200,
-        EMileageUnit.Miles,
-        "PZ1W924",
-        124,
-        EFuelType.Hybrid,
-        EBodyType.SUV,
-        EVehicleType.Passenger
-    );
+    private CreateVehicleRequest CreateValidRequest() => new(
+       $"V1N{Guid.NewGuid().ToString("N")[..14]}",
+       "Integration Test Manufacturer",
+       "Integration Test Model",
+       "2024",
+       1.8m,
+       200,
+       EMileageUnit.Miles,
+       "PZ1W924",
+       124,
+       EFuelType.Hybrid,
+       EBodyType.SUV,
+       EVehicleType.Passenger
+   );
 
     [Fact]
     public async Task CreateVehicle_Should_ReturnCreated_WhenDataIsValidAndUserIsAuthenticated()
@@ -44,7 +47,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var request = CreateValidRequest();
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -56,7 +59,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         _client.ClearBearerToken();
     }
 
-     [Fact]
+    [Fact]
     public async Task CreateVehicle_Should_ReturnUnauthorized_WhenUserIsNotAuthenticated()
     {
         // Arrange
@@ -64,7 +67,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         _client.ClearBearerToken();
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -79,7 +82,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var request = CreateValidRequest();
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Match(code =>
@@ -102,7 +105,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var request = CreateValidRequest() with { Vin = invalidVin };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -126,7 +129,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var request = CreateValidRequest() with { Manufacturer = invalidManufacturer! };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -146,7 +149,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var request = CreateValidRequest() with { Manufacturer = longManufacturer };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -169,7 +172,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var request = CreateValidRequest() with { Model = invalidModel! };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -179,7 +182,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         _client.ClearBearerToken();
     }
 
-     [Fact]
+    [Fact]
     public async Task CreateVehicle_Should_ReturnBadRequest_WhenModelIsTooLong()
     {
         // Arrange
@@ -189,7 +192,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var request = CreateValidRequest() with { Model = longModel };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -214,7 +217,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var request = CreateValidRequest() with { ProductionYear = invalidYear! };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -234,7 +237,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var request = CreateValidRequest() with { EngineCapacity = invalidCapacity };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -248,12 +251,12 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     public async Task CreateVehicle_Should_ReturnBadRequest_WhenFuelTypeIsNone()
     {
         // Arrange
-        var authResponse= await _authHelper.CreateAndLoginUserAsync();
+        var authResponse = await _authHelper.CreateAndLoginUserAsync();
         _client.SetBearerToken(authResponse.Token);
         var request = CreateValidRequest() with { FuelType = EFuelType.None };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -272,7 +275,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var request = CreateValidRequest() with { BodyType = EBodyType.None };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -296,7 +299,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -316,7 +319,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var request = CreateValidRequest() with { LicensePlate = invalidPlate };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -338,7 +341,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
         var request = CreateValidRequest() with { HorsePower = invalidHp };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/v1/vehicles", request);
+        var response = await _client.PostAsJsonAsync(BASE_API_URL, request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);

@@ -1,6 +1,7 @@
 namespace eMechanic.Application.Tests.UserPreferences.Features.Update;
 
 using Application.Tests.Builders;
+using Domain.Tests.Builders;
 using Domain.UserRepairPreferences;
 using Domain.UserRepairPreferences.Enums;
 using eMechanic.Application.Abstractions.Identity.Contexts;
@@ -23,11 +24,8 @@ public class UpdateUserRepairPreferencesHandlerTests
         _preferencesRepository = Substitute.For<IUserRepairPreferencesRepository>();
         _userContext = Substitute.For<IUserContext>();
 
-        // Tworzymy instancję agregatu do testów
-        _existingPreferences = UserRepairPreferences.Create(
-            _currentUserId,
-            EPartsPreference.Economy,
-            ETimelinePreference.Standard);
+        _existingPreferences = new UserRepairPreferencesBuilder().WithUserId(_currentUserId).Build();
+
 
         _handler = new UpdateUserRepairPreferencesHandler(_preferencesRepository, _userContext);
 

@@ -1,6 +1,7 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Get.All;
 
 using Application.Vehicle.Repostories;
+using Domain.Tests.Builders;
 using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Application.Vehicle.Features.Get.All;
 using eMechanic.Common.Result;
@@ -28,26 +29,6 @@ public class GetVehiclesHandlerTests
         _handler = new GetVehiclesHandler(_vehicleRepository, _userContext);
     }
 
-    private Vehicle CreateTestVehicle(string vin, string manufacturer)
-    {
-        var result = Vehicle.Create(
-            _currentUserId,
-            vin,
-            manufacturer,
-            "TestModel",
-            "2022",
-            1.5m,
-            200,
-            EMileageUnit.Miles,
-            "PZ1W924",
-            124,
-            EFuelType.Gasoline,
-            EBodyType.Sedan,
-            EVehicleType.Passenger);
-        result.HasError().Should().BeFalse();
-        return result.Value!;
-    }
-
     [Fact]
     public async Task Handle_Should_ReturnPaginatedResult_WhenVehiclesExistForUser()
     {
@@ -57,8 +38,8 @@ public class GetVehiclesHandlerTests
 
         var vehicles = new List<Vehicle>
         {
-            CreateTestVehicle("V1N123456789ABCDE", "ManufacturerA"),
-            CreateTestVehicle("V1N123456789ABCDF", "ManufacturerB")
+            new VehicleBuilder().WithVin("V1N123456789ABCDE").WithManufacturer("ManufacturerA").Build(),
+            new VehicleBuilder().WithVin("V1N123456789ABCDF").WithManufacturer("ManufacturerB").Build(),
         };
         var paginatedResult = new PaginationResult<Vehicle>(vehicles, 2, 1, 10);
 

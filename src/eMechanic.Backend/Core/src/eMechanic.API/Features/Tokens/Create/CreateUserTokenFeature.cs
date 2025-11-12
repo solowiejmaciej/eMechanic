@@ -14,7 +14,7 @@ public sealed class CreateUserTokenFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost(TokenPrefix.ENDPOINT + "/user",  async (
+        app.MapPost(TokenPrefix.CREATE_USER_TOKEN_ENDPOINT, async (
                 CreateUserTokenRequest tokenRequest,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>

@@ -2,13 +2,13 @@ namespace eMechanic.Application.Tests.Users.DomainEventHandlers;
 
 using Application.Tests.Builders;
 using Domain.UserRepairPreferences;
+using eMechanic.Application.Users.DomainEventsHandlers;
+using eMechanic.Domain.Tests.Builders;
 using eMechanic.Domain.User;
 using eMechanic.Domain.User.DomainEvents;
 using eMechanic.Domain.UserRepairPreferences.Enums;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using eMechanic.Application.Users.DomainEventsHandlers;
-using eMechanic.Domain.Tests.Builders;
 using UserRepairPreferences.Repositories;
 
 public class CreateUserRepairPreferencesUserCreatedDomainEventHandlerTests

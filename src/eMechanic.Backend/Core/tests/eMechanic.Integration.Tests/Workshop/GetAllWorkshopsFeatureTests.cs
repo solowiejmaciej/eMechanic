@@ -1,9 +1,11 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
+using eMechanic.API.Constans;
+using eMechanic.API.Features.Workshop;
+using eMechanic.Integration.Tests.TestContainers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using eMechanic.Integration.Tests.TestContainers;
 
 namespace eMechanic.Integration.Tests.Workshop;
 
@@ -14,6 +16,9 @@ using Common.Result;
 public class GetAllWorkshopsFeatureTests : IClassFixture<IntegrationTestWebAppFactory>
 {
     private readonly HttpClient _client;
+
+    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{WorkshopPrefix.GET_ALL_ENDPOINT}";
+    private const string CREATE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{WorkshopPrefix.CREATE_ENDPOINT}";
 
     public GetAllWorkshopsFeatureTests(IntegrationTestWebAppFactory factory)
     {
@@ -28,7 +33,7 @@ public class GetAllWorkshopsFeatureTests : IClassFixture<IntegrationTestWebAppFa
         await CreateTestWorkshop($"get-ws-2-{Guid.NewGuid()}@test.com");
 
         // Act
-        var response = await _client.GetAsync("/api/v1/workshops?pageNumber=1&pageSize=10");
+        var response = await _client.GetAsync($"{BASE_API_URL}?pageNumber=1&pageSize=10");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -46,7 +51,7 @@ public class GetAllWorkshopsFeatureTests : IClassFixture<IntegrationTestWebAppFa
     public async Task GetWorkshops_Should_ReturnOkAndEmptyList_WhenNoWorkshopsExist()
     {
         // Act
-        var response = await _client.GetAsync("/api/v1/workshops?pageNumber=1&pageSize=10");
+        var response = await _client.GetAsync($"{BASE_API_URL}?pageNumber=1&pageSize=10");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -63,7 +68,7 @@ public class GetAllWorkshopsFeatureTests : IClassFixture<IntegrationTestWebAppFa
     public async Task GetWorkshops_Should_ReturnBadRequest_WhenPaginationIsInvalid()
     {
         // Act
-        var response = await _client.GetAsync("/api/v1/workshops?pageNumber=-1&pageSize=10");
+        var response = await _client.GetAsync($"{BASE_API_URL}?pageNumber=-1&pageSize=10");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -87,8 +92,7 @@ public class GetAllWorkshopsFeatureTests : IClassFixture<IntegrationTestWebAppFa
             "00-000",
             "Polska");
 
-        var resp = await _client.PostAsJsonAsync("/api/v1/workshops", command);
+        var resp = await _client.PostAsJsonAsync(CREATE_API_URL, command);
         resp.EnsureSuccessStatusCode();
     }
 }
-

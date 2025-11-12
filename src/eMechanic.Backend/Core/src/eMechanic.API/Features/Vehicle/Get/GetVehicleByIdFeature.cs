@@ -14,7 +14,7 @@ public sealed class GetVehicleByIdFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet(VehiclePrefix.ENDPOINT + "/{id:guid}", async (
+        app.MapGet(VehiclePrefix.GET_BY_ID_ENDPOINT, async (
                 Guid id,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>

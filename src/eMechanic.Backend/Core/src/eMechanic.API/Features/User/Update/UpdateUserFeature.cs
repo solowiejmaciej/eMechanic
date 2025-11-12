@@ -1,7 +1,7 @@
 namespace eMechanic.API.Features.User.Update;
 
-using Common.Web;
 using Common.Result;
+using Common.Web;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Request;
@@ -13,7 +13,7 @@ public sealed class UpdateUserFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut(UserPrefix.ENDPOINT, async (
+        app.MapPut(UserPrefix.UPDATE_CURRENT_USER_ENDPOINT, async (
                 [FromBody] UpdateUserRequest request,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
