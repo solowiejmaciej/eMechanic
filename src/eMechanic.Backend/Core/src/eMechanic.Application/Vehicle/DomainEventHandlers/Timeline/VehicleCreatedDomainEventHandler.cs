@@ -6,7 +6,7 @@ using eMechanic.Application.Timeline;
 using Microsoft.Extensions.Logging;
 using Repostories;
 
-public class VehicleCreatedDomainEventHandler : BaseTimelineEventHandler , IDomainEventHandler<VehicleCreatedDomainEvent>
+public class VehicleCreatedDomainEventHandler : BaseTimelineEventHandler, IDomainEventHandler<VehicleCreatedDomainEvent>
 {
     public VehicleCreatedDomainEventHandler(IVehicleTimelineRepository vehicleVehicleTimelineRepository) : base(vehicleVehicleTimelineRepository)
     {

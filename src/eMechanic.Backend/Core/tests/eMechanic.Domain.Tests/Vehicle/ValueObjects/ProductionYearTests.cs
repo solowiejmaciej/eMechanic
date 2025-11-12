@@ -1,7 +1,7 @@
 namespace eMechanic.Domain.Tests.Vehicle.ValueObjects;
 
-using Domain.Vehicle.ValueObjects;
 using Common.Result;
+using Domain.Vehicle.ValueObjects;
 using FluentAssertions;
 
 public class ProductionYearTests
@@ -25,7 +25,7 @@ public class ProductionYearTests
         result.Value.Value.Should().Be(VALID_YEAR_STRING);
     }
 
-     [Fact]
+    [Fact]
     public void Create_Should_ReturnSuccess_WhenYearStringHasSpaces()
     {
         // Act

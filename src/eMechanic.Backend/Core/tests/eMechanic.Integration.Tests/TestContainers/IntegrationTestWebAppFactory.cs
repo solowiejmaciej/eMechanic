@@ -2,16 +2,14 @@
 namespace eMechanic.Integration.Tests.TestContainers;
 
 using API;
+using DotNet.Testcontainers.Builders;
+using eMechanic.Infrastructure.DAL;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.AspNetCore.TestHost;
-
-using eMechanic.Infrastructure.DAL;
-
-using DotNet.Testcontainers.Builders;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
 
 public sealed class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
@@ -61,12 +59,12 @@ public sealed class IntegrationTestWebAppFactory : WebApplicationFactory<Program
     {
         await _dbContainer.StartAsync();
 
-         using var scope = Services.CreateScope();
-         var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-         await appDbContext.Database.MigrateAsync();
+        using var scope = Services.CreateScope();
+        var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await appDbContext.Database.MigrateAsync();
 
-         var identityDbContext = scope.ServiceProvider.GetRequiredService<IdentityAppDbContext>();
-         await identityDbContext.Database.MigrateAsync();
+        var identityDbContext = scope.ServiceProvider.GetRequiredService<IdentityAppDbContext>();
+        await identityDbContext.Database.MigrateAsync();
     }
 
     public new async Task DisposeAsync()

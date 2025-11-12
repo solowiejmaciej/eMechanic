@@ -14,7 +14,7 @@ public sealed class GetAllVehiclesFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet(VehiclePrefix.ENDPOINT, async (
+        app.MapGet(VehiclePrefix.GET_ALL_ENDPOINT, async (
                 [AsParameters] PaginationParameters paginationParameters,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>

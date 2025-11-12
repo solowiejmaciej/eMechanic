@@ -5,7 +5,7 @@ using Application.Timeline;
 using Domain.Vehicle;
 using Repostories;
 
-public class VehicleHorsePowerChangedDomainEventHandler : BaseTimelineEventHandler , IDomainEventHandler<VehicleHorsePowerChangedDomainEvent>
+public class VehicleHorsePowerChangedDomainEventHandler : BaseTimelineEventHandler, IDomainEventHandler<VehicleHorsePowerChangedDomainEvent>
 {
     public VehicleHorsePowerChangedDomainEventHandler(IVehicleTimelineRepository vehicleVehicleTimelineRepository) : base(vehicleVehicleTimelineRepository)
     {

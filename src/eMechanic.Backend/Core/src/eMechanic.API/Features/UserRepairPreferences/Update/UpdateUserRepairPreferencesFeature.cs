@@ -14,7 +14,7 @@ public sealed class UpdateUserRepairPreferencesFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut(UserPreferencesPrefix.ENDPOINT, async (
+        app.MapPut(UserPreferencesPrefix.UPDATE_ENDPOINT, async (
                 [FromBody] UpdateUserRepairPreferencesRequest request,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>

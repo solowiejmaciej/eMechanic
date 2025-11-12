@@ -66,7 +66,7 @@ internal sealed class UserService : IUserService
 
                 domainUserId = domainUser.Id;
 
-                if(domainUserId == Guid.Empty)
+                if (domainUserId == Guid.Empty)
                 {
                     throw new RegistrationException(new Error(EErrorCode.InternalServerError, "Failed to create domain user."));
                 }
@@ -143,8 +143,8 @@ internal sealed class UserService : IUserService
         }
         catch (ArgumentException ex)
         {
-             _logger.LogWarning(ex, "Failed to update user details for user {UserId} due to invalid arguments.", domainUserId);
-             return new Error(EErrorCode.ValidationError, ex.Message);
+            _logger.LogWarning(ex, "Failed to update user details for user {UserId} due to invalid arguments.", domainUserId);
+            return new Error(EErrorCode.ValidationError, ex.Message);
         }
         catch (Exception ex)
         {

@@ -1,11 +1,11 @@
 namespace eMechanic.API.Middleware;
 
-using eMechanic.Common.Result;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
+using eMechanic.Common.Result;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 public class ExceptionHandlingMiddleware
 {

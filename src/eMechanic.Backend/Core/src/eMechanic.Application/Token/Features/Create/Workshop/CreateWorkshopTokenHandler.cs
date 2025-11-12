@@ -33,7 +33,7 @@ public class CreateWorkshopTokenHandler : IResultCommandHandler<CreateWorkshopTo
             return authResult.Error!;
         }
 
-        if(authResult.Value == null)
+        if (authResult.Value == null)
         {
             return new Error(EErrorCode.InternalServerError, "Authentication failed unexpectedly.");
         }

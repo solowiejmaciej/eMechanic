@@ -53,6 +53,12 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f8922327_002D6784_002D494e_002Da3a9_002Dd365b1060c40/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fa35d547_002Dd391_002D47b4_002Dac4a_002D9bfab400e9ec/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="DeleteVehicle_Should_ReturnNotFound_WhenVehicleDoesNotExist" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::0068B523-E6E2-4BF9-82DD-C859C4927363::net9.0::eMechanic.Integration.Tests.Vehicle.DeleteVehicleFeatureTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::0068B523-E6E2-4BF9-82DD-C859C4927363::net9.0::eMechanic.Integration.Tests.Vehicle.GetAllVehiclesFeatureTests&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
 	
 	
 	

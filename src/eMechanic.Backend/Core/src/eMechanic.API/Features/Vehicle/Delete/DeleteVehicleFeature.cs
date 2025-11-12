@@ -13,7 +13,7 @@ public sealed class DeleteVehicleFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapDelete(VehiclePrefix.ENDPOINT + "/{id:guid}", async (
+        app.MapDelete(VehiclePrefix.DELETE_ENDPOINT, async (
                 Guid id,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>

@@ -1,10 +1,10 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Update;
 
+using System;
 using Application.Tests.Builders;
 using eMechanic.Application.Vehicle.Features.Update;
 using eMechanic.Domain.Vehicle.Enums;
 using FluentValidation.TestHelper;
-using System;
 
 public class UpdateVehicleCommandValidatorTests
 {

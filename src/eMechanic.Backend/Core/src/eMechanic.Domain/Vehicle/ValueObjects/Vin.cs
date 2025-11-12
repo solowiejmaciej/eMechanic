@@ -30,14 +30,14 @@ public record Vin
 
         if (!VinPattern.IsMatch(normalizedVin))
         {
-             return new Error(EErrorCode.ValidationError, "VIN Contains invalid characters.");
+            return new Error(EErrorCode.ValidationError, "VIN Contains invalid characters.");
         }
 
 
         return new Vin(normalizedVin);
     }
 
-     public static implicit operator string(Vin vin) => vin.Value;
+    public static implicit operator string(Vin vin) => vin.Value;
 
-     public override string ToString() => Value;
+    public override string ToString() => Value;
 }

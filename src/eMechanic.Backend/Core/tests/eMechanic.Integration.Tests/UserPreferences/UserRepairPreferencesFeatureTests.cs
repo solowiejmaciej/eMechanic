@@ -5,6 +5,8 @@ using System.Net.Http.Json;
 using API.Features.UserRepairPreferences.Update.Request;
 using Application.UserRepairPreferences.Features.Get;
 using Domain.UserRepairPreferences.Enums;
+using eMechanic.API.Constans;
+using eMechanic.API.Features.UserRepairPreferences;
 using FluentAssertions;
 using Helpers;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +16,8 @@ public class UserRepairPreferencesFeatureTests : IClassFixture<IntegrationTestWe
 {
     private readonly HttpClient _client;
     private readonly AuthHelper _authHelper;
-    private const string API_URL = "/api/v1/user/repair-preferences";
+    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}";
+    private readonly string _userRepairPreferencesUrl = $"{BASE_API_URL}{UserPreferencesPrefix.GET_ENDPOINT}";
 
     public UserRepairPreferencesFeatureTests(IntegrationTestWebAppFactory factory)
     {
@@ -30,7 +33,7 @@ public class UserRepairPreferencesFeatureTests : IClassFixture<IntegrationTestWe
         _client.SetBearerToken(authResponse.Token);
 
         // ACT (GET)
-        var getResponse = await _client.GetAsync(API_URL);
+        var getResponse = await _client.GetAsync(_userRepairPreferencesUrl);
 
         // ASSERT (GET)
         getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -47,12 +50,12 @@ public class UserRepairPreferencesFeatureTests : IClassFixture<IntegrationTestWe
             ETimelinePreference.Urgent
         );
 
-        var putResponse = await _client.PutAsJsonAsync(API_URL, updateRequest);
+        var putResponse = await _client.PutAsJsonAsync(_userRepairPreferencesUrl, updateRequest);
 
         putResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         // ACT (Verify PUT)
-        var verifyResponse = await _client.GetAsync(API_URL);
+        var verifyResponse = await _client.GetAsync(_userRepairPreferencesUrl);
 
         // ASSERT (Verify PUT)
         verifyResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -69,10 +72,8 @@ public class UserRepairPreferencesFeatureTests : IClassFixture<IntegrationTestWe
     public async Task GetPreferences_Should_ReturnUnauthorized_When_TokenIsMissing()
     {
         // Arrange
-        _client.ClearBearerToken();
-
         // Act
-        var response = await _client.GetAsync(API_URL);
+        var response = await _client.GetAsync(_userRepairPreferencesUrl);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -86,7 +87,7 @@ public class UserRepairPreferencesFeatureTests : IClassFixture<IntegrationTestWe
         var updateRequest = new UpdateUserRepairPreferencesRequest(EPartsPreference.Premium, ETimelinePreference.Urgent);
 
         // Act
-        var response = await _client.PutAsJsonAsync(API_URL, updateRequest);
+        var response = await _client.PutAsJsonAsync(_userRepairPreferencesUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -100,7 +101,7 @@ public class UserRepairPreferencesFeatureTests : IClassFixture<IntegrationTestWe
         _client.SetBearerToken(authResponse.Token);
 
         // Act
-        var response = await _client.GetAsync(API_URL);
+        var response = await _client.GetAsync(_userRepairPreferencesUrl);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -117,7 +118,7 @@ public class UserRepairPreferencesFeatureTests : IClassFixture<IntegrationTestWe
         var updateRequest = new UpdateUserRepairPreferencesRequest(EPartsPreference.Premium, ETimelinePreference.Urgent);
 
         // Act
-        var response = await _client.PutAsJsonAsync(API_URL, updateRequest);
+        var response = await _client.PutAsJsonAsync(_userRepairPreferencesUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -139,7 +140,7 @@ public class UserRepairPreferencesFeatureTests : IClassFixture<IntegrationTestWe
         var updateRequest = new UpdateUserRepairPreferencesRequest(partsPref, timelinePref);
 
         // Act
-        var response = await _client.PutAsJsonAsync(API_URL, updateRequest);
+        var response = await _client.PutAsJsonAsync(_userRepairPreferencesUrl, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);

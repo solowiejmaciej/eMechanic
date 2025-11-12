@@ -13,7 +13,7 @@ public sealed class UpdateVehicleFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut(VehiclePrefix.ENDPOINT + "/{id:guid}", async (
+        app.MapPut(VehiclePrefix.UPDATE_ENDPOINT, async (
                 Guid id,
                 [FromBody] UpdateVehicleRequest request,
                 IMediator mediator,

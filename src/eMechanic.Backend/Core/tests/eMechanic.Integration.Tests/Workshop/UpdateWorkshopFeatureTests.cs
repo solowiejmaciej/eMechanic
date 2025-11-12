@@ -3,6 +3,9 @@ namespace eMechanic.Integration.Tests.Workshop;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using API.Constans;
+using API.Features.Tokens;
+using API.Features.Workshop;
 using API.Features.Workshop.Update.Request;
 using Application.Token.Features.Create.Workshop;
 using Common.Result.Fields;
@@ -15,6 +18,9 @@ public class UpdateWorkshopFeatureTests : IClassFixture<IntegrationTestWebAppFac
 {
     private readonly HttpClient _client;
     private readonly AuthHelper _authHelper;
+
+    private const string UPDATE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{WorkshopPrefix.UPDATE_ENDPOINT}";
+    private const string LOGIN_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{TokenPrefix.CREATE_WORKSHOP_TOKEN_ENDPOINT}";
 
     public UpdateWorkshopFeatureTests(IntegrationTestWebAppFactory factory)
     {
@@ -45,21 +51,21 @@ public class UpdateWorkshopFeatureTests : IClassFixture<IntegrationTestWebAppFac
         var updateRequest = CreateValidRequest(newEmail);
 
         // Act
-        var response = await _client.PutAsJsonAsync("/api/v1/workshops", updateRequest);
+        var response = await _client.PutAsJsonAsync(UPDATE_API_URL, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         _client.ClearBearerToken();
         var loginCmd = new CreateWorkshopTokenCommand(newEmail, "Password123!");
-        var loginResponse = await _client.PostAsJsonAsync("/api/v1/tokens/workshop", loginCmd);
+        var loginResponse = await _client.PostAsJsonAsync(LOGIN_API_URL, loginCmd);
 
         loginResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var loginDto = await loginResponse.Content.ReadFromJsonAsync<CreateWorkshopTokenResponse>();
         loginDto!.WorkshopId.Should().Be(authResponse.DomainId);
 
         var oldLoginCmd = new CreateWorkshopTokenCommand(originalEmail, "Password123!");
-        var oldLoginResponse = await _client.PostAsJsonAsync("/api/v1/tokens/workshop", oldLoginCmd);
+        var oldLoginResponse = await _client.PostAsJsonAsync(LOGIN_API_URL, oldLoginCmd);
         oldLoginResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
         _client.ClearBearerToken();
@@ -75,7 +81,7 @@ public class UpdateWorkshopFeatureTests : IClassFixture<IntegrationTestWebAppFac
         var updateRequest = CreateValidRequest("test@test.com");
 
         // Act
-        var response = await _client.PutAsJsonAsync("/api/v1/workshops", updateRequest);
+        var response = await _client.PutAsJsonAsync(UPDATE_API_URL, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -96,7 +102,7 @@ public class UpdateWorkshopFeatureTests : IClassFixture<IntegrationTestWebAppFac
         var updateRequest = CreateValidRequest(takenEmail);
 
         // Act
-        var response = await _client.PutAsJsonAsync("/api/v1/workshops", updateRequest);
+        var response = await _client.PutAsJsonAsync(UPDATE_API_URL, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -118,7 +124,7 @@ public class UpdateWorkshopFeatureTests : IClassFixture<IntegrationTestWebAppFac
         var updateRequest = CreateValidRequest("new@email.com") with { Name = "" };
 
         // Act
-        var response = await _client.PutAsJsonAsync("/api/v1/workshops", updateRequest);
+        var response = await _client.PutAsJsonAsync(UPDATE_API_URL, updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);

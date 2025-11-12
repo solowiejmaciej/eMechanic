@@ -32,7 +32,7 @@ public class EnumSchemaFilter : ISchemaFilter
         foreach (var name in enumNames)
         {
             var value = Convert.ToInt64(Enum.Parse(context.Type, name), System.Globalization.CultureInfo.InvariantCulture);
-            descriptionBuilder.AppendLine(System.Globalization.CultureInfo.InvariantCulture ,$"<li><b>{value}</b> = {name}</li>");
+            descriptionBuilder.AppendLine(System.Globalization.CultureInfo.InvariantCulture, $"<li><b>{value}</b> = {name}</li>");
         }
 
         descriptionBuilder.AppendLine("</ul>");

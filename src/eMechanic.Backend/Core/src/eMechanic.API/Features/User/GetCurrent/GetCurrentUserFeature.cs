@@ -16,7 +16,7 @@ public sealed class GetCurrentUserFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet(UserPrefix.ENDPOINT + "/me", async (
+        app.MapGet(UserPrefix.GET_CURRENT_USER_ENDPOINT, async (
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {

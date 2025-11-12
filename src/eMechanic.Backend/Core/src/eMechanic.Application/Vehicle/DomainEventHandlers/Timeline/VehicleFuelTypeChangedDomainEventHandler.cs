@@ -5,7 +5,7 @@ using eMechanic.Application.Abstractions.DomainEvents;
 using eMechanic.Application.Timeline;
 using Repostories;
 
-public class VehicleFuelTypeChangedDomainEventHandler : BaseTimelineEventHandler , IDomainEventHandler<VehicleFuelTypeChangedDomainEvent>
+public class VehicleFuelTypeChangedDomainEventHandler : BaseTimelineEventHandler, IDomainEventHandler<VehicleFuelTypeChangedDomainEvent>
 {
     public VehicleFuelTypeChangedDomainEventHandler(IVehicleTimelineRepository vehicleVehicleTimelineRepository) : base(vehicleVehicleTimelineRepository)
     {

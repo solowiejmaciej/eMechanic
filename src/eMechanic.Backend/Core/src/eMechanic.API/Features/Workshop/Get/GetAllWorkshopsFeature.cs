@@ -13,7 +13,7 @@ public sealed class GetAllWorkshopsFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet(WorkshopPrefix.ENDPOINT + "", async (
+        app.MapGet(WorkshopPrefix.GET_ALL_ENDPOINT, async (
                 [AsParameters] PaginationParameters paginationParameters,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
@@ -29,4 +29,5 @@ public sealed class GetAllWorkshopsFeature : IFeature
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Gets all workshops paginated");
-    }}
+    }
+}

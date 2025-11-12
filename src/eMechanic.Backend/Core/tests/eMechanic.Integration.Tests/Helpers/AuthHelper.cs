@@ -6,11 +6,16 @@ using Application.Token.Features.Create.User;
 using Application.Token.Features.Create.Workshop;
 using Application.Users.Features.Create;
 using Application.Workshop.Features.Create;
+using eMechanic.API.Constans;
+using eMechanic.API.Features.Tokens;
+using eMechanic.API.Features.User;
+using eMechanic.API.Features.Workshop;
 using FluentAssertions;
 
 public class AuthHelper
 {
     private readonly HttpClient _client;
+    private const string _baseApiUrl = $"/api/{WebApiConstans.CURRENT_API_VERSION}";
 
     public AuthHelper(HttpClient client)
     {
@@ -23,7 +28,8 @@ public class AuthHelper
         var userPassword = password ?? "Password123!";
 
         var registerCmd = new CreateUserCommand("Test", "User", userEmail, userPassword);
-        var registerResponse = await _client.PostAsJsonAsync("/api/v1/users", registerCmd);
+        var registerUrl = $"{_baseApiUrl}{UserPrefix.CREATE_USER_ENDPOINT}";
+        var registerResponse = await _client.PostAsJsonAsync(registerUrl, registerCmd);
         registerResponse.EnsureSuccessStatusCode();
 
         var registerContent = await registerResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();
@@ -31,7 +37,8 @@ public class AuthHelper
 
 
         var loginCmd = new CreateUserTokenCommand(userEmail, userPassword);
-        var loginResponse = await _client.PostAsJsonAsync("/api/v1/tokens/user", loginCmd);
+        var loginUrl = $"{_baseApiUrl}{TokenPrefix.CREATE_USER_TOKEN_ENDPOINT}";
+        var loginResponse = await _client.PostAsJsonAsync(loginUrl, loginCmd);
         loginResponse.EnsureSuccessStatusCode();
 
         var loginContent = await loginResponse.Content.ReadFromJsonAsync<CreateUserTokenResponse>();
@@ -41,7 +48,7 @@ public class AuthHelper
         return new FullAuthResponse(loginContent.UserId, loginContent.Token, loginContent.RefreshToken);
     }
 
-     public async Task<FullAuthResponse> CreateAndLoginWorkshopAsync(string? email = null, string? password = null)
+    public async Task<FullAuthResponse> CreateAndLoginWorkshopAsync(string? email = null, string? password = null)
     {
         var workshopEmail = email ?? $"test-workshop-{Guid.NewGuid()}@integration.com";
         var workshopPassword = password ?? "Password123!";
@@ -51,15 +58,17 @@ public class AuthHelper
             workshopEmail, workshopPassword, $"contact-{uniqueSuffix}@workshop.com",
             $"Test Workshop {uniqueSuffix}", $"TestW-{uniqueSuffix}", "123456789",
             "Test St 1", "Test City", "12-345", "Testland");
-        var registerResponse = await _client.PostAsJsonAsync("/api/v1/workshops", registerCmd);
+        var registerUrl = $"{_baseApiUrl}{WorkshopPrefix.CREATE_ENDPOINT}";
+        var registerResponse = await _client.PostAsJsonAsync(registerUrl, registerCmd);
         registerResponse.EnsureSuccessStatusCode();
 
-         var registerContent = await registerResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();
+        var registerContent = await registerResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();
         var workshopId = registerContent!["workshopId"];
 
 
         var loginCmd = new CreateWorkshopTokenCommand(workshopEmail, workshopPassword);
-        var loginResponse = await _client.PostAsJsonAsync("/api/v1/tokens/workshop", loginCmd);
+        var loginUrl = $"{_baseApiUrl}{TokenPrefix.CREATE_WORKSHOP_TOKEN_ENDPOINT}";
+        var loginResponse = await _client.PostAsJsonAsync(loginUrl, loginCmd);
         loginResponse.EnsureSuccessStatusCode();
 
         var loginContent = await loginResponse.Content.ReadFromJsonAsync<CreateWorkshopTokenResponse>();
@@ -76,7 +85,7 @@ public class AuthHelper
 
 public static class HttpClientExtensions
 {
-     public static void SetBearerToken(this HttpClient client, string token) => client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+    public static void SetBearerToken(this HttpClient client, string token) => client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-     public static void ClearBearerToken(this HttpClient client) => client.DefaultRequestHeaders.Authorization = null;
+    public static void ClearBearerToken(this HttpClient client) => client.DefaultRequestHeaders.Authorization = null;
 }

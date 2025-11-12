@@ -2,6 +2,8 @@ namespace eMechanic.Integration.Tests.Vehicle;
 
 using System.Net;
 using System.Net.Http.Json;
+using API.Constans;
+using API.Features.Vehicle;
 using API.Features.Vehicle.Create.Request;
 using API.Features.Vehicle.Update.Request;
 using Application.Vehicle.Features.Get;
@@ -16,6 +18,10 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
 {
     private readonly HttpClient _client;
     private readonly AuthHelper _authHelper;
+    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.GET_TIMELINE_ENDPOINT}";
+    private const string CREATE_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.CREATE_ENDPOINT}";
+    private const string UPDATE_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.UPDATE_ENDPOINT}";
+
 
     public GetVehicleTimelineFeatureTests(IntegrationTestWebAppFactory factory)
     {
@@ -42,7 +48,7 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
             EBodyType.Hatchback,
             EVehicleType.Passenger);
 
-        var createResponse = await _client.PostAsJsonAsync("/api/v1/vehicles", createRequest);
+        var createResponse = await _client.PostAsJsonAsync(CREATE_BASE_API_URL, createRequest);
         createResponse.EnsureSuccessStatusCode();
         var createdContent = await createResponse.Content.ReadFromJsonAsync<Dictionary<string, Guid>>();
         var vehicleId = createdContent!["vehicleId"];
@@ -58,7 +64,7 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
         _client.SetBearerToken(token);
 
         // Act 1
-        var responseAfterCreate = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}/timeline?pageNumber=1&pageSize=10");
+        var responseAfterCreate = await _client.GetAsync($"{BASE_API_URL.Replace("{id:guid}", vehicleId.ToString())}?pageNumber=1&pageSize=10");
 
         // Assert 1
         responseAfterCreate.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -90,11 +96,11 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
         );
 
         // Act 2:
-        var updateResponse = await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest);
+        var updateResponse = await _client.PutAsJsonAsync($"{UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString())}", updateRequest);
         updateResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         // Act 3:
-        var responseAfterUpdate = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}/timeline?pageNumber=1&pageSize=10");
+        var responseAfterUpdate = await _client.GetAsync($"{BASE_API_URL.Replace("{id:guid}", vehicleId.ToString())}?pageNumber=1&pageSize=10");
 
         // Assert 3:
         responseAfterUpdate.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -131,16 +137,16 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
         var (vehicleId, token, createRequest) = await CreateVehicleForTestUser();
         _client.SetBearerToken(token);
 
-        var updateRequest1 = new UpdateVehicleRequest(createRequest.Vin, "Update 1", createRequest.Model, createRequest.ProductionYear, createRequest.EngineCapacity, 21000, createRequest.MileageUnit,"PZ1W924", 124,createRequest.FuelType, createRequest.BodyType, createRequest.VehicleType);
-        var updateRequest2 = new UpdateVehicleRequest(createRequest.Vin, "Update 1", "Update 2", createRequest.ProductionYear, createRequest.EngineCapacity, 22000, createRequest.MileageUnit, "PZ1W924", 124,createRequest.FuelType, createRequest.BodyType, createRequest.VehicleType);
-        var updateRequest3 = new UpdateVehicleRequest(createRequest.Vin, "Update 1", "Update 2", createRequest.ProductionYear, createRequest.EngineCapacity, 23000, createRequest.MileageUnit, "PZ1W924", 124,EFuelType.Diesel, createRequest.BodyType, createRequest.VehicleType);
+        var updateRequest1 = new UpdateVehicleRequest(createRequest.Vin, "Update 1", createRequest.Model, createRequest.ProductionYear, createRequest.EngineCapacity, 21000, createRequest.MileageUnit, "PZ1W924", 124, createRequest.FuelType, createRequest.BodyType, createRequest.VehicleType);
+        var updateRequest2 = new UpdateVehicleRequest(createRequest.Vin, "Update 1", "Update 2", createRequest.ProductionYear, createRequest.EngineCapacity, 22000, createRequest.MileageUnit, "PZ1W924", 124, createRequest.FuelType, createRequest.BodyType, createRequest.VehicleType);
+        var updateRequest3 = new UpdateVehicleRequest(createRequest.Vin, "Update 1", "Update 2", createRequest.ProductionYear, createRequest.EngineCapacity, 23000, createRequest.MileageUnit, "PZ1W924", 124, EFuelType.Diesel, createRequest.BodyType, createRequest.VehicleType);
 
-        await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest1);
-        await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest2);
-        await _client.PutAsJsonAsync($"/api/v1/vehicles/{vehicleId}", updateRequest3);
+        await _client.PutAsJsonAsync($"{UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString())}", updateRequest1);
+        await _client.PutAsJsonAsync($"{UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString())}", updateRequest2);
+        await _client.PutAsJsonAsync($"{UPDATE_BASE_API_URL.Replace("{id:guid}", vehicleId.ToString())}", updateRequest3);
 
         // Act
-        var response = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}/timeline?pageNumber=2&pageSize=3");
+        var response = await _client.GetAsync($"{BASE_API_URL.Replace("{id:guid}", vehicleId.ToString())}?pageNumber=2&pageSize=3");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -166,7 +172,7 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
         _client.SetBearerToken(authResponse.Token);
 
         // Act
-        var response = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}/timeline?pageNumber=1&pageSize=3");
+        var response = await _client.GetAsync($"{BASE_API_URL.Replace("{id:guid}", vehicleId.ToString())}?pageNumber=1&pageSize=3");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -182,7 +188,7 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
         _client.ClearBearerToken();
 
         // Act
-        var response = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}/timeline");
+        var response = await _client.GetAsync($"{BASE_API_URL.Replace("{id:guid}", vehicleId.ToString())}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -199,7 +205,7 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
         _client.SetBearerToken(authResponse.Token);
 
         // Act
-        var response = await _client.GetAsync($"/api/v1/vehicles/{vehicleId}/timeline");
+        var response = await _client.GetAsync($"{BASE_API_URL.Replace("{id:guid}", vehicleId.ToString())}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);

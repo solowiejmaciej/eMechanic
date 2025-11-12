@@ -6,6 +6,9 @@ using API.Features.User.Update.Request;
 using Application.Token.Features.Create.User;
 using Application.Users.Features.Get.Current;
 using Common.Result.Fields;
+using eMechanic.API.Constans;
+using eMechanic.API.Features.Tokens;
+using eMechanic.API.Features.User;
 using FluentAssertions;
 using Helpers;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +18,7 @@ public class UpdateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
 {
     private readonly HttpClient _client;
     private readonly AuthHelper _authHelper;
+    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}";
 
     public UpdateUserFeatureTests(IntegrationTestWebAppFactory factory)
     {
@@ -32,12 +36,12 @@ public class UpdateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
         var updateRequest = new UpdateUserRequest("Jan", "Kowalski", "new-email@test.com");
 
         // Act
-        var response = await _client.PutAsJsonAsync("/api/v1/users", updateRequest);
+        var response = await _client.PutAsJsonAsync($"{BASE_API_URL}{UserPrefix.UPDATE_CURRENT_USER_ENDPOINT}", updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var getResponse = await _client.GetAsync("/api/v1/users/me");
+        var getResponse = await _client.GetAsync($"{BASE_API_URL}{UserPrefix.GET_CURRENT_USER_ENDPOINT}");
         getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var userDto = await getResponse.Content.ReadFromJsonAsync<GetCurrentUserResponse>();
@@ -49,14 +53,14 @@ public class UpdateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
 
         _client.ClearBearerToken();
         var loginCmd = new CreateUserTokenCommand("new-email@test.com", "Password123!");
-        var loginResponse = await _client.PostAsJsonAsync("/api/v1/tokens/user", loginCmd);
+        var loginResponse = await _client.PostAsJsonAsync($"{BASE_API_URL}{TokenPrefix.CREATE_USER_TOKEN_ENDPOINT}", loginCmd);
 
         loginResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var loginDto = await loginResponse.Content.ReadFromJsonAsync<CreateUserTokenResponse>();
         loginDto!.UserId.Should().Be(authResponse.DomainId);
 
         var oldLoginCmd = new CreateUserTokenCommand("original@test.com", "Password123!");
-        var oldLoginResponse = await _client.PostAsJsonAsync("/api/v1/tokens/user", oldLoginCmd);
+        var oldLoginResponse = await _client.PostAsJsonAsync($"{BASE_API_URL}{TokenPrefix.CREATE_USER_TOKEN_ENDPOINT}", oldLoginCmd);
         oldLoginResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
         _client.ClearBearerToken();
@@ -75,7 +79,7 @@ public class UpdateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
         var updateRequest = new UpdateUserRequest("UserB", "LastNameB", "taken@test.com");
 
         // Act
-        var response = await _client.PutAsJsonAsync("/api/v1/users", updateRequest);
+        var response = await _client.PutAsJsonAsync($"{BASE_API_URL}{UserPrefix.UPDATE_CURRENT_USER_ENDPOINT}", updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -95,7 +99,7 @@ public class UpdateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
         var updateRequest = new UpdateUserRequest("Test", "Test", "test@test.com");
 
         // Act
-        var response = await _client.PutAsJsonAsync("/api/v1/users", updateRequest);
+        var response = await _client.PutAsJsonAsync($"{BASE_API_URL}{UserPrefix.UPDATE_CURRENT_USER_ENDPOINT}", updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -108,9 +112,8 @@ public class UpdateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
         var authResponse = await _authHelper.CreateAndLoginWorkshopAsync();
         _client.SetBearerToken(authResponse.Token);
         var updateRequest = new UpdateUserRequest("Test", "Test", "test@test.com");
-
         // Act
-        var response = await _client.PutAsJsonAsync("/api/v1/users", updateRequest);
+        var response = await _client.PutAsJsonAsync($"{BASE_API_URL}{UserPrefix.UPDATE_CURRENT_USER_ENDPOINT}", updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -133,7 +136,7 @@ public class UpdateUserFeatureTests : IClassFixture<IntegrationTestWebAppFactory
         var updateRequest = new UpdateUserRequest(firstName, lastName, email);
 
         // Act
-        var response = await _client.PutAsJsonAsync("/api/v1/users", updateRequest);
+        var response = await _client.PutAsJsonAsync($"{BASE_API_URL}{UserPrefix.UPDATE_CURRENT_USER_ENDPOINT}", updateRequest);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);

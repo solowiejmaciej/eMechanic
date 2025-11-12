@@ -165,8 +165,8 @@ internal sealed class WorkshopService : IWorkshopService
         }
         catch (ArgumentException ex)
         {
-             _logger.LogWarning(ex, "Failed to update workshop details for {WorkshopId} due to invalid arguments.", domainWorkshopId);
-             return new Error(EErrorCode.ValidationError, ex.Message);
+            _logger.LogWarning(ex, "Failed to update workshop details for {WorkshopId} due to invalid arguments.", domainWorkshopId);
+            return new Error(EErrorCode.ValidationError, ex.Message);
         }
         catch (Exception ex)
         {

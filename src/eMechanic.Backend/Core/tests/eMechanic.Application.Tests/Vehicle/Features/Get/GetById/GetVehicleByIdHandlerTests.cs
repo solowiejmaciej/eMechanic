@@ -36,8 +36,8 @@ public class GetVehicleByIdHandlerTests
         // Arrange
         var query = new GetVehicleByIdQuery(_vehicleId);
 
-         _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<Result<Vehicle, Error>>(_existingVehicle));
+        _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
+           .Returns(Task.FromResult<Result<Vehicle, Error>>(_existingVehicle));
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
@@ -51,7 +51,7 @@ public class GetVehicleByIdHandlerTests
         result.Value.Manufacturer.Should().Be(_existingVehicle.Manufacturer.Value);
     }
 
-     [Fact]
+    [Fact]
     public async Task Handle_Should_ReturnNotFoundError_WhenOwnershipServiceFails()
     {
         // Arrange
@@ -69,7 +69,7 @@ public class GetVehicleByIdHandlerTests
         result.Error!.Code.Should().Be(EErrorCode.NotFoundError);
     }
 
-     [Fact]
+    [Fact]
     public async Task Handle_Should_ReturnUnauthorizedError_WhenOwnershipServiceReturnsUnauthorized()
     {
         // Arrange

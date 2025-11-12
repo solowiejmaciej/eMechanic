@@ -1,10 +1,10 @@
 namespace eMechanic.Domain.Tests.Vehicle;
 
+using System.Globalization;
 using Builders;
 using Common.Result;
 using Domain.Vehicle;
 using Domain.Vehicle.Enums;
-using System.Globalization;
 using Domain.Vehicle.ValueObjects;
 using FluentAssertions;
 

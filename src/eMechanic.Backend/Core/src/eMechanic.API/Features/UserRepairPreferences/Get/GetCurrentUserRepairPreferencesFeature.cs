@@ -13,7 +13,7 @@ public sealed class GetCurrentUserRepairPreferencesFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet(UserPreferencesPrefix.ENDPOINT, async (
+        app.MapGet(UserPreferencesPrefix.GET_ENDPOINT, async (
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {

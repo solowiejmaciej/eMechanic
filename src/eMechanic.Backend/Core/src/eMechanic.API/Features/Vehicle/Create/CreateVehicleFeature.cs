@@ -16,7 +16,7 @@ public sealed class CreateVehicleFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost(VehiclePrefix.ENDPOINT, async (
+        app.MapPost(VehiclePrefix.CREATE_ENDPOINT, async (
                 CreateVehicleRequest request,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
@@ -25,7 +25,7 @@ public sealed class CreateVehicleFeature : IFeature
 
                 return result.ToStatusCode(
                     vehicleId =>
-                        Results.Created($"{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.ENDPOINT}/{vehicleId}",
+                        Results.Created($"{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.CREATE_ENDPOINT}/{vehicleId}",
                             new { VehicleId = vehicleId }),
                     MapError);
             })

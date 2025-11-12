@@ -1,11 +1,11 @@
 namespace eMechanic.Domain.Vehicle;
 
-using Common.DDD;
-using ValueObjects;
 using System;
+using Common.DDD;
 using Common.Result;
 using Enums;
 using References.User;
+using ValueObjects;
 
 public class Vehicle : AggregateRoot, IUserReferenced
 {
@@ -13,7 +13,7 @@ public class Vehicle : AggregateRoot, IUserReferenced
     public Vin Vin { get; private set; }
     public Manufacturer Manufacturer { get; private set; }
     public Model Model { get; private set; }
-    public ProductionYear ProductionYear{ get; private set; }
+    public ProductionYear ProductionYear { get; private set; }
     public EngineCapacity? EngineCapacity { get; private set; }
     public Mileage Mileage { get; private set; }
     public LicensePlate LicensePlate { get; private set; }

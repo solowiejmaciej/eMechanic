@@ -1,7 +1,7 @@
 namespace eMechanic.Domain.Tests.Vehicle.ValueObjects;
 
-using Domain.Vehicle.ValueObjects;
 using Common.Result;
+using Domain.Vehicle.ValueObjects;
 using FluentAssertions;
 
 public class ModelTests
@@ -24,7 +24,7 @@ public class ModelTests
         result.Value.Value.Should().Be(VALID_MODEL);
     }
 
-     [Fact]
+    [Fact]
     public void Create_Should_ReturnSuccessAndTrim_WhenModelHasLeadingTrailingSpaces()
     {
         // Act

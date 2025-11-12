@@ -20,21 +20,21 @@ public class GetVehicleTimelineByVehicleIdHandler : IResultQueryHandler<GetVehic
     public async Task<Result<PaginationResult<VehicleTimelineResponse>, Error>> Handle(
         GetVehicleTimelineByVehicleIdQuery request, CancellationToken cancellationToken)
     {
-       var vehicleResult = await  _vehicleOwnershipService.GetAndVerifyOwnershipAsync(request.VehicleId, cancellationToken);
+        var vehicleResult = await _vehicleOwnershipService.GetAndVerifyOwnershipAsync(request.VehicleId, cancellationToken);
 
-       if (vehicleResult.HasError())
-       {
-           return vehicleResult.Error!;
-       }
+        if (vehicleResult.HasError())
+        {
+            return vehicleResult.Error!;
+        }
 
-       var timelineItems = await _vehicleTimelineRepository.GetByVehicleIdPaginatedAsync(request.VehicleId, request.PaginationParameters, cancellationToken);
+        var timelineItems = await _vehicleTimelineRepository.GetByVehicleIdPaginatedAsync(request.VehicleId, request.PaginationParameters, cancellationToken);
 
-       var result = timelineItems.MapToDto(x => new VehicleTimelineResponse(
-           x.EventType,
-           x.Data,
-           x.CreatedAt));
+        var result = timelineItems.MapToDto(x => new VehicleTimelineResponse(
+            x.EventType,
+            x.Data,
+            x.CreatedAt));
 
-       return result;
+        return result;
     }
 }
 
