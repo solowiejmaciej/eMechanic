@@ -1,5 +1,6 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Create;
 
+using Application.Tests.Builders;
 using eMechanic.Application.Vehicle.Features.Create;
 using eMechanic.Domain.Vehicle.Enums;
 using FluentValidation.TestHelper;
@@ -12,19 +13,7 @@ public class CreateVehicleCommandValidatorTests
     public void Should_NotHaveError_WhenCommandIsValid()
     {
         // Arrange
-        var command = new CreateVehicleCommand(
-            "VIN123456789ABCDE",
-            "Test Manufacturer",
-            "Test Model",
-            "2023",
-            1.6m,
-            200,
-            EMileageUnit.Miles,
-            "PZ1W924",
-            124,
-            EFuelType.Gasoline,
-            EBodyType.Sedan,
-            EVehicleType.Passenger);
+        var command = new CreateVehicleCommandBuilder().Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -41,19 +30,7 @@ public class CreateVehicleCommandValidatorTests
     public void Should_HaveError_WhenVinIsInvalid(string invalidVin)
     {
         // Arrange
-        var command = new CreateVehicleCommand(
-            invalidVin,
-            "Test Manufacturer",
-            "Test Model",
-            "2023",
-            1.6m,
-            200,
-            EMileageUnit.Miles,
-            "PZ1W924",
-            124,
-            EFuelType.Gasoline,
-            EBodyType.Sedan,
-            EVehicleType.Passenger);
+        var command = new CreateVehicleCommandBuilder().WithVin(invalidVin).Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -67,20 +44,8 @@ public class CreateVehicleCommandValidatorTests
     [InlineData(null)]
     public void Should_HaveError_WhenManufacturerIsEmpty(string? invalidManufacturer)
     {
-         // Arrange
-        var command = new CreateVehicleCommand(
-            "VIN123456789ABCDE",
-            invalidManufacturer!,
-            "Test Model",
-            "2023",
-            1.6m,
-            200,
-            EMileageUnit.Miles,
-            "PZ1W924",
-            124,
-            EFuelType.Gasoline,
-            EBodyType.Sedan,
-            EVehicleType.Passenger);
+        // Arrange
+        var command = new CreateVehicleCommandBuilder().WithManufacturer(invalidManufacturer!).Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -92,20 +57,8 @@ public class CreateVehicleCommandValidatorTests
     [Fact]
     public void Should_HaveError_WhenEngineCapacityIsNegative()
     {
-         // Arrange
-        var command = new CreateVehicleCommand(
-            "VIN123456789ABCDE",
-            "Test Manufacturer",
-            "Test Model",
-            "2023",
-            -1.0m,
-            200,
-            EMileageUnit.Miles,
-            "PZ1W924",
-            124,
-            EFuelType.Gasoline,
-            EBodyType.Sedan,
-            EVehicleType.Passenger);
+        // Arrange
+        var command = new CreateVehicleCommandBuilder().WithEngineCapacity(-1.0m).Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -117,20 +70,8 @@ public class CreateVehicleCommandValidatorTests
     [Fact]
     public void Should_HaveError_WhenFuelTypeIsNone()
     {
-         // Arrange
-        var command = new CreateVehicleCommand(
-            "VIN123456789ABCDE",
-            "Test Manufacturer",
-            "Test Model",
-            "2023",
-            1.6m,
-            200,
-            EMileageUnit.Miles,
-            "PZ1W924",
-            124,
-            EFuelType.None,
-            EBodyType.Sedan,
-            EVehicleType.Passenger);
+        // Arrange
+        var command = new CreateVehicleCommandBuilder().WithFuelType(EFuelType.None).Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -139,23 +80,11 @@ public class CreateVehicleCommandValidatorTests
         result.ShouldHaveValidationErrorFor(x => x.FuelType);
     }
 
-     [Fact]
+    [Fact]
     public void Should_HaveError_WhenBodyTypeIsNone()
     {
-         // Arrange
-        var command = new CreateVehicleCommand(
-            "VIN123456789ABCDE",
-            "Test Manufacturer",
-            "Test Model",
-            "2023",
-            1.6m,
-            200,
-            EMileageUnit.Miles,
-            "PZ1W924",
-            124,
-            EFuelType.Gasoline,
-            EBodyType.None,
-            EVehicleType.Passenger);
+        // Arrange
+        var command = new CreateVehicleCommandBuilder().WithBodyType(EBodyType.None).Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -168,19 +97,10 @@ public class CreateVehicleCommandValidatorTests
     public void Should_NotHaveError_WhenVehicleTypeIsMotorcycleAndBodyTypeIsNone()
     {
         // Arrange
-        var command = new CreateVehicleCommand(
-            "VIN123456789ABCDE",
-            "Test Manufacturer",
-            "Test Model",
-            "2023",
-            1.6m,
-            200,
-            EMileageUnit.Miles,
-            "PZ1W924",
-            124,
-            EFuelType.Gasoline,
-            EBodyType.None,
-            EVehicleType.Motorcycle);
+        var command = new CreateVehicleCommandBuilder()
+            .WithVehicleType(EVehicleType.Motorcycle)
+            .WithBodyType(EBodyType.None)
+            .Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -196,17 +116,7 @@ public class CreateVehicleCommandValidatorTests
     public void Should_HaveError_WhenLicensePlateIsInvalid(string invalidPlate)
     {
         // Arrange
-        var command = new CreateVehicleCommand(
-            "VIN123456789ABCDE",
-            "Test Manufacturer",
-            "Test Model",
-            "2023",
-            1.6m,
-            200,
-            EMileageUnit.Miles,
-            invalidPlate,
-            150,
-            EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+        var command = new CreateVehicleCommandBuilder().WithLicensePlate(invalidPlate).Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -222,17 +132,7 @@ public class CreateVehicleCommandValidatorTests
     public void Should_HaveError_WhenHorsePowerIsInvalid(int invalidHp)
     {
         // Arrange
-        var command = new CreateVehicleCommand(
-            "VIN123456789ABCDE",
-            "Test Manufacturer",
-            "Test Model",
-            "2023",
-            1.6m,
-            200,
-            EMileageUnit.Miles,
-            "PO 12345",
-            invalidHp,
-            EFuelType.Gasoline, EBodyType.Sedan, EVehicleType.Passenger);
+        var command = new CreateVehicleCommandBuilder().WithHorsePower(invalidHp).Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -245,19 +145,10 @@ public class CreateVehicleCommandValidatorTests
     public void Should_NotHaveError_WhenLicensePlateAndHpAreValid()
     {
         // Arrange
-        var command = new CreateVehicleCommand(
-            "VIN123456789ABCDE",
-            "Test Manufacturer",
-            "Test Model",
-            "2023",
-            1.6m,
-            200,
-            EMileageUnit.Miles,
-            "PO 12345",
-            150,
-            EFuelType.Gasoline,
-            EBodyType.Sedan,
-            EVehicleType.Passenger);
+        var command = new CreateVehicleCommandBuilder()
+            .WithLicensePlate("PO 12345")
+            .WithHorsePower(150)
+            .Build();
 
         // Act
         var result = _validator.TestValidate(command);

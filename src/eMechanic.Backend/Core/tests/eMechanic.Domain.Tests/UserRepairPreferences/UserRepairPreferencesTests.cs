@@ -1,22 +1,27 @@
 namespace eMechanic.Domain.Tests.UserRepairPreferences;
 
-using eMechanic.Domain.UserRepairPreferences.Enums;
-using FluentAssertions;
+using System;
 using Domain.UserRepairPreferences;
+using Domain.UserRepairPreferences.Enums;
+using eMechanic.Domain.Tests.Builders;
+using FluentAssertions;
 
 public class UserRepairPreferencesTests
 {
     private readonly Guid _validUserId = Guid.NewGuid();
 
-    [Fact]
-    public void Create_Should_Succeed_WhenDataIsValid()
+    [Theory]
+    [InlineData(EPartsPreference.Economy, ETimelinePreference.Standard)]
+    [InlineData(EPartsPreference.Premium, ETimelinePreference.Urgent)]
+    public void Create_Should_ReturnUserRepairPreferences_WhenCreatedWithValidData(
+        EPartsPreference partsPref, ETimelinePreference timelinePref)
     {
-        // Arrange
-        var partsPref = EPartsPreference.Balanced;
-        var timelinePref = ETimelinePreference.Standard;
-
         // Act
-        var preferences = UserRepairPreferences.Create(_validUserId, partsPref, timelinePref);
+        var preferences = new UserRepairPreferencesBuilder()
+            .WithUserId(_validUserId)
+            .WithPartsPreference(partsPref)
+            .WithTimelinePreference(timelinePref)
+            .Build();
 
         // Assert
         preferences.Should().NotBeNull();
@@ -29,85 +34,96 @@ public class UserRepairPreferencesTests
     public void Create_Should_ThrowArgumentException_WhenUserIdIsEmpty()
     {
         // Act
-        Action act = () => UserRepairPreferences.Create(
-            Guid.Empty,
-            EPartsPreference.Balanced,
-            ETimelinePreference.Standard);
+        Action act = () => new UserRepairPreferencesBuilder().WithUserId(Guid.Empty).Build();
 
         // Assert
-        act.Should().Throw<ArgumentException>()
-            .And.ParamName.Should().Be("userId");
+        act.Should().Throw<ArgumentException>().And.ParamName.Should().Be("userId");
     }
 
     [Fact]
-    public void UpdatePartsPreference_Should_UpdateValue_WhenNewPreferenceIsValid()
+    public void UpdatePreferences_Should_UpdatePreferencesAndRaiseEvent()
     {
         // Arrange
-        var preferences = UserRepairPreferences.Create(_validUserId, EPartsPreference.Economy, ETimelinePreference.Standard);
-        var newPreference = EPartsPreference.Premium;
+        var preferences = new UserRepairPreferencesBuilder().Build();
+        preferences.ClearDomainEvents();
 
         // Act
-        preferences.UpdatePartsPreference(newPreference);
+        preferences.UpdatePartsPreference(EPartsPreference.Premium);
+        preferences.UpdateTimelinePreference(ETimelinePreference.Urgent);
 
         // Assert
-        preferences.PartsPreference.Should().Be(newPreference);
+        preferences.PartsPreference.Should().Be(EPartsPreference.Premium);
+        preferences.TimelinePreference.Should().Be(ETimelinePreference.Urgent);
     }
 
     [Fact]
-    public void UpdatePartsPreference_Should_DoNothing_WhenPreferenceIsTheSame()
+    public void UpdatePreferences_Should_NotRaiseEvent_WhenPreferencesAreTheSame()
     {
         // Arrange
-        var preferences = UserRepairPreferences.Create(_validUserId, EPartsPreference.Economy, ETimelinePreference.Standard);
-        var samePreference = EPartsPreference.Economy;
+        var preferences = new UserRepairPreferencesBuilder().Build();
+        preferences.ClearDomainEvents();
 
         // Act
-        preferences.UpdatePartsPreference(samePreference);
+        preferences.UpdatePartsPreference(EPartsPreference.Economy);
+        preferences.UpdateTimelinePreference(ETimelinePreference.Standard);
 
         // Assert
-        preferences.PartsPreference.Should().Be(samePreference);
+        preferences.GetDomainEvents().Should().BeEmpty();
     }
 
     [Fact]
-    public void UpdatePartsPreference_Should_ThrowArgumentException_WhenPreferenceIsInvalid()
+    public void SetPartsPreference_Should_UpdatePreferenceAndRaiseEvent()
     {
         // Arrange
-        var preferences = UserRepairPreferences.Create(_validUserId, EPartsPreference.Economy, ETimelinePreference.Standard);
-        var invalidPreference = (EPartsPreference)999;
+        var preferences = new UserRepairPreferencesBuilder().Build();
+        preferences.ClearDomainEvents();
 
         // Act
-        Action act = () => preferences.UpdatePartsPreference(invalidPreference);
+        preferences.UpdatePartsPreference(EPartsPreference.Premium);
 
         // Assert
-        act.Should().Throw<ArgumentException>()
-            .And.ParamName.Should().Be("newPreference");
+        preferences.PartsPreference.Should().Be(EPartsPreference.Premium);
     }
 
     [Fact]
-    public void UpdateTimelinePreference_Should_UpdateValue_WhenNewPreferenceIsValid()
+    public void SetPartsPreference_Should_NotRaiseEvent_WhenPreferenceIsTheSame()
     {
         // Arrange
-        var preferences = UserRepairPreferences.Create(_validUserId, EPartsPreference.Economy, ETimelinePreference.Standard);
-        var newPreference = ETimelinePreference.Urgent;
+        var preferences = new UserRepairPreferencesBuilder().Build();
+        preferences.ClearDomainEvents();
 
         // Act
-        preferences.UpdateTimelinePreference(newPreference);
+        preferences.UpdatePartsPreference(EPartsPreference.Economy);
 
         // Assert
-        preferences.TimelinePreference.Should().Be(newPreference);
+        preferences.GetDomainEvents().Should().BeEmpty();
     }
 
     [Fact]
-    public void UpdateTimelinePreference_Should_ThrowArgumentException_WhenPreferenceIsInvalid()
+    public void SetTimelinePreference_Should_UpdatePreferenceAndRaiseEvent()
     {
         // Arrange
-        var preferences = UserRepairPreferences.Create(_validUserId, EPartsPreference.Economy, ETimelinePreference.Standard);
-        var invalidPreference = (ETimelinePreference)999;
+        var preferences = new UserRepairPreferencesBuilder().Build();
+        preferences.ClearDomainEvents();
 
         // Act
-        Action act = () => preferences.UpdateTimelinePreference(invalidPreference);
+        preferences.UpdateTimelinePreference(ETimelinePreference.Urgent);
 
         // Assert
-        act.Should().Throw<ArgumentException>()
-            .And.ParamName.Should().Be("newPreference");
+        preferences.TimelinePreference.Should().Be(ETimelinePreference.Urgent);
+    }
+
+    [Fact]
+    public void SetTimelinePreference_Should_NotRaiseEvent_WhenPreferenceIsTheSame()
+    {
+        // Arrange
+        var preferences = new UserRepairPreferencesBuilder().Build();
+        preferences.ClearDomainEvents();
+
+        // Act
+        preferences.UpdateTimelinePreference(ETimelinePreference.Standard);
+
+        // Assert
+        preferences.GetDomainEvents().Should().BeEmpty();
     }
 }

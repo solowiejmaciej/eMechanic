@@ -5,6 +5,7 @@ using Application.Identity;
 using Common.Result;
 using Common.Result.Fields;
 using Domain.User;
+using eMechanic.Domain.Tests.Builders;
 using eMechanic.Infrastructure.Identity;
 using eMechanic.Infrastructure.Services.Creators;
 using FluentAssertions;
@@ -58,7 +59,7 @@ public class UserServiceTests
                 await operation();
             });
 
-        _fakeUser = User.Create(TEST_EMAIL, TEST_FIRST_NAME, TEST_LAST_NAME, _identityId);
+        _fakeUser = new UserBuilder().WithEmail(TEST_EMAIL).WithFirstName(TEST_FIRST_NAME).WithLastName(TEST_LAST_NAME).WithIdentityId(_identityId).Build();
         _fakeIdentity = Identity.Create(TEST_EMAIL, EIdentityType.User);
         _fakeIdentity.Id = _identityId;
     }

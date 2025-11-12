@@ -1,7 +1,9 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Delete;
 
+using Application.Tests.Builders;
 using eMechanic.Application.Vehicle.Features.Delete;
 using FluentValidation.TestHelper;
+using System;
 
 public class DeleteVehicleCommandValidatorTests
 {
@@ -11,7 +13,7 @@ public class DeleteVehicleCommandValidatorTests
     public void Should_NotHaveError_WhenIdIsValid()
     {
         // Arrange
-        var command = new DeleteVehicleCommand(Guid.NewGuid());
+        var command = new DeleteVehicleCommandBuilder().Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -24,7 +26,7 @@ public class DeleteVehicleCommandValidatorTests
     public void Should_HaveError_WhenIdIsEmpty()
     {
         // Arrange
-        var command = new DeleteVehicleCommand(Guid.Empty);
+        var command = new DeleteVehicleCommandBuilder().WithId(Guid.Empty).Build();
 
         // Act
         var result = _validator.TestValidate(command);

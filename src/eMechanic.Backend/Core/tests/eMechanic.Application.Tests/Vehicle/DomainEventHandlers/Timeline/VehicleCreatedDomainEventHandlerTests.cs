@@ -2,6 +2,7 @@ namespace eMechanic.Application.Tests.Vehicle.DomainEventHandlers.Timeline;
 
 using Application.Vehicle.Repostories;
 using eMechanic.Application.Vehicle.DomainEventHandlers.Timeline;
+using eMechanic.Domain.Tests.Builders;
 using eMechanic.Domain.Vehicle;
 using eMechanic.Domain.Vehicle.Enums;
 using eMechanic.Domain.VehicleTimeline;
@@ -19,33 +20,14 @@ public class VehicleCreatedDomainEventHandlerTests
         _handler = new VehicleCreatedDomainEventHandler(_vehicleTimelineRepository);
     }
 
-    private Vehicle CreateTestVehicle(decimal? engineCapacity)
-    {
-        var creationResult = Vehicle.Create(
-            Guid.NewGuid(),
-            "V1N123456789ABCDE",
-            "Test Manufacturer",
-            "Test Model",
-            "2022",
-            engineCapacity,
-            10000,
-            EMileageUnit.Kilometers,
-            "PZ1W924",
-            124,
-            EFuelType.Gasoline,
-            EBodyType.Sedan,
-            EVehicleType.Passenger);
-
-        creationResult.HasError().Should().BeFalse();
-        return creationResult.Value!;
-    }
-
     [Fact]
     public async Task Handle_Should_CreateTimelineEntry_WhenVehicleHasAllData()
     {
         // Arrange
-        var vehicle = CreateTestVehicle(1.8m);
-        var notification = new VehicleCreatedDomainEvent(vehicle);
+        var vehicleResult = new VehicleBuilder().WithEngineCapacity(1.8m).BuildResult();
+        vehicleResult.HasError().Should().BeFalse();
+        var vehicle = vehicleResult.Value;
+        var notification = new VehicleCreatedDomainEvent(vehicle!);
 
         // Act
         await _handler.Handle(notification, CancellationToken.None);
@@ -60,8 +42,10 @@ public class VehicleCreatedDomainEventHandlerTests
     public async Task Handle_Should_CreateTimelineEntry_WhenVehicleHasNullEngineCapacity()
     {
         // Arrange
-        var vehicle = CreateTestVehicle(null);
-        var notification = new VehicleCreatedDomainEvent(vehicle);
+        var vehicleResult = new VehicleBuilder().WithEngineCapacity(null).BuildResult();
+        vehicleResult.HasError().Should().BeFalse();
+        var vehicle = vehicleResult.Value;
+        var notification = new VehicleCreatedDomainEvent(vehicle!);
 
         // Act
         await _handler.Handle(notification, CancellationToken.None);
@@ -69,7 +53,7 @@ public class VehicleCreatedDomainEventHandlerTests
         // Assert
         await _vehicleTimelineRepository.Received(1).AddAsync(
             Arg.Is<VehicleTimeline>(entry =>
-                entry.VehicleId == vehicle.Id &&
+                entry.VehicleId == vehicle!.Id &&
                 entry.EventType == nameof(VehicleCreatedDomainEvent) &&
                 entry.Data.Contains(vehicle.Vin.Value) &&
                 entry.Data.Contains(vehicle.Model.Value) &&

@@ -1,5 +1,6 @@
 namespace eMechanic.Application.Tests.Users.DomainEventHandlers;
 
+using Application.Tests.Builders;
 using Domain.UserRepairPreferences;
 using eMechanic.Domain.User;
 using eMechanic.Domain.User.DomainEvents;
@@ -7,6 +8,7 @@ using eMechanic.Domain.UserRepairPreferences.Enums;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using eMechanic.Application.Users.DomainEventsHandlers;
+using eMechanic.Domain.Tests.Builders;
 using UserRepairPreferences.Repositories;
 
 public class CreateUserRepairPreferencesUserCreatedDomainEventHandlerTests
@@ -26,7 +28,7 @@ public class CreateUserRepairPreferencesUserCreatedDomainEventHandlerTests
     public async Task Handle_Should_CreateDefaultPreferences_WhenUserIsCreated()
     {
         // Arrange
-        var user = User.Create("test@test.com", "Jan", "Kowalski", Guid.NewGuid());
+        var user = new UserBuilder().Build();
         var domainEvent = new UserCreatedDomainEvent(user);
 
         // Act

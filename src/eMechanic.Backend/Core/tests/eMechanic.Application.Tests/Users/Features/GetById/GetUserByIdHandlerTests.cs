@@ -4,6 +4,7 @@ using Application.Users.Repositories;
 using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Application.Users.Features.Get.Current;
 using eMechanic.Common.Result;
+using eMechanic.Domain.Tests.Builders;
 using eMechanic.Domain.User;
 using FluentAssertions;
 using NSubstitute;
@@ -23,7 +24,7 @@ public class GetCurrentUserHandlerTests
         _userContext = Substitute.For<IUserContext>();
         _handler = new GetCurrentUserHandler(_userRepository, _userContext);
 
-        _fakeUser = User.Create("test@user.pl", "Test", "User", Guid.NewGuid());
+        _fakeUser = new UserBuilder().Build();
         typeof(User).GetProperty("Id")!.SetValue(_fakeUser, _currentUserId);
 
         // Konfiguracja mocka UserContext

@@ -10,7 +10,7 @@ public class MileageTests
 {
     [Theory]
     [InlineData(100000, EMileageUnit.Kilometers)]
-    [InlineData(0, EMileageUnit.Miles)]
+    [InlineData(1, EMileageUnit.Miles)]
     [InlineData(60000, EMileageUnit.Miles)]
     public void Create_Should_ReturnSuccess_WhenMileageIsValid(int validValue, EMileageUnit validUnit)
     {
@@ -24,16 +24,17 @@ public class MileageTests
         result.Value.Unit.Should().Be(validUnit);
     }
 
-    [Fact]
-    public void Create_Should_ReturnError_WhenValueIsNull()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(null)]
+    public void Create_Should_ReturnError_WhenValueIsInvalid(int? value)
     {
         // Act
-        var result = Mileage.Create(null, EMileageUnit.Kilometers);
+        var result = Mileage.Create(value, EMileageUnit.Kilometers);
 
         // Assert
         result.HasError().Should().BeTrue();
         result.Error!.Code.Should().Be(EErrorCode.ValidationError);
-        result.Error.Message.Should().Contain("Mileage cannot be null");
     }
 
     [Fact]

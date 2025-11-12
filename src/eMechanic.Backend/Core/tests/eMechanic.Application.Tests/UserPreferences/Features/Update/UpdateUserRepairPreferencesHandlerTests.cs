@@ -1,5 +1,6 @@
 namespace eMechanic.Application.Tests.UserPreferences.Features.Update;
 
+using Application.Tests.Builders;
 using Domain.UserRepairPreferences;
 using Domain.UserRepairPreferences.Enums;
 using eMechanic.Application.Abstractions.Identity.Contexts;
@@ -39,9 +40,10 @@ public class UpdateUserRepairPreferencesHandlerTests
     public async Task Handle_Should_ReturnSuccess_AndUpdateDomainObject_WhenCommandIsValid()
     {
         // Arrange
-        var command = new UpdateUserRepairPreferencesCommand(
-            EPartsPreference.Premium,
-            ETimelinePreference.Urgent);
+        var command = new UpdateUserRepairPreferencesCommandBuilder()
+            .WithPartsPreference(EPartsPreference.Premium)
+            .WithTimelinePreference(ETimelinePreference.Urgent)
+            .Build();
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -62,7 +64,7 @@ public class UpdateUserRepairPreferencesHandlerTests
         _preferencesRepository.GetByUserIdAsync(_currentUserId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<UserRepairPreferences?>(null));
 
-        var command = new UpdateUserRepairPreferencesCommand(EPartsPreference.Premium, ETimelinePreference.Urgent);
+        var command = new UpdateUserRepairPreferencesCommandBuilder().Build();
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -78,9 +80,7 @@ public class UpdateUserRepairPreferencesHandlerTests
     public async Task Handle_Should_NotSaveChanges_WhenPreferencesAreTheSame()
     {
         // Arrange
-        var command = new UpdateUserRepairPreferencesCommand(
-            EPartsPreference.Economy,
-            ETimelinePreference.Standard);
+        var command = new UpdateUserRepairPreferencesCommandBuilder().Build();
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

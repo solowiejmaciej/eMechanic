@@ -8,7 +8,7 @@ public class ProductionYearTests
 {
     private const string VALID_YEAR_STRING = "2023";
     private const int MIN_YEAR = 1886;
-    private const int MAX_YEAR = 2100;
+    private static readonly int MAX_YEAR = DateTime.UtcNow.Year + 1;
     private const string YEAR_BELOW_MIN = "1885";
     private const string YEAR_ABOVE_MAX = "2101";
     private const string INVALID_YEAR_FORMAT = "twenty twenty three";
@@ -123,7 +123,7 @@ public class ProductionYearTests
     {
         // Arrange
         var y1Result = ProductionYear.Create("2020");
-        var y2Result = ProductionYear.Create(" 2020 "); // Ten sam rok, inne formatowanie
+        var y2Result = ProductionYear.Create(" 2020 ");
         var y3Result = ProductionYear.Create("2021");
 
         y1Result.HasError().Should().BeFalse();

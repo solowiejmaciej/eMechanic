@@ -3,6 +3,7 @@ namespace eMechanic.Application.Tests.Users.Features.Update;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Tests.Builders;
 using Application.Users.Services;
 using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Application.Users.Features.Update;
@@ -34,7 +35,7 @@ public class UpdateUserHandlerTests
     public async Task Handle_Should_ReturnSuccess_WhenUserIsAuthenticatedAndServiceSucceeds()
     {
         // Arrange
-        var command = new UpdateUserCommand("NewName", "NewLastName", "new@email.com");
+        var command = new UpdateUserCommandBuilder().Build();
 
         _userService.UpdateUserWithIdentityAsync(
             _currentUserId,
@@ -62,7 +63,7 @@ public class UpdateUserHandlerTests
     public async Task Handle_Should_ReturnError_WhenServiceReturnsError()
     {
         // Arrange
-        var command = new UpdateUserCommand("Jan", "Kowalski", "taken@email.com");
+        var command = new UpdateUserCommandBuilder().WithEmail("taken@email.com").Build();
         var serviceError = Error.Validation(EField.Email, "Email already in use.");
 
         _userService.UpdateUserWithIdentityAsync(
@@ -85,7 +86,7 @@ public class UpdateUserHandlerTests
     public async Task Handle_Should_ReturnUnauthorizedError_WhenUserContextThrowsUnauthorized()
     {
         // Arrange
-        var command = new UpdateUserCommand("Jan", "Kowalski", "new@email.com");
+        var command = new UpdateUserCommandBuilder().Build();
 
         _userContext.GetUserId().Throws<UnauthorizedAccessException>();
 

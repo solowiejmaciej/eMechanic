@@ -1,5 +1,6 @@
 namespace eMechanic.Application.Tests.Users.Features.Update;
 
+using Application.Tests.Builders;
 using eMechanic.Application.Users.Features.Update;
 using FluentValidation.TestHelper;
 
@@ -11,7 +12,7 @@ public class UpdateUserCommandValidatorTests
     public void Should_NotHaveError_WhenCommandIsValid()
     {
         // Arrange
-        var command = new UpdateUserCommand("Jan", "Kowalski", "jan@kowalski.pl");
+        var command = new UpdateUserCommandBuilder().Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -26,7 +27,7 @@ public class UpdateUserCommandValidatorTests
     public void Should_HaveError_WhenFirstNameIsEmpty(string invalidName)
     {
         // Arrange
-        var command = new UpdateUserCommand(invalidName, "Kowalski", "jan@kowalski.pl");
+        var command = new UpdateUserCommandBuilder().WithFirstName(invalidName).Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -41,7 +42,7 @@ public class UpdateUserCommandValidatorTests
     {
         // Arrange
         var longName = new string('a', 101);
-        var command = new UpdateUserCommand(longName, "Kowalski", "jan@kowalski.pl");
+        var command = new UpdateUserCommandBuilder().WithFirstName(longName).Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -57,7 +58,7 @@ public class UpdateUserCommandValidatorTests
     public void Should_HaveError_WhenLastNameIsEmpty(string invalidName)
     {
         // Arrange
-        var command = new UpdateUserCommand("Jan", invalidName, "jan@kowalski.pl");
+        var command = new UpdateUserCommandBuilder().WithLastName(invalidName).Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -72,7 +73,7 @@ public class UpdateUserCommandValidatorTests
     {
         // Arrange
         var longName = new string('a', 101);
-        var command = new UpdateUserCommand("Jan", longName, "jan@kowalski.pl");
+        var command = new UpdateUserCommandBuilder().WithLastName(longName).Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -88,7 +89,7 @@ public class UpdateUserCommandValidatorTests
     public void Should_HaveError_WhenEmailIsEmpty(string invalidEmail)
     {
         // Arrange
-        var command = new UpdateUserCommand("Jan", "Kowalski", invalidEmail);
+        var command = new UpdateUserCommandBuilder().WithEmail(invalidEmail).Build();
 
         // Act
         var result = _validator.TestValidate(command);
@@ -101,7 +102,7 @@ public class UpdateUserCommandValidatorTests
     public void Should_HaveError_WhenEmailIsInvalidFormat()
     {
         // Arrange
-        var command = new UpdateUserCommand("Jan", "Kowalski", "not-an-email");
+        var command = new UpdateUserCommandBuilder().WithEmail("not-an-email").Build();
 
         // Act
         var result = _validator.TestValidate(command);

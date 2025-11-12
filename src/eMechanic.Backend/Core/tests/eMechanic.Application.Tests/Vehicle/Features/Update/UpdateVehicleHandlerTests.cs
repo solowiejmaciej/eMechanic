@@ -1,7 +1,9 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Update;
 
+using Application.Tests.Builders;
 using Application.Vehicle.Repostories;
 using Application.Vehicle.Services;
+using Domain.Tests.Builders;
 using eMechanic.Application.Vehicle.Features.Update;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;
@@ -23,20 +25,19 @@ public class UpdateVehicleHandlerTests
     {
         _vehicleRepository = Substitute.For<IVehicleRepository>();
         _ownershipService = Substitute.For<IVehicleOwnershipService>();
-        var creationResult = Vehicle.Create(
-            _currentUserId,
-            "V1N123456789ABCDE",
-            "Old Manufacturer",
-            "Old Model",
-            "2020",
-            1.5m,
-            200,
-            EMileageUnit.Miles,
-            "PZ1W924",
-            124,
-            EFuelType.Diesel,
-            EBodyType.Kombi,
-            EVehicleType.Passenger);
+        var creationResult = new VehicleBuilder()
+            .WithOwnerId(_currentUserId)
+            .WithManufacturer("Old Manufacturer")
+            .WithModel("Old Model")
+            .WithProductionYear("2020")
+            .WithEngineCapacity(1.5m)
+            .WithMileage(200, EMileageUnit.Miles)
+            .WithLicensePlate("PZ1W924")
+            .WithHorsePower(124)
+            .WithFuelType(EFuelType.Diesel)
+            .WithBodyType(EBodyType.Kombi)
+            .WithVehicleType(EVehicleType.Passenger)
+            .BuildResult();
 
         creationResult.HasError().Should().BeFalse();
         _existingVehicle = creationResult.Value!;
@@ -49,20 +50,9 @@ public class UpdateVehicleHandlerTests
     public async Task Handle_Should_ReturnSuccess_WhenCommandIsValidAndVehicleExistsForUser()
     {
         // Arrange
-        var command = new UpdateVehicleCommand(
-            _vehicleId,
-            "V1N123456789ABCDE",
-            "New Manufacturer",
-            "New Model",
-            "2024",
-            2.0m,
-            200,
-            EMileageUnit.Kilometers,
-            "PZ1W924",
-            124,
-            EFuelType.Electric,
-            EBodyType.SUV,
-            EVehicleType.Passenger);
+        var command = new UpdateVehicleCommandBuilder()
+            .WithId(_vehicleId)
+            .Build();
 
         _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Result<Vehicle, Error>>(_existingVehicle));
@@ -91,20 +81,7 @@ public class UpdateVehicleHandlerTests
     public async Task Handle_Should_ReturnNotFoundError_WhenOwnershipServiceFails()
     {
         // Arrange
-        var command = new UpdateVehicleCommand(
-             _vehicleId,
-             "V1N123456789ABCDE",
-             "New Manufacturer",
-             "New Model",
-             "2024",
-             2.0m,
-             200,
-             EMileageUnit.Kilometers,
-             "PZ1W924",
-             124,
-             EFuelType.Electric,
-             EBodyType.SUV,
-             EVehicleType.Passenger);
+        var command = new UpdateVehicleCommandBuilder().WithId(_vehicleId).Build();
 
         var notFoundError = new Error(EErrorCode.NotFoundError, "Vehicle not found.");
         _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
@@ -125,20 +102,7 @@ public class UpdateVehicleHandlerTests
     public async Task Handle_Should_ReturnValidationError_WhenDomainUpdateFails()
     {
         // Arrange
-         var command = new UpdateVehicleCommand(
-             _vehicleId,
-             "zly-vin",
-             "New Manufacturer",
-             "New Model",
-             "2024",
-             2.0m,
-             200,
-             EMileageUnit.Kilometers,
-             "PZ1W924",
-             124,
-             EFuelType.Electric,
-             EBodyType.SUV,
-             EVehicleType.Passenger);
+         var command = new UpdateVehicleCommandBuilder().WithId(_vehicleId).WithVin("zly-vin").Build();
 
         _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Result<Vehicle, Error>>(_existingVehicle));
@@ -158,20 +122,7 @@ public class UpdateVehicleHandlerTests
     public async Task Handle_Should_ReturnUnauthorizedError_WhenOwnershipServiceReturnsUnauthorized()
     {
         // Arrange
-         var command = new UpdateVehicleCommand(
-            _vehicleId,
-            "V1N123456789ABCDE",
-            "Test Manufacturer",
-            "Test Model",
-            "2023",
-            1.6m,
-            200,
-            EMileageUnit.Kilometers,
-            "PZ1W924",
-            124,
-            EFuelType.Gasoline,
-            EBodyType.Sedan,
-            EVehicleType.Passenger);
+         var command = new UpdateVehicleCommandBuilder().WithId(_vehicleId).Build();
 
         var unauthorizedError = new Error(EErrorCode.UnauthorizedError, "User is not authenticated.");
         _ownershipService.GetAndVerifyOwnershipAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
