@@ -1,6 +1,6 @@
-namespace eMechanic.API.Features.Vehicle.Update.Request;
+namespace eMechanic.API.Features.Vehicle.Vehicle.Update.Request;
 
-using Application.Vehicle.Features.Update;
+using eMechanic.Application.Vehicle.Features.Update;
 using eMechanic.Domain.Vehicle.Enums;
 
 public sealed record UpdateVehicleRequest(

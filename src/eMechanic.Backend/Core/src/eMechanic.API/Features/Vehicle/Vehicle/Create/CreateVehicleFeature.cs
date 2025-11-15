@@ -1,14 +1,13 @@
-namespace eMechanic.API.Features.Vehicle.Create;
+namespace eMechanic.API.Features.Vehicle.Vehicle.Create;
 
-using Common.Web;
 using eMechanic.API.Constans;
 using eMechanic.API.Features.Vehicle;
+using eMechanic.API.Security;
 using eMechanic.Common.Result;
+using eMechanic.Common.Web;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Request;
-using Security;
 
 public sealed class CreateVehicleFeature : IFeature
 {
@@ -16,7 +15,7 @@ public sealed class CreateVehicleFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost(VehiclePrefix.CREATE_ENDPOINT, async (
+        app.MapPost(VehiclePrefix.CREATE, async (
                 CreateVehicleRequest request,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
@@ -25,7 +24,7 @@ public sealed class CreateVehicleFeature : IFeature
 
                 return result.ToStatusCode(
                     vehicleId =>
-                        Results.Created($"{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.CREATE_ENDPOINT}/{vehicleId}",
+                        Results.Created($"{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.CREATE}/{vehicleId}",
                             new { VehicleId = vehicleId }),
                     MapError);
             })

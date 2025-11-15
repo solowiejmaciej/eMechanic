@@ -1,12 +1,12 @@
-namespace eMechanic.API.Features.Vehicle.Get;
+namespace eMechanic.API.Features.Vehicle.Timeline.Get;
 
-using Application.Vehicle.Features.Get;
-using Application.Vehicle.Features.Get.Timeline;
-using Common.Result;
-using Common.Web;
+using eMechanic.API.Security;
+using eMechanic.Application.Vehicle.Features.Get;
+using eMechanic.Application.Vehicle.Features.Get.Timeline;
+using eMechanic.Common.Result;
+using eMechanic.Common.Web;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Security;
 
 public sealed class GetVehicleTimelineByVehicleIdFeature : IFeature
 {
@@ -14,7 +14,7 @@ public sealed class GetVehicleTimelineByVehicleIdFeature : IFeature
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet(VehiclePrefix.GET_TIMELINE_ENDPOINT, async (
+        app.MapGet(VehiclePrefix.Timeline.GET, async (
                 Guid id,
                 [AsParameters] PaginationParameters paginationParameters,
                 IMediator mediator,

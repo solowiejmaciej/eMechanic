@@ -4,8 +4,8 @@ using System.Net;
 using System.Net.Http.Json;
 using API.Constans;
 using API.Features.Vehicle;
-using API.Features.Vehicle.Create.Request;
-using API.Features.Vehicle.Update.Request;
+using API.Features.Vehicle.Vehicle.Create.Request;
+using API.Features.Vehicle.Vehicle.Update.Request;
 using Application.Vehicle.Features.Get;
 using Domain.Vehicle.Enums;
 using FluentAssertions;
@@ -18,9 +18,9 @@ public class UpdateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
     private readonly HttpClient _client;
     private readonly AuthHelper _authHelper;
 
-    private const string CREATE_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.CREATE_ENDPOINT}";
-    private const string UPDATE_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.UPDATE_ENDPOINT}";
-    private const string GET_BY_ID_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.GET_BY_ID_ENDPOINT}";
+    private const string CREATE_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.CREATE}";
+    private const string UPDATE_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.UPDATE}";
+    private const string GET_BY_ID_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.GET_BY_ID}";
 
     public UpdateVehicleFeatureTests(IntegrationTestWebAppFactory factory)
     {

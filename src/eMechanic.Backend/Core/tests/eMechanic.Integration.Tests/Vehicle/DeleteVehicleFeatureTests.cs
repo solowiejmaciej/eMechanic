@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using API.Constans;
 using API.Features.Vehicle;
-using API.Features.Vehicle.Create.Request;
+using API.Features.Vehicle.Vehicle.Create.Request;
 using Domain.Vehicle.Enums;
 using FluentAssertions;
 using Helpers;
@@ -14,7 +14,7 @@ public class DeleteVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
 {
     private readonly HttpClient _client;
     private readonly AuthHelper _authHelper;
-    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.DELETE_ENDPOINT}";
+    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.DELETE}";
     public DeleteVehicleFeatureTests(IntegrationTestWebAppFactory factory)
     {
         _client = factory.CreateClient();

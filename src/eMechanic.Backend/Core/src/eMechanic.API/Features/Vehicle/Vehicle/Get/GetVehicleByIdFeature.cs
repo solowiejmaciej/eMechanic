@@ -1,36 +1,37 @@
-namespace eMechanic.API.Features.Vehicle.Delete;
+namespace eMechanic.API.Features.Vehicle.Vehicle.Get;
 
-using Application.Vehicle.Features.Delete;
-using Common.Web;
+using eMechanic.API.Security;
+using eMechanic.Application.Vehicle.Features.Get;
+using eMechanic.Application.Vehicle.Features.Get.ById;
 using eMechanic.Common.Result;
+using eMechanic.Common.Web;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Security;
 
-public sealed class DeleteVehicleFeature : IFeature
+public sealed class GetVehicleByIdFeature : IFeature
 {
     public IResult MapError(Error error) => ErrorMapper.MapToHttpResult(error);
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapDelete(VehiclePrefix.DELETE_ENDPOINT, async (
+        app.MapGet(VehiclePrefix.GET_BY_ID, async (
                 Guid id,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
-                var command = new DeleteVehicleCommand(id);
-                var result = await mediator.Send(command, cancellationToken);
+                var query = new GetVehicleByIdQuery(id);
+                var result = await mediator.Send(query, cancellationToken);
 
-                return result.ToStatusCode(_ => Results.NoContent(), MapError);
+                return result.ToStatusCode(Results.Ok, MapError);
             })
-            .WithName("DeleteVehicle")
+            .WithName("GetVehicleById")
             .WithTags(VehiclePrefix.TAG)
-            .Produces(StatusCodes.Status204NoContent)
+            .Produces<VehicleResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .Produces(StatusCodes.Status401Unauthorized)
-            .WithSummary("Deletes a vehicle by its unique identifier.")
+            .WithSummary("Gets a vehicle by its unique identifier.")
             .RequireAuthorization(AuthorizationPolicies.MUST_BE_USER);
     }
 }

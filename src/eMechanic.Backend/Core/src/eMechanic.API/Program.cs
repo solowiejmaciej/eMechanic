@@ -1,11 +1,6 @@
-using eMechanic.API.Constans;
-using eMechanic.API.Middleware;
-
 namespace eMechanic.API;
 
 using Application;
-using Common.Web;
-using Features;
 using Infrastructure;
 using ServiceDefaults;
 

@@ -6,6 +6,7 @@ using Common.DDD;
 using Domain.User;
 using Domain.UserRepairPreferences;
 using Domain.Vehicle;
+using Domain.VehicleDocument;
 using Domain.VehicleTimeline;
 using Domain.Workshop;
 using MediatR;
@@ -27,6 +28,7 @@ public class AppDbContext : DbContext
     public DbSet<Vehicle> Vehicles { get; set; }
     public DbSet<VehicleTimeline> VehicleTimelines { get; set; }
     public DbSet<UserRepairPreferences> UserRepairPreferences { get; set; }
+    public DbSet<VehicleDocument> VehicleDocuments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

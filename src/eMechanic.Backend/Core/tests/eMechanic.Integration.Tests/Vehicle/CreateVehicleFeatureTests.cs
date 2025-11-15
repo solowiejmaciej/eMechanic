@@ -2,7 +2,7 @@ namespace eMechanic.Integration.Tests.Vehicle;
 
 using System.Net;
 using System.Net.Http.Json;
-using API.Features.Vehicle.Create.Request;
+using API.Features.Vehicle.Vehicle.Create.Request;
 using Domain.Vehicle.Enums;
 using eMechanic.API.Constans;
 using eMechanic.API.Features.Vehicle;
@@ -15,7 +15,7 @@ public class CreateVehicleFeatureTests : IClassFixture<IntegrationTestWebAppFact
 {
     private readonly HttpClient _client;
     private readonly AuthHelper _authHelper;
-    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.CREATE_ENDPOINT}";
+    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.CREATE}";
 
     public CreateVehicleFeatureTests(IntegrationTestWebAppFactory factory)
     {
