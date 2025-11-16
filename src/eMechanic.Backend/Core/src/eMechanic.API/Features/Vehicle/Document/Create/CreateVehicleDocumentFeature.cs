@@ -28,7 +28,7 @@ public sealed class CreateVehicleDocumentFeature : IFeature
                 return result.ToStatusCode(
                     documentId =>
                     {
-                        var locationUrl = VehicleDocumentPrefix.GET_BY_ID
+                        var locationUrl = VehicleDocumentPrefix.DOWNLOAD
                             .Replace("{vehicleId:guid}", vehicleId.ToString())
                             .Replace("{documentId:guid}", documentId.ToString());
 

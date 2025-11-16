@@ -70,6 +70,4 @@ public class VehicleDocument : AggregateRoot, IVehicleReference
 
         return document;
     }
-
-    public void SetFullPath(string fullPath) => FullPath = fullPath;
 }

@@ -59,6 +59,7 @@ internal sealed class DeleteVehicleDocumentCommandHandler : IResultCommandHandle
         if (deleteResult.HasError())
         {
             _logger.LogError("Successfully deleted {DocumentId} from db, but unable to delete {FullPath} from storage {Error}", document.Id, document.FullPath, deleteResult.Error!.Message);
+            return deleteResult.Error!;
         }
 
         return Result.Success;
