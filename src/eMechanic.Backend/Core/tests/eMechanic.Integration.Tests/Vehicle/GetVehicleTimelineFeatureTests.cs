@@ -4,8 +4,8 @@ using System.Net;
 using System.Net.Http.Json;
 using API.Constans;
 using API.Features.Vehicle;
-using API.Features.Vehicle.Create.Request;
-using API.Features.Vehicle.Update.Request;
+using API.Features.Vehicle.Vehicle.Create.Request;
+using API.Features.Vehicle.Vehicle.Update.Request;
 using Application.Vehicle.Features.Get;
 using Common.Result;
 using Domain.Vehicle;
@@ -18,9 +18,9 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
 {
     private readonly HttpClient _client;
     private readonly AuthHelper _authHelper;
-    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.GET_TIMELINE_ENDPOINT}";
-    private const string CREATE_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.CREATE_ENDPOINT}";
-    private const string UPDATE_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.UPDATE_ENDPOINT}";
+    private const string BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.Timeline.GET}";
+    private const string CREATE_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.CREATE}";
+    private const string UPDATE_BASE_API_URL = $"/api/{WebApiConstans.CURRENT_API_VERSION}{VehiclePrefix.UPDATE}";
 
 
     public GetVehicleTimelineFeatureTests(IntegrationTestWebAppFactory factory)

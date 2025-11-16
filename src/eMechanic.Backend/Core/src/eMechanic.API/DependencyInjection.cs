@@ -160,6 +160,15 @@ public static class DependencyInjection
         var apiV1Group = app.MapGroup($"/api/{WebApiConstans.CURRENT_API_VERSION}");
         apiV1Group.MapFeatures();
 
+        if (app.Environment.IsDevelopment())
+        {
+            app.Map("/", () => Results.Redirect("/swagger/index.html"));
+        }
+        else
+        {
+            app.Map("/", () => Results.Redirect("/health"));
+        }
+
         app.Services.ApplyMigrations();
     }
 }

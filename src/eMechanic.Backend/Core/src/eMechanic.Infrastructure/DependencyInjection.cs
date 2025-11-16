@@ -2,10 +2,12 @@ namespace eMechanic.Infrastructure;
 
 using Application.Abstractions.Identity;
 using Application.Abstractions.Identity.Contexts;
+using Application.Abstractions.Storage;
 using Application.UserRepairPreferences.Repositories;
 using Application.Users.Repositories;
 using Application.Users.Services;
 using Application.Vehicle.Repostories;
+using Application.VehicleDocument.Repositories;
 using Application.Workshop.Repositories;
 using Application.Workshop.Services;
 using DAL;
@@ -15,6 +17,7 @@ using Identity.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,6 +25,8 @@ using Repositories;
 using Services;
 using Services.Creators;
 using Services.Identity;
+using Storage;
+using Storage.Builders;
 
 public static class DependencyInjection
 {
@@ -48,6 +53,11 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<IdentityAppDbContext>()
             .AddDefaultTokenProviders();
 
+        services.AddAzureClients(clientBuilder =>
+        {
+            clientBuilder.AddBlobServiceClient(configuration.GetConnectionString("Storage"));
+        });
+
         services.AddRepositories();
         services.AddServices();
     }
@@ -59,6 +69,7 @@ public static class DependencyInjection
         services.AddScoped<IVehicleRepository, VehicleRepository>();
         services.AddScoped<IVehicleTimelineRepository, VehicleTimelineRepository>();
         services.AddScoped<IUserRepairPreferencesRepository, UserRepairPreferencesRepositoryRepository>();
+        services.AddScoped<IVehicleDocumentRepository, VehicleDocumentRepository>();
     }
 
     private static void AddServices(this IServiceCollection services)
@@ -73,6 +84,8 @@ public static class DependencyInjection
         services.AddScoped<IUserContext, UserContext>();
         services.AddScoped<IWorkshopContext, WorkshopContext>();
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+        services.AddScoped<IFileStorageService, AzureBlobStorageService>();
+        services.AddScoped<IVehicleDocumentPathBuilder, VehicleDocumentPathBuilder>();
     }
 
     public static void ApplyMigrations(this IServiceProvider services)

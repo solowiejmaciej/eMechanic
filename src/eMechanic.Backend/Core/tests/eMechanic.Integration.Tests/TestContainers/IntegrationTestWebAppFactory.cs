@@ -2,6 +2,7 @@
 namespace eMechanic.Integration.Tests.TestContainers;
 
 using API;
+using Application.Abstractions.Storage;
 using DotNet.Testcontainers.Builders;
 using eMechanic.Infrastructure.DAL;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Mocks;
 using Testcontainers.PostgreSql;
 
 public sealed class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
@@ -52,6 +54,9 @@ public sealed class IntegrationTestWebAppFactory : WebApplicationFactory<Program
 
             services.AddDbContext<IdentityAppDbContext>(options =>
                 options.UseNpgsql(connectionString));
+
+            services.RemoveAll<IFileStorageService>();
+            services.AddSingleton<IFileStorageService, MockFileStorageService>();
         });
     }
 

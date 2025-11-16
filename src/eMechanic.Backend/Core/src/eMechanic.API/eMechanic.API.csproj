@@ -21,5 +21,6 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Features\Shared\Request\" />
+      <Folder Include="Features\Vehicle\Vehicle\" />
     </ItemGroup>
 </Project>
