@@ -5,6 +5,7 @@ using Common.Result;
 using Domain.References.Vehicle;
 using Domain.VehicleDocument.Enums;
 using DomainEvents;
+using Vehicle.Documents.DomainEvents;
 
 public class VehicleDocument : AggregateRoot, IVehicleReference
 {
@@ -70,4 +71,6 @@ public class VehicleDocument : AggregateRoot, IVehicleReference
 
         return document;
     }
+
+    public void RaiseDeletedEvent() => RaiseDomainEvent(new VehicleDocumentDeletedDomainEvent(this));
 }

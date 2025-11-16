@@ -63,10 +63,8 @@ public class QueryValidationBehaviorTests
         var result = await _behavior.Handle(query, _nextDelegate, CancellationToken.None);
 
         // Assert
-        // Sprawdź, czy "next" NIE zostało wywołane
         await _nextDelegate.DidNotReceive().Invoke();
 
-        // Sprawdź, czy zwrócony został błąd walidacji
         Assert.True(result.HasError());
         Assert.Equal(EErrorCode.ValidationError, result.Error!.Code);
     }

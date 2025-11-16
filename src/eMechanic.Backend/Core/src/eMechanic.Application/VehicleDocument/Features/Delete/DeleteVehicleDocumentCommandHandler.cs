@@ -51,7 +51,7 @@ internal sealed class DeleteVehicleDocumentCommandHandler : IResultCommandHandle
             throw new UnauthorizedAccessException();
         }
 
-        //TODO Publish event to timeline
+        document.RaiseDeletedEvent();
         _documentRepository.DeleteAsync(document, cancellationToken);
         await _documentRepository.SaveChangesAsync(cancellationToken);
 

@@ -26,6 +26,7 @@ using Services;
 using Services.Creators;
 using Services.Identity;
 using Storage;
+using Storage.Builders;
 
 public static class DependencyInjection
 {
@@ -84,6 +85,7 @@ public static class DependencyInjection
         services.AddScoped<IWorkshopContext, WorkshopContext>();
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
         services.AddScoped<IFileStorageService, AzureBlobStorageService>();
+        services.AddScoped<IVehicleDocumentPathBuilder, VehicleDocumentPathBuilder>();
     }
 
     public static void ApplyMigrations(this IServiceProvider services)

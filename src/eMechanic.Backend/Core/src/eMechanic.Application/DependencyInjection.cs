@@ -7,7 +7,6 @@ using Caching;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Storage.Builders;
 using Vehicle.Services;
 
 public static class DependencyInjection
@@ -41,9 +40,5 @@ public static class DependencyInjection
         services.AddSingleton<ICacheConfiguration>(cacheConfig);
     }
 
-    private static void AddServices(this IServiceCollection services)
-    {
-        services.AddScoped<IVehicleOwnershipService, VehicleOwnershipService>();
-        services.AddScoped<IVehicleDocumentPathBuilder, VehicleDocumentPathBuilder>();
-    }
+    private static void AddServices(this IServiceCollection services) => services.AddScoped<IVehicleOwnershipService, VehicleOwnershipService>();
 }
