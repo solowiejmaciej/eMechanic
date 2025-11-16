@@ -71,7 +71,7 @@ internal sealed class AddVehicleDocumentCommandHandler : IResultCommandHandler<A
         }
         catch (Exception)
         {
-            await _fileStorage.DeleteFileAsync(fullPath, CancellationToken.None);
+            await _fileStorage.DeleteFileAsync(fullPath, cancellationToken);
             throw;
         }
 
