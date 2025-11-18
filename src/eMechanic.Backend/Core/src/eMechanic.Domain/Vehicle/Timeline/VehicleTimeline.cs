@@ -1,7 +1,7 @@
 namespace eMechanic.Domain.VehicleTimeline;
 
 using Common.DDD;
-using References.Vehicle;
+using Shared.References.Vehicle;
 
 public class VehicleTimeline : AggregateRoot, IVehicleReference
 {

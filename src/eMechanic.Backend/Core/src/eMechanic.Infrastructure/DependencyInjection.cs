@@ -10,6 +10,7 @@ using Application.Vehicle.Repostories;
 using Application.VehicleDocument.Repositories;
 using Application.Workshop.Repositories;
 using Application.Workshop.Services;
+using eMechanic.Application.RepairRequest.Repositories;
 using DAL;
 using DAL.Transactions;
 using Domain.Vehicle;
@@ -70,6 +71,7 @@ public static class DependencyInjection
         services.AddScoped<IVehicleTimelineRepository, VehicleTimelineRepository>();
         services.AddScoped<IUserRepairPreferencesRepository, UserRepairPreferencesRepositoryRepository>();
         services.AddScoped<IVehicleDocumentRepository, VehicleDocumentRepository>();
+        services.AddScoped<IRepairRequestRepository, RepairRequestRepository>();
     }
 
     private static void AddServices(this IServiceCollection services)

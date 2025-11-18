@@ -2,9 +2,9 @@ namespace eMechanic.Domain.VehicleDocument;
 
 using Common.DDD;
 using Common.Result;
-using Domain.References.Vehicle;
 using Domain.VehicleDocument.Enums;
 using DomainEvents;
+using Shared.References.Vehicle;
 using Vehicle.Documents.DomainEvents;
 
 public class VehicleDocument : AggregateRoot, IVehicleReference

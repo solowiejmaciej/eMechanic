@@ -10,7 +10,7 @@ public sealed record VehicleResponse(
     string Model,
     string ProductionYear,
     decimal? EngineCapacity,
-    int Mileage,
+    int MileageValue,
     EMileageUnit MileageUnit,
     string LicensePlate,
     int HorsePower,
