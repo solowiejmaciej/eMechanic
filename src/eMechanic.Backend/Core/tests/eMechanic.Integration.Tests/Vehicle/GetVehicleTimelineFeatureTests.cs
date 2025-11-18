@@ -77,7 +77,7 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
         createEvent.EventType.Should().Be(nameof(VehicleCreatedDomainEvent));
         createEvent.Data.Should().Contain(createRequest.Vin.ToUpperInvariant());
         createEvent.Data.Should().Contain(createRequest.Manufacturer);
-        createEvent.Data.Should().Contain(createRequest.Mileage.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        createEvent.Data.Should().Contain(createRequest.MileageValue.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
         // Arrange 2
         var updateRequest = new UpdateVehicleRequest(
@@ -124,7 +124,7 @@ public class GetVehicleTimelineFeatureTests : IClassFixture<IntegrationTestWebAp
         manufacturerEvent.Data.Should().Contain(updateRequest.Manufacturer);
 
         var mileageEvent = events.First(e => e.EventType == nameof(VehicleMileageChangedDomainEvent));
-        mileageEvent.Data.Should().Contain(createRequest.Mileage.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        mileageEvent.Data.Should().Contain(createRequest.MileageValue.ToString(System.Globalization.CultureInfo.InvariantCulture));
         mileageEvent.Data.Should().Contain(updateRequest.MileageValue.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
         _client.ClearBearerToken();

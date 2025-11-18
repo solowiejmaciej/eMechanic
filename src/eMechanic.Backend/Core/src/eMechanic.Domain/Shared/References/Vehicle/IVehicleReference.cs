@@ -1,4 +1,4 @@
-namespace eMechanic.Domain.References.Vehicle;
+namespace eMechanic.Domain.Shared.References.Vehicle;
 
 public interface IVehicleReference
 {

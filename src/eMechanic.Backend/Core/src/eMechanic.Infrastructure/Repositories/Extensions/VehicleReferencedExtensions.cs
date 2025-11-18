@@ -1,6 +1,6 @@
 namespace eMechanic.Infrastructure.Repositories.Extensions;
 
-using Domain.References.Vehicle;
+using Domain.Shared.References.Vehicle;
 
 public static class VehicleReferencedExtensions
 {

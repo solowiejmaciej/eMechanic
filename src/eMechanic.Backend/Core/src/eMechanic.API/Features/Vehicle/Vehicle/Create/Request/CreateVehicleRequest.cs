@@ -9,7 +9,7 @@ public sealed record CreateVehicleRequest(
     string Model,
     string ProductionYear,
     decimal? EngineCapacity,
-    int Mileage,
+    int MileageValue,
     EMileageUnit MileageUnit,
     string LicensePlate,
     int HorsePower,
@@ -17,5 +17,5 @@ public sealed record CreateVehicleRequest(
     EBodyType BodyType,
     EVehicleType VehicleType)
 {
-    public CreateVehicleCommand ToCommand() => new(Vin, Manufacturer, Model, ProductionYear, EngineCapacity, Mileage, MileageUnit, LicensePlate, HorsePower, FuelType, BodyType, VehicleType);
+    public CreateVehicleCommand ToCommand() => new(Vin, Manufacturer, Model, ProductionYear, EngineCapacity, MileageValue, MileageUnit, LicensePlate, HorsePower, FuelType, BodyType, VehicleType);
 }
