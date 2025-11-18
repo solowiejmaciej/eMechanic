@@ -10,6 +10,7 @@ using Xunit;
 
 public class RepairRequestTests
 {
+    private readonly Guid _userId = Guid.NewGuid();
     private readonly Guid _vehicleId = Guid.NewGuid();
     private readonly Guid _workshopId = Guid.NewGuid();
 
@@ -18,6 +19,7 @@ public class RepairRequestTests
     {
         // Arrange
         var builder = new RepairRequestBuilder()
+            .WithUserId(_userId)
             .WithVehicleId(_vehicleId)
             .WithWorkshopId(_workshopId);
 
@@ -29,20 +31,40 @@ public class RepairRequestTests
         var request = result.Value!;
 
         request.Id.Should().NotBeEmpty();
+        request.UserId.Should().Be(_userId);
         request.VehicleId.Should().Be(_vehicleId);
         request.WorkshopId.Should().Be(_workshopId);
         request.Status.Should().Be(ERepairRequestStatus.Pending);
         request.Description.Value.Should().NotBeNullOrWhiteSpace();
 
-        // Domain Events
         request.GetDomainEvents().Should().ContainSingle(e => e is RepairRequestCreatedDomainEvent);
+    }
+
+    [Fact]
+    public void Create_Should_ReturnError_WhenUserIdIsEmpty()
+    {
+        // Act
+        var result = new RepairRequestBuilder()
+            .WithUserId(Guid.Empty)
+            .WithVehicleId(_vehicleId)
+            .WithWorkshopId(_workshopId)
+            .BuildResult();
+
+        // Assert
+        result.HasError().Should().BeTrue();
+        result.Error!.Code.Should().Be(EErrorCode.ValidationError);
+        result.Error.Message.Should().Contain("UserId");
     }
 
     [Fact]
     public void Create_Should_ReturnError_WhenVehicleIdIsEmpty()
     {
         // Act
-        var result = new RepairRequestBuilder().WithVehicleId(Guid.Empty).BuildResult();
+        var result = new RepairRequestBuilder()
+            .WithUserId(_userId)
+            .WithVehicleId(Guid.Empty)
+            .WithWorkshopId(_workshopId)
+            .BuildResult();
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -51,10 +73,26 @@ public class RepairRequestTests
     }
 
     [Fact]
+    public void Create_Should_ReturnError_WhenWorkshopIdIsEmpty()
+    {
+        // Act
+        var result = new RepairRequestBuilder()
+            .WithUserId(_userId)
+            .WithVehicleId(_vehicleId)
+            .WithWorkshopId(Guid.Empty)
+            .BuildResult();
+
+        // Assert
+        result.HasError().Should().BeTrue();
+        result.Error!.Code.Should().Be(EErrorCode.ValidationError);
+        result.Error.Message.Should().Contain("WorkshopId");
+    }
+
+    [Fact]
     public void ProvideEstimation_Should_UpdateStateToEstimated_WhenRequestIsPending()
     {
         // Arrange
-        var request = new RepairRequestBuilder().Build();
+        var request = new RepairRequestBuilder().WithUserId(_userId).Build();
         request.ClearDomainEvents();
         var diagnosis = "Brake pads worn out.";
         var cost = 450.00m;
@@ -75,7 +113,7 @@ public class RepairRequestTests
     public void ProvideEstimation_Should_ReturnError_WhenCostIsNegative()
     {
         // Arrange
-        var request = new RepairRequestBuilder().Build();
+        var request = new RepairRequestBuilder().WithUserId(_userId).Build();
 
         // Act
         var result = request.ProvideEstimation("Diagnosis", -100m);
@@ -89,7 +127,7 @@ public class RepairRequestTests
     public void ProvideEstimation_Should_ReturnError_WhenStatusIsNotPending()
     {
         // Arrange
-        var request = new RepairRequestBuilder().Build();
+        var request = new RepairRequestBuilder().WithUserId(_userId).Build();
         request.ProvideEstimation("Initial diagnosis", 100m);
 
         // Act
@@ -105,7 +143,7 @@ public class RepairRequestTests
     public void AcceptEstimation_Should_UpdateStateToAccepted_WhenStatusIsEstimated()
     {
         // Arrange
-        var request = new RepairRequestBuilder().Build();
+        var request = new RepairRequestBuilder().WithUserId(_userId).Build();
         request.ProvideEstimation("Diagnosis", 100m);
         request.ClearDomainEvents();
 
@@ -122,7 +160,7 @@ public class RepairRequestTests
     public void AcceptEstimation_Should_ReturnError_WhenStatusIsPending()
     {
         // Arrange
-        var request = new RepairRequestBuilder().Build();
+        var request = new RepairRequestBuilder().WithUserId(_userId).Build();
 
         // Act
         var result = request.AcceptEstimation();
@@ -137,7 +175,7 @@ public class RepairRequestTests
     public void RejectEstimation_Should_UpdateStateToRejected_WhenStatusIsEstimated()
     {
         // Arrange
-        var request = new RepairRequestBuilder().Build();
+        var request = new RepairRequestBuilder().WithUserId(_userId).Build();
         request.ProvideEstimation("Diagnosis", 100m);
         request.ClearDomainEvents();
         var reason = "Too expensive";
@@ -156,7 +194,7 @@ public class RepairRequestTests
     public void RejectEstimation_Should_ReturnError_WhenReasonIsEmpty()
     {
         // Arrange
-        var request = new RepairRequestBuilder().Build();
+        var request = new RepairRequestBuilder().WithUserId(_userId).Build();
         request.ProvideEstimation("Diagnosis", 100m);
 
         // Act

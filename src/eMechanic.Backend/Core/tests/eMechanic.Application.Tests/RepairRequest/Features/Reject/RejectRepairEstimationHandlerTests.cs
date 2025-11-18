@@ -13,7 +13,6 @@ using NSubstitute;
 
 public class RejectRepairEstimationHandlerTests
 {
-    private readonly IUserContext _userContext = Substitute.For<IUserContext>();
     private readonly IRepairRequestRepository _repairRequestRepository = Substitute.For<IRepairRequestRepository>();
     private readonly IVehicleOwnershipService _vehicleOwnershipService = Substitute.For<IVehicleOwnershipService>();
     private readonly RejectRepairEstimationHandler _handler;
@@ -23,9 +22,8 @@ public class RejectRepairEstimationHandlerTests
 
     public RejectRepairEstimationHandlerTests()
     {
-        _handler = new RejectRepairEstimationHandler(_userContext, _repairRequestRepository, _vehicleOwnershipService);
+        _handler = new RejectRepairEstimationHandler(_repairRequestRepository, _vehicleOwnershipService);
         _vehicle = new VehicleBuilder().WithOwnerId(_userId).Build();
-        _userContext.GetUserId().Returns(_userId);
     }
 
     [Fact]

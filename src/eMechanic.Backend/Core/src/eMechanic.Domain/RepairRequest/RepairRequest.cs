@@ -27,10 +27,12 @@ public class RepairRequest : AggregateRoot, IVehicleReference, IWorkshopReferenc
     private RepairRequest() { }
 
     private RepairRequest(
+        Guid userId,
         Guid vehicleId,
         Guid workshopId,
         RepairDescription description)
     {
+        UserId = userId;
         VehicleId = vehicleId;
         WorkshopId = workshopId;
         Description = description;
@@ -58,7 +60,7 @@ public class RepairRequest : AggregateRoot, IVehicleReference, IWorkshopReferenc
         if (descriptionResult.HasError())
             return descriptionResult.Error!;
 
-        return new RepairRequest(vehicleId, workshopId, descriptionResult.Value!);
+        return new RepairRequest(userId, vehicleId, workshopId, descriptionResult.Value!);
     }
 
     public Result<Success, Error> ProvideEstimation(string diagnosisString, decimal costAmount, string currency = "PLN")

@@ -12,7 +12,7 @@ public class RejectRepairEstimationHandler : IResultCommandHandler<RejectRepairE
     private readonly IRepairRequestRepository _repairRequestRepository;
     private readonly IVehicleOwnershipService _vehicleOwnershipService;
 
-    public RejectRepairEstimationHandler(IUserContext userContext,
+    public RejectRepairEstimationHandler(
         IRepairRequestRepository repairRequestRepository,
         IVehicleOwnershipService vehicleOwnershipService)
     {

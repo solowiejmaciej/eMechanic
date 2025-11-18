@@ -10,15 +10,13 @@ using Domain.RepairRequest;
 
 public sealed class CreateRepairRequestHandler : IResultCommandHandler<CreateRepairRequestCommand, Guid>
 {
-    private readonly IUserContext _userContext;
     private readonly IVehicleOwnershipService _vehicleOwnershipService;
     private readonly IRepairRequestRepository _repairRequestRepository;
 
-    public CreateRepairRequestHandler(IUserContext userContext,
+    public CreateRepairRequestHandler(
         IVehicleOwnershipService vehicleOwnershipService,
         IRepairRequestRepository repairRequestRepository)
     {
-        _userContext = userContext;
         _vehicleOwnershipService = vehicleOwnershipService;
         _repairRequestRepository = repairRequestRepository;
     }

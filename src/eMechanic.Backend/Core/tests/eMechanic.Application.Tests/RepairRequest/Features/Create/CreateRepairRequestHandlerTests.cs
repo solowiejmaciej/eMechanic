@@ -14,7 +14,6 @@ using NSubstitute;
 
 public class CreateRepairRequestHandlerTests
 {
-    private readonly IUserContext _userContext = Substitute.For<IUserContext>();
     private readonly IVehicleOwnershipService _vehicleOwnershipService = Substitute.For<IVehicleOwnershipService>();
     private readonly IRepairRequestRepository _repairRequestRepository = Substitute.For<IRepairRequestRepository>();
     private readonly CreateRepairRequestHandler _handler;
@@ -24,9 +23,8 @@ public class CreateRepairRequestHandlerTests
 
     public CreateRepairRequestHandlerTests()
     {
-        _handler = new CreateRepairRequestHandler(_userContext, _vehicleOwnershipService, _repairRequestRepository);
+        _handler = new CreateRepairRequestHandler(_vehicleOwnershipService, _repairRequestRepository);
         _vehicle = new VehicleBuilder().WithOwnerId(_userId).Build();
-        _userContext.GetUserId().Returns(_userId);
     }
 
     [Fact]

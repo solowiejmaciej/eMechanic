@@ -1,7 +1,6 @@
 
 namespace eMechanic.Application.Tests.RepairRequest.Features.Accept;
 
-using Application.Abstractions.Identity.Contexts;
 using Application.RepairRequest.Features.Accept;
 using Application.RepairRequest.Repositories;
 using Domain.Tests.Builders;
@@ -13,7 +12,6 @@ using NSubstitute;
 
 public class AcceptRepairEstimationHandlerTests
 {
-    private readonly IUserContext _userContext = Substitute.For<IUserContext>();
     private readonly IRepairRequestRepository _repairRequestRepository = Substitute.For<IRepairRequestRepository>();
     private readonly IVehicleOwnershipService _vehicleOwnershipService = Substitute.For<IVehicleOwnershipService>();
     private readonly AcceptRepairEstimationHandler _handler;
@@ -23,9 +21,8 @@ public class AcceptRepairEstimationHandlerTests
 
     public AcceptRepairEstimationHandlerTests()
     {
-        _handler = new AcceptRepairEstimationHandler(_userContext, _repairRequestRepository, _vehicleOwnershipService);
+        _handler = new AcceptRepairEstimationHandler(_repairRequestRepository, _vehicleOwnershipService);
         _vehicle = new VehicleBuilder().WithOwnerId(_userId).Build();
-        _userContext.GetUserId().Returns(_userId);
     }
 
     [Fact]
