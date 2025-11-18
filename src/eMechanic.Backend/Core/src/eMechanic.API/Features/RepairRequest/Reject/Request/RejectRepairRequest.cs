@@ -1,6 +1,4 @@
 namespace eMechanic.API.Features.RepairRequest.Reject.Request;
 
-public class RejectRepairRequest
-{
-    
-}
+
+public sealed record RejectRepairRequest(string Reason);

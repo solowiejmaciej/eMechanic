@@ -8,6 +8,7 @@ public class RepairRequestBuilder
 {
     private Guid _vehicleId = Guid.NewGuid();
     private Guid _workshopId = Guid.NewGuid();
+    private Guid _userId = Guid.NewGuid();
     private string _description = "Standard issue with the brakes making squeaky noise.";
 
     public RepairRequestBuilder WithVehicleId(Guid vehicleId)
@@ -28,7 +29,13 @@ public class RepairRequestBuilder
         return this;
     }
 
-    public Result<RepairRequest, Error> BuildResult() => RepairRequest.Create(_vehicleId, _workshopId, _description);
+    public RepairRequestBuilder WithUserId(Guid userId)
+    {
+        _userId = userId;
+        return this;
+    }
+
+    public Result<RepairRequest, Error> BuildResult() => RepairRequest.Create(_userId, _vehicleId, _workshopId, _description);
 
     public RepairRequest Build()
     {
