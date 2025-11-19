@@ -9,4 +9,6 @@ public interface IVehicleRepository : IRepository<Vehicle>
     Task<Vehicle?> GetForUserById(Guid entityId, Guid userId, CancellationToken cancellationToken);
     Task<PaginationResult<Vehicle>> GetForUserPaginatedAsync(PaginationParameters paginationParameters,
         Guid userId, CancellationToken cancellationToken);
+
+    Task<bool> ExistsForUserAsync(Guid vehicleId, Guid currentUserId, CancellationToken cancellationToken);
 }

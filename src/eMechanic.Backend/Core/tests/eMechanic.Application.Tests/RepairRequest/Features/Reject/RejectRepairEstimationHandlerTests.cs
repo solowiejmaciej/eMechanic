@@ -34,8 +34,8 @@ public class RejectRepairEstimationHandlerTests
         repairRequest.ProvideEstimation("test", 1, "aaa");
         var command = new RejectRepairEstimationCommand(repairRequest.Id, "Too expensive");
         _repairRequestRepository.GetByIdAsync(command.RepairRequestId, Arg.Any<CancellationToken>()).Returns(repairRequest);
-        _vehicleOwnershipService.GetAndVerifyOwnershipAsync(repairRequest.VehicleId, Arg.Any<CancellationToken>())
-            .Returns(_vehicle);
+        _vehicleOwnershipService.VerifyOwnershipAsync(repairRequest.VehicleId, Arg.Any<CancellationToken>())
+            .Returns(Result.Success);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -68,7 +68,7 @@ public class RejectRepairEstimationHandlerTests
         var repairRequest = new RepairRequestBuilder().Build();
         var command = new RejectRepairEstimationCommand(repairRequest.Id, "test");
         _repairRequestRepository.GetByIdAsync(command.RepairRequestId, Arg.Any<CancellationToken>()).Returns(repairRequest);
-        _vehicleOwnershipService.GetAndVerifyOwnershipAsync(repairRequest.VehicleId, Arg.Any<CancellationToken>())
+        _vehicleOwnershipService.VerifyOwnershipAsync(repairRequest.VehicleId, Arg.Any<CancellationToken>())
             .Returns(new Error(EErrorCode.UnauthorizedError, "User is not the owner of the vehicle."));
 
         // Act

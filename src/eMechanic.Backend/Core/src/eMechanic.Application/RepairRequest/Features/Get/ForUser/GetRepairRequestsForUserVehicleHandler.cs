@@ -20,7 +20,7 @@ public sealed class GetRepairRequestsForUserVehicleHandler : IResultQueryHandler
 
     public async Task<Result<PaginationResult<RepairRequestResponse>, Error>> Handle(GetRepairRequestsForUserVehicleQuery request, CancellationToken cancellationToken)
     {
-        var ownershipResult = await _vehicleOwnershipService.GetAndVerifyOwnershipAsync(request.VehicleId, cancellationToken);
+        var ownershipResult = await _vehicleOwnershipService.VerifyOwnershipAsync(request.VehicleId, cancellationToken);
 
         if (ownershipResult.HasError())
         {
