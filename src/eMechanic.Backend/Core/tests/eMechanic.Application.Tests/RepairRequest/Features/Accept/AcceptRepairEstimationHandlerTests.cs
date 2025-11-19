@@ -33,8 +33,8 @@ public class AcceptRepairEstimationHandlerTests
         repairRequest.ProvideEstimation("test", 1, "aaa");
         var command = new AcceptRepairEstimationCommand(repairRequest.Id);
         _repairRequestRepository.GetByIdAsync(command.RepairRequestId, Arg.Any<CancellationToken>()).Returns(repairRequest);
-        _vehicleOwnershipService.GetAndVerifyOwnershipAsync(repairRequest.VehicleId, Arg.Any<CancellationToken>())
-            .Returns(_vehicle);
+        _vehicleOwnershipService.VerifyOwnershipAsync(repairRequest.VehicleId, Arg.Any<CancellationToken>())
+            .Returns(Result.Success);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -67,7 +67,7 @@ public class AcceptRepairEstimationHandlerTests
         var repairRequest = new RepairRequestBuilder().Build();
         var command = new AcceptRepairEstimationCommand(repairRequest.Id);
         _repairRequestRepository.GetByIdAsync(command.RepairRequestId, Arg.Any<CancellationToken>()).Returns(repairRequest);
-        _vehicleOwnershipService.GetAndVerifyOwnershipAsync(repairRequest.VehicleId, Arg.Any<CancellationToken>())
+        _vehicleOwnershipService.VerifyOwnershipAsync(repairRequest.VehicleId, Arg.Any<CancellationToken>())
             .Returns(new Error(EErrorCode.UnauthorizedError, "User is not the owner of the vehicle."));
 
         // Act

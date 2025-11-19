@@ -34,4 +34,10 @@ internal sealed class VehicleRepository : Repository<Vehicle>, IVehicleRepositor
 
         return GetPaginatedAsync(query, paginationParameters, cancellationToken);
     }
+
+    public async Task<bool> ExistsForUserAsync(Guid vehicleId, Guid currentUserId, CancellationToken cancellationToken)
+        => await GetQuery()
+            .FilterById(vehicleId)
+            .FilterByUserId(currentUserId)
+            .AnyAsync(cancellationToken);
 }

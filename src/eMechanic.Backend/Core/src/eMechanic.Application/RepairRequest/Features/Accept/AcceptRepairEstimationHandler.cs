@@ -30,7 +30,7 @@ public class AcceptRepairEstimationHandler : IResultCommandHandler<AcceptRepairE
         }
 
         var ownershipResult =
-            await _vehicleOwnershipService.GetAndVerifyOwnershipAsync(repairRequest.VehicleId, cancellationToken);
+            await _vehicleOwnershipService.VerifyOwnershipAsync(repairRequest.VehicleId, cancellationToken);
 
         if (ownershipResult.HasError())
         {
