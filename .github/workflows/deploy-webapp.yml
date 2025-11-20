@@ -23,7 +23,7 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_SWA_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
+          action: "upload" 
           app_location: "src/eMechanic.Frontend"
           api_location: ""
           output_location: "dist"
