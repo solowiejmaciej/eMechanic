@@ -14,6 +14,6 @@ public sealed class LoginUserFeature : IFeature
         app.MapGet(TestPrefix.ENDPOINT, () => Task.FromResult(TypedResults.Ok()))
             .WithTags(TestPrefix.TAG)
             .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest)
-            .WithSummary("Testing endpoint will always return 200");
+            .WithSummary("Testing endpoint will always return 200 ");
     }
 }
