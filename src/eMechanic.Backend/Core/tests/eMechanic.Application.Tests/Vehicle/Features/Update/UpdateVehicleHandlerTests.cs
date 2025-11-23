@@ -1,15 +1,15 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Update;
 
-using Application.Tests.Builders;
 using Application.Vehicle.Repostories;
 using Application.Vehicle.Services;
-using Domain.Tests.Builders;
 using eMechanic.Application.Vehicle.Features.Update;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;
 using eMechanic.Domain.Vehicle.Enums;
 using FluentAssertions;
 using NSubstitute;
+using eMechanic.Domain.Tests.Builders;
+using eMechanic.Application.Tests.Builders.Vehicle;
 
 public class UpdateVehicleHandlerTests
 {
@@ -52,10 +52,11 @@ public class UpdateVehicleHandlerTests
         // Arrange
         var command = new UpdateVehicleCommandBuilder()
             .WithId(_vehicleId)
+            .WithVin("NEWV111N123456789")
             .Build();
 
         _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<Result<Vehicle, Error>>(_existingVehicle));
+            .Returns(new Result<Vehicle, Error>(_existingVehicle));
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -63,7 +64,7 @@ public class UpdateVehicleHandlerTests
         // Assert
         result.HasError().Should().BeFalse();
 
-        _vehicleRepository.Received(1).UpdateAsync(Arg.Is<Vehicle>(v =>
+        await _vehicleRepository.Received(1).UpdateAsync(Arg.Is<Vehicle>(v =>
             v.Id == _vehicleId &&
             v.Manufacturer.Value == command.Manufacturer &&
             v.Model.Value == command.Model &&
@@ -72,7 +73,9 @@ public class UpdateVehicleHandlerTests
             v.EngineCapacity!.Value == command.EngineCapacity &&
             v.FuelType == command.FuelType &&
             v.BodyType == command.BodyType &&
-            v.VehicleType == command.VehicleType
+            v.VehicleType == command.VehicleType &&
+            v.LicensePlate.Value == command.LicensePlate &&
+            v.HorsePower.Value == command.HorsePower
         ), Arg.Any<CancellationToken>());
         await _vehicleRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
@@ -85,7 +88,7 @@ public class UpdateVehicleHandlerTests
 
         var notFoundError = new Error(EErrorCode.NotFoundError, "Vehicle not found.");
         _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<Result<Vehicle, Error>>(notFoundError));
+            .Returns(notFoundError);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -94,7 +97,7 @@ public class UpdateVehicleHandlerTests
         result.HasError().Should().BeTrue();
         result.Error!.Code.Should().Be(EErrorCode.NotFoundError);
 
-        _vehicleRepository.DidNotReceiveWithAnyArgs().UpdateAsync(default!, default);
+        await _vehicleRepository.DidNotReceiveWithAnyArgs().UpdateAsync(default!, default);
         await _vehicleRepository.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
     }
 
@@ -105,7 +108,7 @@ public class UpdateVehicleHandlerTests
         var command = new UpdateVehicleCommandBuilder().WithId(_vehicleId).WithVin("zly-vin").Build();
 
         _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<Result<Vehicle, Error>>(_existingVehicle));
+            .Returns(new Result<Vehicle, Error>(_existingVehicle));
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -114,7 +117,7 @@ public class UpdateVehicleHandlerTests
         result.HasError().Should().BeTrue();
         result.Error!.Code.Should().Be(EErrorCode.ValidationError);
 
-        _vehicleRepository.DidNotReceiveWithAnyArgs().UpdateAsync(default!, default);
+        await _vehicleRepository.DidNotReceiveWithAnyArgs().UpdateAsync(default!, default);
         await _vehicleRepository.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
     }
 
@@ -126,7 +129,7 @@ public class UpdateVehicleHandlerTests
 
         var unauthorizedError = new Error(EErrorCode.UnauthorizedError, "User is not authenticated.");
         _ownershipService.GetAndVerifyOwnershipAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<Result<Vehicle, Error>>(unauthorizedError));
+            .Returns(unauthorizedError);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

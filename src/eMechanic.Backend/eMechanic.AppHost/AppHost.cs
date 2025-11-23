@@ -11,12 +11,14 @@ var postgresDb = postgresServer.AddDatabase("eMechanic");
 var redisCache = builder.AddRedis("emechanic-cache");
 var serviceBus = builder.AddConnectionString("AzureServiceBus");
 var azureStorage = builder.AddConnectionString("Storage");
+var googleApiKey = builder.AddParameter("google-api-key", secret: true);
 
 builder
     .AddProject<Projects.eMechanic_API>("eMechanic-Core")
     .WithReference(postgresDb)
     .WithReference(redisCache)
     .WithReference(azureStorage)
+    .WithEnvironment("LLMProviders__Google__ApiKey", googleApiKey)
     .WaitFor(postgresServer);
 
 builder.AddAzureFunctionsProject<Projects.eMechanic_OutboxPublisher>("outbox-publisher")

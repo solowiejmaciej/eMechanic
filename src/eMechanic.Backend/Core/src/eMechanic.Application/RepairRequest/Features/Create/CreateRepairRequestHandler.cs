@@ -7,6 +7,7 @@ using Common.Result;
 using Repositories;
 using Vehicle.Services;
 using Domain.RepairRequest;
+using Services;
 
 public sealed class CreateRepairRequestHandler : IResultCommandHandler<CreateRepairRequestCommand, Guid>
 {
@@ -48,7 +49,6 @@ public sealed class CreateRepairRequestHandler : IResultCommandHandler<CreateRep
 
         await _repairRequestRepository.AddAsync(repairRequest, cancellationToken);
         await _repairRequestRepository.SaveChangesAsync(cancellationToken);
-
         return repairRequest.Id;
     }
 }

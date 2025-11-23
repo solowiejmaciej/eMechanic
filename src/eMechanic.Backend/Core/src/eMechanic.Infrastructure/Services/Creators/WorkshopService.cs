@@ -153,7 +153,7 @@ internal sealed class WorkshopService : IWorkshopService
                     country
                 );
 
-                _workshopRepository.UpdateAsync(domainWorkshop, cancellationToken);
+                await _workshopRepository.UpdateAsync(domainWorkshop, cancellationToken);
                 await _workshopRepository.SaveChangesAsync(cancellationToken);
 
             }, cancellationToken);
