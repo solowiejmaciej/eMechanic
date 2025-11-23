@@ -1,3 +1,4 @@
+
 namespace eMechanic.Application.Vehicle.Features.Update;
 
 using eMechanic.Common.CQRS;
@@ -74,8 +75,20 @@ public sealed class UpdateVehicleHandler : IResultCommandHandler<UpdateVehicleCo
         {
             return millageTypeResult.Error!;
         }
+        
+        var licensePlateResult = vehicle.UpdateLicensePlate(request.LicensePlate);
+        if (licensePlateResult.HasError())
+        {
+            return licensePlateResult.Error!;
+        }
+        
+        var horsePowerResult = vehicle.UpdateHorsePower(request.HorsePower);
+        if (horsePowerResult.HasError())
+        {
+            return horsePowerResult.Error!;
+        }
 
-        _vehicleRepository.UpdateAsync(vehicle, cancellationToken);
+        await _vehicleRepository.UpdateAsync(vehicle, cancellationToken);
         await _vehicleRepository.SaveChangesAsync(cancellationToken);
 
         return Result.Success;

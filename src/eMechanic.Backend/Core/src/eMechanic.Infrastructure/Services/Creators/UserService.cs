@@ -131,7 +131,7 @@ internal sealed class UserService : IUserService
 
                 domainUser.Update(email, firstName, lastName);
 
-                _userRepository.UpdateAsync(domainUser, cancellationToken);
+                await _userRepository.UpdateAsync(domainUser, cancellationToken);
                 await _userRepository.SaveChangesAsync(cancellationToken);
 
             }, cancellationToken);

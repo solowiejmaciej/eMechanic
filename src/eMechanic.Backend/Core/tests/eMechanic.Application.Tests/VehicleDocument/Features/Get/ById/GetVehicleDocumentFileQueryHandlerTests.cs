@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using eMechanic.Application.Abstractions.Storage;
 using eMechanic.Application.Storage.Dtos;
-using eMechanic.Application.Tests.Builders;
 using eMechanic.Application.Vehicle.Services;
 using eMechanic.Application.VehicleDocument.Features.Get.ById;
 using eMechanic.Application.VehicleDocument.Repositories;
@@ -17,6 +16,7 @@ using eMechanic.Domain.Vehicle;
 using eMechanic.Domain.VehicleDocument;
 using FluentAssertions;
 using NSubstitute;
+using eMechanic.Application.Tests.Builders.VehicleDocument;
 
 public class GetVehicleDocumentFileQueryHandlerTests
 {
@@ -57,7 +57,7 @@ public class GetVehicleDocumentFileQueryHandlerTests
             new MemoryStream(Encoding.UTF8.GetBytes("test file")), "application/pdf", "test-faktura.pdf");
 
         _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<Result<Vehicle, Error>>(_vehicle));
+            .Returns(new Result<Vehicle, Error>(_vehicle));
 
         _documentRepository.GetByIdAsync(_documentId, Arg.Any<CancellationToken>())
             .Returns(_document);

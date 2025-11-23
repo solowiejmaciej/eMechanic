@@ -62,7 +62,7 @@ public class DeleteVehicleDocumentCommandHandlerTests
         // Assert
         result.HasError().Should().BeFalse();
 
-        _documentRepository.Received(1).DeleteAsync(_document, Arg.Any<CancellationToken>());
+        await _documentRepository.Received(1).DeleteAsync(_document, Arg.Any<CancellationToken>());
         await _documentRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
         await _fileStorage.Received(1).DeleteFileAsync(_document.FullPath, Arg.Any<CancellationToken>());
     }
@@ -81,7 +81,7 @@ public class DeleteVehicleDocumentCommandHandlerTests
         // Assert
         result.HasError().Should().BeTrue();
         result.Error.Should().Be(error);
-        _documentRepository.DidNotReceiveWithAnyArgs().DeleteAsync(default!, default);
+        await _documentRepository.DidNotReceiveWithAnyArgs().DeleteAsync(default!, default);
         await _fileStorage.DidNotReceiveWithAnyArgs().DeleteFileAsync(default!, default);
     }
 
@@ -98,7 +98,7 @@ public class DeleteVehicleDocumentCommandHandlerTests
         // Assert
         result.HasError().Should().BeTrue();
         result.Error!.Code.Should().Be(EErrorCode.NotFoundError);
-        _documentRepository.DidNotReceiveWithAnyArgs().DeleteAsync(default!, default);
+        await _documentRepository.DidNotReceiveWithAnyArgs().DeleteAsync(default!, default);
     }
 
     [Fact]
@@ -119,7 +119,7 @@ public class DeleteVehicleDocumentCommandHandlerTests
 
         // Assert
         await act.Should().ThrowAsync<UnauthorizedAccessException>();
-        _documentRepository.DidNotReceiveWithAnyArgs().DeleteAsync(default!, default);
+        await _documentRepository.DidNotReceiveWithAnyArgs().DeleteAsync(default!, default);
         await _fileStorage.DidNotReceiveWithAnyArgs().DeleteFileAsync(default!, default);
     }
 
@@ -138,7 +138,7 @@ public class DeleteVehicleDocumentCommandHandlerTests
         result.HasError().Should().BeTrue();
         result.Error.Should().Be(storageError);
 
-        _documentRepository.Received(1).DeleteAsync(_document, Arg.Any<CancellationToken>());
+        await _documentRepository.Received(1).DeleteAsync(_document, Arg.Any<CancellationToken>());
         await _documentRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 }

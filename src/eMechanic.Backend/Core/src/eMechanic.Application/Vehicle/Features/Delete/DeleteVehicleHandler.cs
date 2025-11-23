@@ -28,7 +28,7 @@ public sealed class DeleteVehicleHandler : IResultCommandHandler<DeleteVehicleCo
             return new Error(EErrorCode.NotFoundError, $"Vehicle with Id '{request.Id}' not found.");
         }
 
-        _vehicleRepository.DeleteAsync(vehicle, cancellationToken);
+        await _vehicleRepository.DeleteAsync(vehicle, cancellationToken);
         await _vehicleRepository.SaveChangesAsync(cancellationToken);
 
         return Result.Success;

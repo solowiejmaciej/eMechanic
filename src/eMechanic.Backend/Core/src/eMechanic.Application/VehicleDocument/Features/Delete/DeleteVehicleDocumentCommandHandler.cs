@@ -52,7 +52,7 @@ internal sealed class DeleteVehicleDocumentCommandHandler : IResultCommandHandle
         }
 
         document.RaiseDeletedEvent();
-        _documentRepository.DeleteAsync(document, cancellationToken);
+        await _documentRepository.DeleteAsync(document, cancellationToken);
         await _documentRepository.SaveChangesAsync(cancellationToken);
 
         var deleteResult = await _fileStorage.DeleteFileAsync(document.FullPath, cancellationToken);

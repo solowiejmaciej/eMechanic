@@ -16,11 +16,11 @@ public sealed class GetRepairRequestsForWorkshopFeature : IFeature
     {
         app.MapGet(RepairRequestPrefix.GET_BY_WORKSHOP_ID, async (
                 [AsParameters] PaginationParameters pagination,
-                ISender sender,
+                IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
                 var query = new GetRepairRequestsForWorkshopQuery(pagination);
-                var result = await sender.Send(query, cancellationToken);
+                var result = await mediator.Send(query, cancellationToken);
                 return result.ToStatusCode(Results.Ok, MapError);
             })
             .WithName("GetRepairRequestsForWorkshop")

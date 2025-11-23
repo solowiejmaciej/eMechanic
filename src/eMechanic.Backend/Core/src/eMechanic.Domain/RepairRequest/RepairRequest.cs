@@ -23,6 +23,7 @@ public class RepairRequest : AggregateRoot, IVehicleReference, IWorkshopReferenc
 
     public ERepairRequestStatus Status { get; private set; }
     public string? RejectionReason { get; private set; }
+    public string? SummaryReport { get; private set; }
 
     private RepairRequest() { }
 
@@ -117,4 +118,5 @@ public class RepairRequest : AggregateRoot, IVehicleReference, IWorkshopReferenc
         return Result.Success;
     }
 
+    public void SetSummaryReport(string summaryReport) => SummaryReport = summaryReport;
 }

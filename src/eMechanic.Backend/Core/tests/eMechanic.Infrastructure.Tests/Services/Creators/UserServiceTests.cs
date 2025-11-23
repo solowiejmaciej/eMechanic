@@ -185,7 +185,7 @@ public class UserServiceTests
         await _userManager.DidNotReceiveWithAnyArgs().SetEmailAsync(default!, default!);
         await _userManager.DidNotReceiveWithAnyArgs().SetUserNameAsync(default!, default!);
 
-        _userRepository.Received(1).UpdateAsync(Arg.Is<User>(u =>
+        await _userRepository.Received(1).UpdateAsync(Arg.Is<User>(u =>
             u.FirstName == newFirstName &&
             u.LastName == newLastName &&
             u.Email == TEST_EMAIL
@@ -225,7 +225,7 @@ public class UserServiceTests
         await _userManager.Received(1).SetEmailAsync(_fakeIdentity, newEmail);
         await _userManager.Received(1).SetUserNameAsync(_fakeIdentity, newEmail);
 
-        _userRepository.Received(1).UpdateAsync(Arg.Is<User>(u => u.Email == newEmail), Arg.Any<CancellationToken>());
+        await _userRepository.Received(1).UpdateAsync(Arg.Is<User>(u => u.Email == newEmail), Arg.Any<CancellationToken>());
         await _userRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 

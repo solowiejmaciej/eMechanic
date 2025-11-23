@@ -2,7 +2,9 @@ namespace eMechanic.Infrastructure;
 
 using Application.Abstractions.Identity;
 using Application.Abstractions.Identity.Contexts;
+using Application.Abstractions.Outbox;
 using Application.Abstractions.Storage;
+using Application.Summary;
 using Application.UserRepairPreferences.Repositories;
 using Application.Users.Repositories;
 using Application.Users.Services;
@@ -15,6 +17,11 @@ using DAL;
 using DAL.Transactions;
 using Domain.Vehicle;
 using Identity.Contexts;
+using LLM.Builders;
+using LLM.Enums;
+using LLM.Factories;
+using LLM.Models;
+using LLM.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +29,7 @@ using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Outbox;
 using Repositories;
 using Services;
 using Services.Creators;
@@ -88,6 +96,8 @@ public static class DependencyInjection
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
         services.AddScoped<IFileStorageService, AzureBlobStorageService>();
         services.AddScoped<IVehicleDocumentPathBuilder, VehicleDocumentPathBuilder>();
+        services.AddScoped<IOutboxWriter, OutboxWriter>();
+        services.RegisterLlmServices();
     }
 
     public static void ApplyMigrations(this IServiceProvider services)
@@ -98,5 +108,18 @@ public static class DependencyInjection
 
         var identityDbContext = scope.ServiceProvider.GetRequiredService<IdentityAppDbContext>();
         identityDbContext.Database.Migrate();
+    }
+
+    private static void RegisterLlmServices(this IServiceCollection services)
+    {
+        services.AddSingleton<IModelFactory, ModelFactory>();
+        services.AddSingleton<ChatRequestBuilder>();
+        services.AddScoped<IModel>(provider =>
+        {
+            var factory = provider.GetRequiredService<IModelFactory>();
+            var modelType = ModelProviderType.Google;
+            return factory.GetClient(modelType);
+        });
+        services.AddScoped<IModelFacade, ModelFacade>();
     }
 }
