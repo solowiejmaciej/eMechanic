@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace eMechanic.Integration.Tests.Workshop;
 
-using Application.Workshop.Features.Create;
+using Application.Workshop.Workshop.Features.Create;
 
 public class CreateWorkshopFeatureTests : IClassFixture<IntegrationTestWebAppFactory>
 {

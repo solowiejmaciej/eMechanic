@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using eMechanic.Application.Abstractions.DomainEvents;
 using eMechanic.Application.Abstractions.Outbox;
 using eMechanic.Application.Users.Repositories;
-using eMechanic.Application.Vehicle.Repostories;
 using eMechanic.Domain.RepairRequest.DomainEvents;
 using eMechanic.Events.Events.RepairRequest;
+using Vehicle.Vehicle.Repostories;
 
 public class RepairRequestRejectedEventHandler : IDomainEventHandler<RepairRequestRejectedDomainEvent>
 {

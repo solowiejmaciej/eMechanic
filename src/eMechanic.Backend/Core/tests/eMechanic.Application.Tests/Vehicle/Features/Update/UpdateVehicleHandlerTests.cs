@@ -1,11 +1,12 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Update;
 
-using Application.Vehicle.Repostories;
-using Application.Vehicle.Services;
-using eMechanic.Application.Vehicle.Features.Update;
+using Application.Vehicle.Vehicle.Features.Update;
+using Application.Vehicle.Vehicle.Repostories;
+using Application.Vehicle.Vehicle.Services;
+using Domain.Vehicle.Vehicle;
+using Domain.Vehicle.Vehicle.Enums;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;
-using eMechanic.Domain.Vehicle.Enums;
 using FluentAssertions;
 using NSubstitute;
 using eMechanic.Domain.Tests.Builders;

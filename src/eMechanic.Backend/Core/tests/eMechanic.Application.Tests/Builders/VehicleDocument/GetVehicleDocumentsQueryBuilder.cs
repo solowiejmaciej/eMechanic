@@ -1,9 +1,10 @@
 
 using System;
-using eMechanic.Application.VehicleDocument.Features.Get.All;
 using eMechanic.Common.Result;
 
 namespace eMechanic.Application.Tests.Builders.VehicleDocument;
+
+using Application.Vehicle.Document.Features.Get.All;
 
 public class GetVehicleDocumentsQueryBuilder
 {

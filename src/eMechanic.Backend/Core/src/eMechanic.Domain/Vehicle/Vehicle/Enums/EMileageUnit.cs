@@ -1,4 +1,4 @@
-namespace eMechanic.Domain.Vehicle.Enums;
+namespace eMechanic.Domain.Vehicle.Vehicle.Enums;
 
 public enum EMileageUnit
 {

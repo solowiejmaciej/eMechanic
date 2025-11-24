@@ -1,8 +1,9 @@
 
 using System;
-using eMechanic.Application.Vehicle.Features.Delete;
 
 namespace eMechanic.Application.Tests.Builders.Vehicle;
+
+using Application.Vehicle.Vehicle.Features.Delete;
 
 public class DeleteVehicleCommandBuilder
 {

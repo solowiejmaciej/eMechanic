@@ -1,7 +1,7 @@
 namespace eMechanic.API.Features.Vehicle.Vehicle.Update.Request;
 
-using eMechanic.Application.Vehicle.Features.Update;
-using eMechanic.Domain.Vehicle.Enums;
+using Application.Vehicle.Vehicle.Features.Update;
+using Domain.Vehicle.Vehicle.Enums;
 
 public sealed record UpdateVehicleRequest(
     string Vin,

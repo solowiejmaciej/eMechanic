@@ -1,10 +1,10 @@
 namespace eMechanic.Infrastructure.Repositories;
 
-using Application.Vehicle.Repostories;
+using Application.Vehicle.Vehicle.Repostories;
 using Base;
 using Common.Result;
 using DAL;
-using Domain.VehicleTimeline;
+using Domain.Vehicle.Timeline;
 using Extensions;
 using Microsoft.EntityFrameworkCore;
 using Services;

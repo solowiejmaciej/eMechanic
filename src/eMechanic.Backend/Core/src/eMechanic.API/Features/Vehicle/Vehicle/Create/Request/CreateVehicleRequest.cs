@@ -1,7 +1,7 @@
 namespace eMechanic.API.Features.Vehicle.Vehicle.Create.Request;
 
-using eMechanic.Application.Vehicle.Features.Create;
-using eMechanic.Domain.Vehicle.Enums;
+using Application.Vehicle.Vehicle.Features.Create;
+using Domain.Vehicle.Vehicle.Enums;
 
 public sealed record CreateVehicleRequest(
     string Vin,

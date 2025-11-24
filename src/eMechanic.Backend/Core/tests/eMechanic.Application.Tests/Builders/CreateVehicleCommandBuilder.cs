@@ -1,7 +1,7 @@
 namespace eMechanic.Application.Tests.Builders;
 
-using eMechanic.Application.Vehicle.Features.Create;
-using eMechanic.Domain.Vehicle.Enums;
+using Application.Vehicle.Vehicle.Features.Create;
+using Domain.Vehicle.Vehicle.Enums;
 
 public class CreateVehicleCommandBuilder
 {

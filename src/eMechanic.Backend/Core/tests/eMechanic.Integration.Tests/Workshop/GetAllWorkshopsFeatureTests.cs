@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace eMechanic.Integration.Tests.Workshop;
 
-using API.Features.Workshop.Create;
-using Application.Workshop.Features.Get;
+using API.Features.Workshop.Workshop.Create;
+using Application.Workshop.Workshop.Features.Get;
 using Common.Result;
 
 public class GetAllWorkshopsFeatureTests : IClassFixture<IntegrationTestWebAppFactory>

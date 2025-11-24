@@ -1,11 +1,11 @@
 namespace eMechanic.API.Features.Vehicle.Document.Create;
 
+using Application.Vehicle.Document.Features.Create;
+using Domain.Vehicle.Documents.Enums;
 using eMechanic.API.Constans;
 using eMechanic.API.Security;
-using eMechanic.Application.VehicleDocument.Features.Create;
 using eMechanic.Common.Result;
 using eMechanic.Common.Web;
-using eMechanic.Domain.VehicleDocument.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

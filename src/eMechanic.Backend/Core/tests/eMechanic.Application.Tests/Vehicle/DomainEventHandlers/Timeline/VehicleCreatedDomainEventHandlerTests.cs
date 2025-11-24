@@ -1,11 +1,11 @@
 namespace eMechanic.Application.Tests.Vehicle.DomainEventHandlers.Timeline;
 
-using Application.Vehicle.Repostories;
-using eMechanic.Application.Vehicle.DomainEventHandlers.Timeline;
+using Application.Vehicle.Timeline.DomainEventHandlers;
+using Application.Vehicle.Vehicle.Repostories;
+using Domain.Vehicle.Timeline;
+using Domain.Vehicle.Vehicle.DomainEvents;
 using eMechanic.Domain.Tests.Builders;
 using eMechanic.Domain.Vehicle;
-using eMechanic.Domain.Vehicle.Enums;
-using eMechanic.Domain.VehicleTimeline;
 using FluentAssertions;
 using NSubstitute;
 

@@ -5,7 +5,7 @@ using Abstractions.Identity.Contexts;
 using Common.CQRS;
 using Common.Result;
 using Repositories;
-using Vehicle.Services;
+using Vehicle.Vehicle.Services;
 
 public sealed class GetRepairRequestsForUserVehicleHandler : IResultQueryHandler<GetRepairRequestsForUserVehicleQuery, PaginationResult<RepairRequestResponse>>
 {

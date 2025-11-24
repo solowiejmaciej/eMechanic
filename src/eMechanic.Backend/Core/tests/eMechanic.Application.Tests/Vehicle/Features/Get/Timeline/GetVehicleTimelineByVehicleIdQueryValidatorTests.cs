@@ -2,7 +2,7 @@ namespace eMechanic.Application.Tests.Vehicle.Features.Get.Timeline;
 
 using System;
 using Application.Tests.Builders;
-using eMechanic.Application.Vehicle.Features.Get.Timeline;
+using Application.Vehicle.Timeline.Features.Get;
 using eMechanic.Common.Result;
 using FluentValidation.TestHelper;
 

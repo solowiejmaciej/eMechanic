@@ -8,7 +8,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using RepairRequest.Services;
-using Vehicle.Services;
+using Vehicle.Vehicle.Services;
 
 public static class DependencyInjection
 {

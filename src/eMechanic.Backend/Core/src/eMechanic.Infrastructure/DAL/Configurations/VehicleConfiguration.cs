@@ -2,7 +2,9 @@
 namespace eMechanic.Infrastructure.DAL.Configurations;
 
 using Domain.Vehicle;
-using Domain.Vehicle.ValueObjects; // Upewnij się, że są usingi dla Value Objects
+using Domain.Vehicle.Vehicle;
+using Domain.Vehicle.Vehicle.ValueObjects;
+// Upewnij się, że są usingi dla Value Objects
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

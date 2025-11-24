@@ -2,8 +2,8 @@ namespace eMechanic.Infrastructure.Tests.Services.Creators;
 
 using Application.Abstractions.Identity;
 using Application.Identity;
-using Application.Workshop.Features.Update;
-using Application.Workshop.Repositories;
+using Application.Workshop.Workshop.Features.Update;
+using Application.Workshop.Workshop.Repositories;
 using Common.Result;
 using Common.Result.Fields;
 using Domain.Tests.Builders;

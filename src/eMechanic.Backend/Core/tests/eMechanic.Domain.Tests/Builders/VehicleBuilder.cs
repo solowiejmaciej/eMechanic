@@ -3,7 +3,8 @@ namespace eMechanic.Domain.Tests.Builders;
 using System;
 using Common.Result;
 using Domain.Vehicle;
-using Domain.Vehicle.Enums;
+using Domain.Vehicle.Vehicle;
+using Domain.Vehicle.Vehicle.Enums;
 
 public class VehicleBuilder
 {

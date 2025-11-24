@@ -1,3 +1,5 @@
+namespace eMechanic.Application.Tests.RepairRequest.Features.Summarize;
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,8 +13,6 @@ using eMechanic.Domain.Tests.Builders;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
-
-namespace eMechanic.Application.Tests.RepairRequest;
 
 public class SummarizeRepairRequestCommandHandlerTests
 {

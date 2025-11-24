@@ -1,4 +1,4 @@
-namespace eMechanic.Domain.References.Identity;
+namespace eMechanic.Domain.Shared.References.Identity;
 
 public interface IIdentityReference
 {

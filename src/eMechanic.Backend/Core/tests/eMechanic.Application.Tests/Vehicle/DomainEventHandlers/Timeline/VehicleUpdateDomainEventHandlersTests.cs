@@ -2,13 +2,13 @@ namespace eMechanic.Application.Tests.Vehicle.DomainEventHandlers.Timeline;
 
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Vehicle.DomainEventHandlers;
-using Application.Vehicle.DomainEventHandlers.Timeline;
-using Application.Vehicle.Repostories;
+using Application.Vehicle.Timeline.DomainEventHandlers;
+using Application.Vehicle.Vehicle.Repostories;
 using Domain.Vehicle;
-using Domain.Vehicle.Enums;
-using Domain.Vehicle.ValueObjects;
-using Domain.VehicleTimeline;
+using Domain.Vehicle.Timeline;
+using Domain.Vehicle.Vehicle.DomainEvents;
+using Domain.Vehicle.Vehicle.Enums;
+using Domain.Vehicle.Vehicle.ValueObjects;
 using FluentAssertions;
 using NSubstitute;
 

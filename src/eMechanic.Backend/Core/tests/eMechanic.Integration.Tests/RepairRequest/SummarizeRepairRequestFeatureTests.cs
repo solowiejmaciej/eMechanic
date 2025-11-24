@@ -2,11 +2,11 @@ namespace eMechanic.Integration.Tests.RepairRequest;
 
 using System.Net;
 using System.Net.Http.Json;
+using Domain.Vehicle.Vehicle.Enums;
 using eMechanic.API.Constans;
 using eMechanic.API.Features.RepairRequest;
 using eMechanic.API.Features.Vehicle;
 using eMechanic.Application.RepairRequest.Features.Create;
-using eMechanic.Domain.Vehicle.Enums;
 using eMechanic.API.Features.Vehicle.Vehicle.Create.Request;
 using FluentAssertions;
 using Helpers;

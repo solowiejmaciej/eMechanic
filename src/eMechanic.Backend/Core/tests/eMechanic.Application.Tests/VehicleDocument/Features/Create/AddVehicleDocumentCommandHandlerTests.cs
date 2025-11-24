@@ -2,10 +2,12 @@ namespace eMechanic.Application.Tests.VehicleDocument.Features.Create;
 
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Vehicle.Document.Features.Create;
+using Application.Vehicle.Document.Repositories;
+using Application.Vehicle.Vehicle.Services;
+using Domain.Vehicle.Documents;
+using Domain.Vehicle.Vehicle;
 using eMechanic.Application.Abstractions.Storage;
-using eMechanic.Application.Vehicle.Services;
-using eMechanic.Application.VehicleDocument.Features.Create;
-using eMechanic.Application.VehicleDocument.Repositories;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Tests.Builders;
 using eMechanic.Domain.Vehicle;
@@ -65,7 +67,7 @@ public class AddVehicleDocumentCommandHandlerTests
         result.Value.Should().NotBeEmpty();
 
         await _fileStorage.Received(1).UploadFileAsync(EXPECTED_PATH, _mockFile, Arg.Any<CancellationToken>());
-        await _documentRepository.Received(1).AddAsync(Arg.Is<Domain.VehicleDocument.VehicleDocument>(
+        await _documentRepository.Received(1).AddAsync(Arg.Is<VehicleDocument>(
             d => d.VehicleId == _vehicleId && d.FullPath == EXPECTED_PATH
         ), Arg.Any<CancellationToken>());
         await _documentRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());

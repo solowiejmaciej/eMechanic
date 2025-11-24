@@ -5,9 +5,9 @@ using Abstractions.Identity.Contexts;
 using Common.CQRS;
 using Common.Result;
 using Repositories;
-using Vehicle.Services;
 using Domain.RepairRequest;
 using Services;
+using Vehicle.Vehicle.Services;
 
 public sealed class CreateRepairRequestHandler : IResultCommandHandler<CreateRepairRequestCommand, Guid>
 {

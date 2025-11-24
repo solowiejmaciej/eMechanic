@@ -1,10 +1,11 @@
-namespace eMechanic.Domain.Vehicle;
+namespace eMechanic.Domain.Vehicle.Vehicle;
 
 using System;
-using Common.DDD;
-using Common.Result;
+using DomainEvents;
+using eMechanic.Common.DDD;
+using eMechanic.Common.Result;
 using Enums;
-using References.User;
+using Shared.References.User;
 using ValueObjects;
 
 public class Vehicle : AggregateRoot, IUserReferenced

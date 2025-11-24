@@ -1,5 +1,5 @@
-namespace eMechanic.Domain.VehicleDocument.DomainEvents;
+namespace eMechanic.Domain.Vehicle.Documents.DomainEvents;
 
-using Common.DDD;
+using eMechanic.Common.DDD;
 
 public record VehicleDocumentAddedDomainEvent(VehicleDocument Document) : IDomainEvent;

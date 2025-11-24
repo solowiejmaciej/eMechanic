@@ -1,5 +1,7 @@
-namespace eMechanic.Domain.Vehicle.ValueObjects;
-using Common.Result;
+namespace eMechanic.Domain.Vehicle.Vehicle.ValueObjects;
+
+using eMechanic.Common.Result;
+
 public record EngineCapacity
 {
     public decimal Value { get; }

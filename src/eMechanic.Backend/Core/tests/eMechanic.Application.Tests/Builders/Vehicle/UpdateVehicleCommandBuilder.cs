@@ -1,9 +1,10 @@
 
 using System;
-using eMechanic.Application.Vehicle.Features.Update;
-using eMechanic.Domain.Vehicle.Enums;
 
 namespace eMechanic.Application.Tests.Builders.Vehicle;
+
+using Application.Vehicle.Vehicle.Features.Update;
+using Domain.Vehicle.Vehicle.Enums;
 
 public class UpdateVehicleCommandBuilder
 {

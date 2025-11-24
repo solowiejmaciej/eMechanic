@@ -1,6 +1,6 @@
-namespace eMechanic.Domain.Vehicle.ValueObjects;
+namespace eMechanic.Domain.Vehicle.Vehicle.ValueObjects;
 
-using Common.Result;
+using eMechanic.Common.Result;
 
 public record Manufacturer
 {

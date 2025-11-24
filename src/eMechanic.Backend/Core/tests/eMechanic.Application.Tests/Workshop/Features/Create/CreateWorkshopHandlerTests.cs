@@ -1,8 +1,8 @@
 namespace eMechanic.Application.Tests.Workshop.Features.Create;
 
 using Application.Tests.Builders;
-using Application.Workshop.Features.Create;
-using eMechanic.Application.Workshop.Services;
+using Application.Workshop.Workshop.Features.Create;
+using Application.Workshop.Workshop.Services;
 using eMechanic.Common.Result;
 using NSubstitute;
 

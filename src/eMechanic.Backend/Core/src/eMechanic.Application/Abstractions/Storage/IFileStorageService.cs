@@ -20,4 +20,6 @@ public interface IFileStorageService
         string fullPath,
         CancellationToken cancellationToken,
         string displayNameAs = "");
+
+    Uri GetPublicUrl(string fullPath);
 }

@@ -2,7 +2,7 @@ namespace eMechanic.Application.Tests.Vehicle.Features.Get.GetById;
 
 using System;
 using Application.Tests.Builders;
-using eMechanic.Application.Vehicle.Features.Get.ById;
+using Application.Vehicle.Vehicle.Features.Get.ById;
 using FluentValidation.TestHelper;
 
 public class GetVehicleByIdQueryValidatorTests

@@ -1,6 +1,6 @@
 namespace eMechanic.Infrastructure.Repositories.Extensions;
 
-using Domain.References.User;
+using Domain.Shared.References.User;
 
 public static class UserReferencedExtensions
 {

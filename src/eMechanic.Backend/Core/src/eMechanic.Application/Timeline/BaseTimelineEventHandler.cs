@@ -4,9 +4,9 @@ using System;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Domain.VehicleTimeline;
+using Domain.Vehicle.Timeline;
 using Microsoft.Extensions.Logging;
-using Vehicle.Repostories;
+using Vehicle.Vehicle.Repostories;
 
 public abstract class BaseTimelineEventHandler
 {

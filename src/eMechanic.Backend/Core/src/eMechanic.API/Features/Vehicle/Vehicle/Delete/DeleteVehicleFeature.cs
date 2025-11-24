@@ -1,7 +1,7 @@
 namespace eMechanic.API.Features.Vehicle.Vehicle.Delete;
 
+using Application.Vehicle.Vehicle.Features.Delete;
 using eMechanic.API.Security;
-using eMechanic.Application.Vehicle.Features.Delete;
 using eMechanic.Common.Result;
 using eMechanic.Common.Web;
 using MediatR;

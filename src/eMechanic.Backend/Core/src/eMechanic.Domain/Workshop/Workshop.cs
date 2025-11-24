@@ -2,7 +2,7 @@ namespace eMechanic.Domain.Workshop;
 
 using Common.DDD;
 using DomainEvents;
-using References.Identity;
+using Shared.References.Identity;
 
 public class Workshop : AggregateRoot, IIdentityReference
 {

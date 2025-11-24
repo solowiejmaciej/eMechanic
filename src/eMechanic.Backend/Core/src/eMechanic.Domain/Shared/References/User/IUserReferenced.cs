@@ -1,4 +1,4 @@
-namespace eMechanic.Domain.References.User;
+namespace eMechanic.Domain.Shared.References.User;
 
 public interface IUserReferenced
 {

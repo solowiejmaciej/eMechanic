@@ -1,8 +1,7 @@
-namespace eMechanic.Domain.Vehicle.ValueObjects;
-
+namespace eMechanic.Domain.Vehicle.Vehicle.ValueObjects;
 
 using System.Text.RegularExpressions;
-using Common.Result;
+using eMechanic.Common.Result;
 
 public record LicensePlate
 {

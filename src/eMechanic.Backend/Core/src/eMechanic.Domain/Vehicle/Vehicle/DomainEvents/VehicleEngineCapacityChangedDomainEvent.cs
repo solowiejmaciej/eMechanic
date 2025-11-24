@@ -1,6 +1,6 @@
-namespace eMechanic.Domain.Vehicle;
+namespace eMechanic.Domain.Vehicle.Vehicle.DomainEvents;
 
 using eMechanic.Common.DDD;
-using eMechanic.Domain.Vehicle.ValueObjects;
+using ValueObjects;
 
 public record VehicleEngineCapacityChangedDomainEvent(Guid Id, EngineCapacity? OldCapacity, EngineCapacity? NewCapacity) : IDomainEvent;

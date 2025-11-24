@@ -1,6 +1,6 @@
 namespace eMechanic.Infrastructure.Repositories.Extensions;
 
-using Domain.References.Identity;
+using Domain.Shared.References.Identity;
 
 public static class IdentityReferencedExtensions
 {
