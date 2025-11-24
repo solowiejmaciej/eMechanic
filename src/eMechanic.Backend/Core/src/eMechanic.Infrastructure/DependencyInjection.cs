@@ -8,10 +8,11 @@ using Application.Summary;
 using Application.UserRepairPreferences.Repositories;
 using Application.Users.Repositories;
 using Application.Users.Services;
-using Application.Vehicle.Repostories;
-using Application.VehicleDocument.Repositories;
-using Application.Workshop.Repositories;
-using Application.Workshop.Services;
+using Application.Vehicle.Document.Repositories;
+using Application.Vehicle.Vehicle.Repostories;
+using Application.Workshop.Document.Repositories;
+using Application.Workshop.Workshop.Repositories;
+using Application.Workshop.Workshop.Services;
 using eMechanic.Application.RepairRequest.Repositories;
 using DAL;
 using DAL.Transactions;
@@ -79,6 +80,7 @@ public static class DependencyInjection
         services.AddScoped<IVehicleTimelineRepository, VehicleTimelineRepository>();
         services.AddScoped<IUserRepairPreferencesRepository, UserRepairPreferencesRepositoryRepository>();
         services.AddScoped<IVehicleDocumentRepository, VehicleDocumentRepository>();
+        services.AddScoped<IWorkshopDocumentRepository, WorkshopDocumentRepository>();
         services.AddScoped<IRepairRequestRepository, RepairRequestRepository>();
     }
 
@@ -96,6 +98,7 @@ public static class DependencyInjection
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
         services.AddScoped<IFileStorageService, AzureBlobStorageService>();
         services.AddScoped<IVehicleDocumentPathBuilder, VehicleDocumentPathBuilder>();
+        services.AddScoped<IWorkshopDocumentPathBuilder, WorkshopDocumentPathBuilder>();
         services.AddScoped<IOutboxWriter, OutboxWriter>();
         services.RegisterLlmServices();
     }

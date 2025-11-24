@@ -1,19 +1,17 @@
-using System;
+namespace eMechanic.Application.Tests.RepairRequest.Features.Get.ForUser;
+
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using eMechanic.Application.RepairRequest.Features.Get;
 using eMechanic.Application.RepairRequest.Features.Get.ForUser;
 using eMechanic.Application.RepairRequest.Repositories;
 using eMechanic.Application.Tests.Builders.RepairRequest;
-using eMechanic.Application.Vehicle.Services;
+using eMechanic.Application.Vehicle.Vehicle.Services;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Tests.Builders;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
-
-namespace eMechanic.Application.Tests.RepairRequest;
 
 public class GetRepairRequestsForUserVehicleHandlerTests
 {
@@ -36,7 +34,7 @@ public class GetRepairRequestsForUserVehicleHandlerTests
         var repairRequest = new RepairRequestBuilder().Build();
         var repairRequests = new List<Domain.RepairRequest.RepairRequest> { repairRequest };
         var paginationResult = new PaginationResult<Domain.RepairRequest.RepairRequest>(repairRequests, 1, 1, 10);
-        
+
         _vehicleOwnershipService.VerifyOwnershipAsync(query.VehicleId, CancellationToken.None).Returns(Result.Success);
         _repairRequestRepository.GetForUserVehicleAsync(query.VehicleId, query.Pagination, CancellationToken.None).Returns(paginationResult);
 

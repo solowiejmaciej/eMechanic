@@ -1,8 +1,7 @@
 namespace eMechanic.API.Features.Vehicle.Timeline.Get;
 
+using Application.Vehicle.Timeline.Features.Get;
 using eMechanic.API.Security;
-using eMechanic.Application.Vehicle.Features.Get;
-using eMechanic.Application.Vehicle.Features.Get.Timeline;
 using eMechanic.Common.Result;
 using eMechanic.Common.Web;
 using MediatR;

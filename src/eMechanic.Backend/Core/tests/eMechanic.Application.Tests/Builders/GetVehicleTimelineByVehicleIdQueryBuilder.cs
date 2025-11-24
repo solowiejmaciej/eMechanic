@@ -1,6 +1,6 @@
 namespace eMechanic.Application.Tests.Builders;
 
-using eMechanic.Application.Vehicle.Features.Get.Timeline;
+using Application.Vehicle.Timeline.Features.Get;
 using eMechanic.Common.Result;
 
 public class GetVehicleTimelineByVehicleIdQueryBuilder

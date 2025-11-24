@@ -2,7 +2,7 @@ using FluentValidation.TestHelper;
 
 namespace eMechanic.Application.Tests.Workshop.Features.Update;
 
-using Application.Workshop.Features.Update;
+using Application.Workshop.Workshop.Features.Update;
 
 public class UpdateWorkshopCommandValidatorTests
 {

@@ -1,6 +1,6 @@
 namespace eMechanic.Application.Tests.Builders;
 
-using eMechanic.Application.VehicleDocument.Features.Get.All;
+using Application.Vehicle.Document.Features.Get.All;
 using eMechanic.Common.Result;
 
 public class GetVehicleDocumentsQueryBuilder

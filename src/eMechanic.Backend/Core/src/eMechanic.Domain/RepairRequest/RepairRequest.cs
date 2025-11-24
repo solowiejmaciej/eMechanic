@@ -7,7 +7,7 @@ using Enums;
 using ValueObjects;
 using Shared.ValueObjects;
 using DomainEvents;
-using References.User;
+using Shared.References.User;
 using Shared.References.Vehicle;
 using Shared.References.Workshop;
 

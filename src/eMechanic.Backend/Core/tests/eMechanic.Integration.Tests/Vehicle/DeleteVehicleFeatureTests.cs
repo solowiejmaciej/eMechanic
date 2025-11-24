@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 using API.Constans;
 using API.Features.Vehicle;
 using API.Features.Vehicle.Vehicle.Create.Request;
-using Domain.Vehicle.Enums;
+using Domain.Vehicle.Vehicle.Enums;
 using FluentAssertions;
 using Helpers;
 using TestContainers;

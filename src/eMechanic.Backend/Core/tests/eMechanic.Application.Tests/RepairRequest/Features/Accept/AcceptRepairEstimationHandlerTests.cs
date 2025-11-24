@@ -3,10 +3,11 @@ namespace eMechanic.Application.Tests.RepairRequest.Features.Accept;
 
 using Application.RepairRequest.Features.Accept;
 using Application.RepairRequest.Repositories;
+using Application.Vehicle.Vehicle.Services;
 using Domain.Tests.Builders;
-using Application.Vehicle.Services;
 using Common.Result;
 using Domain.Vehicle;
+using Domain.Vehicle.Vehicle;
 using FluentAssertions;
 using NSubstitute;
 

@@ -1,14 +1,14 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Get.Timeline;
 
 using System.Text.Json;
-using Application.Vehicle.Features.Get.Timeline;
-using Application.Vehicle.Repostories;
-using Application.Vehicle.Services;
+using Application.Vehicle.Timeline.Features.Get;
+using Application.Vehicle.Vehicle.Repostories;
+using Application.Vehicle.Vehicle.Services;
 using Common.Result;
 using Domain.Tests.Builders;
 using Domain.Vehicle;
-using Domain.Vehicle.Enums;
-using Domain.VehicleTimeline;
+using Domain.Vehicle.Timeline;
+using Domain.Vehicle.Vehicle;
 using FluentAssertions;
 using NSubstitute;
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using API.Constans;
 using API.Features.Tokens;
 using API.Features.Workshop;
-using API.Features.Workshop.Update.Request;
+using API.Features.Workshop.Workshop.Update.Request;
 using Application.Token.Features.Create.Workshop;
 using Common.Result.Fields;
 using FluentAssertions;

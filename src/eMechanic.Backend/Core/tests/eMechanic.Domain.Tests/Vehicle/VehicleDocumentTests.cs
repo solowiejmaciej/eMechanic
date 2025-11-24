@@ -1,9 +1,9 @@
 namespace eMechanic.Domain.Tests.Vehicle;
 
+using Domain.Vehicle.Documents.DomainEvents;
+using Domain.Vehicle.Documents.Enums;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Tests.Builders;
-using eMechanic.Domain.VehicleDocument.DomainEvents;
-using eMechanic.Domain.VehicleDocument.Enums;
 using FluentAssertions;
 
 public class VehicleDocumentTests

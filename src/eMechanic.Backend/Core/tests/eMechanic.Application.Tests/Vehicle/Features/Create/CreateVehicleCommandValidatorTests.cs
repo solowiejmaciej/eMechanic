@@ -1,8 +1,8 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Create;
 
 using Application.Tests.Builders;
-using eMechanic.Application.Vehicle.Features.Create;
-using eMechanic.Domain.Vehicle.Enums;
+using Application.Vehicle.Vehicle.Features.Create;
+using Domain.Vehicle.Vehicle.Enums;
 using FluentValidation.TestHelper;
 
 public class CreateVehicleCommandValidatorTests

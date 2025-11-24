@@ -1,7 +1,7 @@
 namespace eMechanic.Application.Tests.Workshop.Features.Create
 {
     using Application.Tests.Builders;
-    using Application.Workshop.Features.Create;
+    using Application.Workshop.Workshop.Features.Create;
     using FluentValidation.TestHelper;
 
     public class CreateWorkshopCommandValidatorTests

@@ -1,10 +1,10 @@
 
-namespace eMechanic.Application.RepairRequest.DomainEventHandlers;
+namespace eMechanic.Application.RepairRequest.DomainEventHandlers.Timeline;
 
-using Application.Abstractions.DomainEvents;
-using Application.Timeline;
-using Application.Vehicle.Repostories;
-using Domain.RepairRequest.DomainEvents;
+using eMechanic.Application.Abstractions.DomainEvents;
+using eMechanic.Application.Timeline;
+using eMechanic.Application.Vehicle.Vehicle.Repostories;
+using eMechanic.Domain.RepairRequest.DomainEvents;
 
 public class RepairRequestCreatedTimelineHandler : BaseTimelineEventHandler,
     IDomainEventHandler<RepairRequestCreatedDomainEvent>

@@ -14,7 +14,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Vehicle\Features\" />
+      <Folder Include="Vehicle\Timeline\Repositories\" />
+      <Folder Include="Vehicle\Vehicle\" />
+      <Folder Include="Vehicle\Vehicle\DomainEventHandlers\" />
+      <Folder Include="Workshop\Workshop\" />
     </ItemGroup>
 
 </Project>

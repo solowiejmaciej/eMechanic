@@ -2,8 +2,8 @@ namespace eMechanic.Domain.Tests.Vehicle.ValueObjects;
 
 
 using Common.Result;
-using Domain.Vehicle.ValueObjects;
-using eMechanic.Domain.Vehicle.Enums;
+using Domain.Vehicle.Vehicle.Enums;
+using Domain.Vehicle.Vehicle.ValueObjects;
 using FluentAssertions;
 
 public class MileageTests

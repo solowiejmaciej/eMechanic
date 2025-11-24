@@ -1,3 +1,5 @@
+namespace eMechanic.Application.Tests.RepairRequest.Features.Get.ForkWorkshop;
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -11,8 +13,6 @@ using eMechanic.Domain.Tests.Builders;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
-
-namespace eMechanic.Application.Tests.RepairRequest;
 
 public class GetRepairRequestsForWorkshopHandlerTests
 {
@@ -36,7 +36,7 @@ public class GetRepairRequestsForWorkshopHandlerTests
         var repairRequest = new RepairRequestBuilder().WithWorkshopId(workshopId).Build();
         var repairRequests = new List<Domain.RepairRequest.RepairRequest> { repairRequest };
         var paginationResult = new PaginationResult<Domain.RepairRequest.RepairRequest>(repairRequests, 1, 1, 10);
-        
+
         _workshopContext.GetWorkshopId().Returns(workshopId);
         _repairRequestRepository.GetForWorkshopAsync(workshopId, query.Pagination, CancellationToken.None).Returns(paginationResult);
 

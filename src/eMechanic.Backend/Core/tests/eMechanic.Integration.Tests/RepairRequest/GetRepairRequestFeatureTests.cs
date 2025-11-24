@@ -8,7 +8,7 @@ using API.Features.Vehicle;
 using Application.RepairRequest.Features.Create;
 using Application.RepairRequest.Features.Get;
 using Common.Result;
-using Domain.Vehicle.Enums;
+using Domain.Vehicle.Vehicle.Enums;
 using eMechanic.API.Features.Vehicle.Vehicle.Create.Request;
 using FluentAssertions;
 using Helpers;

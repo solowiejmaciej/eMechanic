@@ -134,6 +134,15 @@ internal sealed class AzureBlobStorageService : IFileStorageService
         }
     }
 
+    public Uri GetPublicUrl(string fullPath)
+    {
+        var (containerName, blobName) = ResolvePath(fullPath);
+        var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
+        var blobClient = containerClient.GetBlobClient(blobName);
+
+        return blobClient.Uri;
+    }
+
     private (string containerName, string blobName) ResolvePath(string fullPath, bool isDirectory = false)
     {
         var normalizedPath = fullPath.Replace("\\", "/").Trim('/');

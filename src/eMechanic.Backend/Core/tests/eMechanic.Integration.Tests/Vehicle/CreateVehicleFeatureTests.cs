@@ -3,7 +3,7 @@ namespace eMechanic.Integration.Tests.Vehicle;
 using System.Net;
 using System.Net.Http.Json;
 using API.Features.Vehicle.Vehicle.Create.Request;
-using Domain.Vehicle.Enums;
+using Domain.Vehicle.Vehicle.Enums;
 using eMechanic.API.Constans;
 using eMechanic.API.Features.Vehicle;
 using FluentAssertions;

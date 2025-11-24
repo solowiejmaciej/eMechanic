@@ -2,8 +2,8 @@ namespace eMechanic.Infrastructure.Services.Creators;
 
 using System.Collections.ObjectModel;
 using Application.Identity;
-using Application.Workshop.Repositories;
-using Application.Workshop.Services;
+using Application.Workshop.Workshop.Repositories;
+using Application.Workshop.Workshop.Services;
 using Common.Result.Fields;
 using eMechanic.Application.Abstractions.Identity;
 using eMechanic.Common.Result;

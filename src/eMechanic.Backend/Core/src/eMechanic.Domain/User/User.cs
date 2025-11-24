@@ -2,7 +2,7 @@ namespace eMechanic.Domain.User;
 
 using DomainEvents;
 using eMechanic.Common.DDD;
-using References.Identity;
+using Shared.References.Identity;
 
 public class User : AggregateRoot, IIdentityReference
 {

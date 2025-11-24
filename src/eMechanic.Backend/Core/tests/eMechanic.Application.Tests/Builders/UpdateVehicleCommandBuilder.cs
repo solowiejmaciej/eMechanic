@@ -1,7 +1,7 @@
 namespace eMechanic.Application.Tests.Builders;
 
-using eMechanic.Application.Vehicle.Features.Update;
-using eMechanic.Domain.Vehicle.Enums;
+using Application.Vehicle.Vehicle.Features.Update;
+using Domain.Vehicle.Vehicle.Enums;
 
 public class UpdateVehicleCommandBuilder
 {

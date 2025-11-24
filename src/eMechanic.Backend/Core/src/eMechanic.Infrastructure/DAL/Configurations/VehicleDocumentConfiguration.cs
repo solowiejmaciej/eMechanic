@@ -1,6 +1,6 @@
 namespace eMechanic.Infrastructure.DAL.Configurations;
 
-using Domain.VehicleDocument;
+using Domain.Vehicle.Documents;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

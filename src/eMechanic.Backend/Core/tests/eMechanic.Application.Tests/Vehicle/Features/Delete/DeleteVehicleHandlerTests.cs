@@ -1,9 +1,10 @@
 
 namespace eMechanic.Application.Tests.Vehicle.Features.Delete;
 
-using Application.Vehicle.Repostories;
+using Application.Vehicle.Vehicle.Features.Delete;
+using Application.Vehicle.Vehicle.Repostories;
+using Domain.Vehicle.Vehicle;
 using eMechanic.Application.Abstractions.Identity.Contexts;
-using eMechanic.Application.Vehicle.Features.Delete;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;
 using FluentAssertions;

@@ -2,7 +2,7 @@ namespace eMechanic.Infrastructure.Tests.Services.Identity;
 
 using Application.Identity;
 using Application.Users.Repositories;
-using Application.Workshop.Repositories;
+using Application.Workshop.Workshop.Repositories;
 using Common.Result;
 using Common.Result.Fields;
 using Domain.User;

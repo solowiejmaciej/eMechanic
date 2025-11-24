@@ -1,12 +1,13 @@
 
 using System;
 using System.IO;
-using eMechanic.Application.VehicleDocument.Features.Create;
-using eMechanic.Domain.VehicleDocument.Enums;
 using Microsoft.AspNetCore.Http;
 using NSubstitute;
 
 namespace eMechanic.Application.Tests.Builders.VehicleDocument;
+
+using Application.Vehicle.Document.Features.Create;
+using Domain.Vehicle.Documents.Enums;
 
 public class AddVehicleDocumentCommandBuilder
 {
@@ -21,7 +22,7 @@ public class AddVehicleDocumentCommandBuilder
         _file.Length.Returns(1024);
         _file.OpenReadStream().Returns(new MemoryStream());
     }
-    
+
     public AddVehicleDocumentCommandBuilder WithVehicleId(Guid vehicleId)
     {
         _vehicleId = vehicleId;

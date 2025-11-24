@@ -1,8 +1,9 @@
 namespace eMechanic.Domain.UserRepairPreferences;
 
 using Common.DDD;
-using Domain.References.User;
 using Enums;
+using Shared.References.User;
+
 public class UserRepairPreferences : AggregateRoot, IUserReferenced
 {
     public Guid UserId { get; private set; }

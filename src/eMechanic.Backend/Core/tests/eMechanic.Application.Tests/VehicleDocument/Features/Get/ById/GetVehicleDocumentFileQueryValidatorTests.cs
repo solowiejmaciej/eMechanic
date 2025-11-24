@@ -1,7 +1,7 @@
 namespace eMechanic.Application.Tests.VehicleDocument.Features.Get.ById;
 
+using Application.Vehicle.Document.Features.Get.ById;
 using eMechanic.Application.Tests.Builders;
-using eMechanic.Application.VehicleDocument.Features.Get.ById;
 using FluentValidation.TestHelper;
 
 public class GetVehicleDocumentFileQueryValidatorTests
