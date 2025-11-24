@@ -134,13 +134,13 @@ public static class DependencyInjection
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString!))
                 };
             });
-            
+
         services.AddCors(options =>
         {
             options.AddPolicy("AllowAll",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:5173", "http://localhost:5178")
+                    builder.WithOrigins("http://localhost:5173", "http://localhost:5178", "https://e-mechanic.net", "http://e-mechanic.net")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
