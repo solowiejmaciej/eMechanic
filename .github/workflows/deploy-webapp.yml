@@ -29,3 +29,5 @@ jobs:
           app_location: "src/eMechanic.Frontend"
           api_location: ""
           output_location: "dist"
+        env: 
+          VITE_API_URL: ${{ secrets.CORE_API_URL }}
