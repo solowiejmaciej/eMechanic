@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '../components/layout/Navbar';
 import HeroSection from '../features/landing/HeroSection';
 import FeaturesSection from '../features/landing/FeaturesSection';
+import Footer from '../components/layout/Footer';
 
 const LandingPage = () => {
   return (
@@ -11,10 +12,7 @@ const LandingPage = () => {
         <HeroSection />
         <FeaturesSection />
       </main>
-      {/* Footer placeholder */}
-      <footer className="bg-transparent text-slate-400 py-12 text-center">
-        <p>© 2024 eMechanic. All rights reserved.</p>
-      </footer>
+      <Footer />
     </div>
   );
 };

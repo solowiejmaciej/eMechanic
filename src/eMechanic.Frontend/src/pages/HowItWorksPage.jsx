@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, Calendar, Wrench, CheckCircle } from 'lucide-react';
 import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
 
 const Step = ({ number, icon: Icon, title, description }) => (
   <div className="flex flex-col items-center text-center max-w-sm mx-auto">
@@ -60,6 +61,7 @@ const HowItWorksPage = () => {
           />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

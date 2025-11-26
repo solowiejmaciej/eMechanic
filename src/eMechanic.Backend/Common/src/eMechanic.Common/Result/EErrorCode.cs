@@ -7,5 +7,5 @@ public enum EErrorCode
     InternalServerError = 2,
     ValidationError = 3,
     NotImplementedError = 4,
-    UnauthorizedError = 5
+    UnauthorizedError = 5,
 }

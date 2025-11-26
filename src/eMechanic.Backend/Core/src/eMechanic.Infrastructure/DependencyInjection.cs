@@ -35,6 +35,7 @@ using Repositories;
 using Services;
 using Services.Creators;
 using Services.Identity;
+using Services.Identity.ExternalProviders.Google;
 using Storage;
 using Storage.Builders;
 
@@ -100,6 +101,7 @@ public static class DependencyInjection
         services.AddScoped<IVehicleDocumentPathBuilder, VehicleDocumentPathBuilder>();
         services.AddScoped<IWorkshopDocumentPathBuilder, WorkshopDocumentPathBuilder>();
         services.AddScoped<IOutboxWriter, OutboxWriter>();
+        services.AddScoped<IGoogleAuthService, GoogleAuthService>();
         services.RegisterLlmServices();
     }
 

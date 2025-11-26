@@ -5,6 +5,7 @@ using eMechanic.Application.Users.Features.Create;
 using eMechanic.Application.Users.Services;
 using eMechanic.Common.Result;
 using NSubstitute;
+using Xunit;
 
 public class CreateUserHandlerTests
 {
@@ -23,14 +24,17 @@ public class CreateUserHandlerTests
         // Arrange
         var command = new CreateUserCommandBuilder().Build();
         var newUserId = Guid.NewGuid();
+        var newIdentityId = Guid.NewGuid();
 
         _userService.CreateUserWithIdentityAsync(
             command.Email,
             command.Password,
             command.FirstName,
             command.LastName,
+            Arg.Any<string?>(),
+            Arg.Any<string?>(),
             Arg.Any<CancellationToken>())
-        .Returns(newUserId);
+        .Returns((newUserId, newIdentityId));
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -52,6 +56,8 @@ public class CreateUserHandlerTests
             command.Password,
             command.FirstName,
             command.LastName,
+            Arg.Any<string?>(),
+            Arg.Any<string?>(),
             Arg.Any<CancellationToken>())
         .Returns(error);
 

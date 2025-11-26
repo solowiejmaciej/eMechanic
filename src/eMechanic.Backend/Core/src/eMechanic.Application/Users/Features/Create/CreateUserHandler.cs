@@ -16,8 +16,13 @@ public class CreateUserHandler : IResultCommandHandler<CreateUserCommand, Guid>
     public async Task<Result<Guid, Error>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var result = await _userService
-            .CreateUserWithIdentityAsync(request.Email, request.Password, request.FirstName, request.LastName, cancellationToken);
+            .CreateUserWithIdentityAsync(request.Email, request.Password, request.FirstName, request.LastName, string.Empty, string.Empty, cancellationToken);
 
-        return result;
+        if (result.HasError())
+        {
+            return result.Error!;
+        }
+
+        return result.Value.UserId;
     }
 }

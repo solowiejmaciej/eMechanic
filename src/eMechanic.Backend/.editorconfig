@@ -124,5 +124,8 @@ dotnet_diagnostic.CA5404.severity = none
 dotnet_diagnostic.CA1308.severity = none
 dotnet_diagnostic.CA1034.severity = none
 dotnet_diagnostic.CA2000.severity = none
+dotnet_diagnostic.CA1054.severity = none
+dotnet_diagnostic.CA1056.severity = none
+dotnet_diagnostic.CA2208.severity = none
 
 

@@ -12,6 +12,7 @@ var redisCache = builder.AddRedis("emechanic-cache");
 var serviceBus = builder.AddConnectionString("AzureServiceBus");
 var azureStorage = builder.AddConnectionString("Storage");
 var googleApiKey = builder.AddParameter("google-api-key", secret: true);
+var googleClientId = builder.AddParameter("google-client-id", secret: true);
 
 builder
     .AddProject<Projects.eMechanic_API>("eMechanic-Core")
@@ -19,6 +20,7 @@ builder
     .WithReference(redisCache)
     .WithReference(azureStorage)
     .WithEnvironment("LLMProviders__Google__ApiKey", googleApiKey)
+    .WithEnvironment("Authentication__Google__ClientId", googleClientId)
     .WaitFor(postgresServer);
 
 builder.AddAzureFunctionsProject<Projects.eMechanic_OutboxPublisher>("outbox-publisher")
