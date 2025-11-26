@@ -1,11 +1,57 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, ArrowRight, Wrench, User } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Wrench, User, AlertCircle } from 'lucide-react';
+import { GoogleLogin } from '@react-oauth/google';
 import Navbar from '../../components/layout/Navbar';
+import { useAuth } from '../../context/AuthContext';
 
 const LoginPage = () => {
   const [activeTab, setActiveTab] = useState('user'); // 'user' or 'workshop'
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const { login, googleLogin } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const result = await login(email, password);
+      if (result.success) {
+        navigate('/home');
+      } else {
+        setError(result.error);
+      }
+    } catch (err) {
+      setError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setError('');
+    setIsLoading(true);
+    try {
+      // credentialResponse.credential is the ID Token (JWT)
+      const result = await googleLogin(credentialResponse.credential);
+      if (result.success) {
+        navigate('/home');
+      } else {
+        setError(result.error);
+      }
+    } catch (err) {
+      setError('Google login failed');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-dark-lighter transition-colors">
@@ -16,6 +62,13 @@ const LoginPage = () => {
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Welcome Back</h2>
             <p className="text-slate-600 dark:text-slate-400">Sign in to your account</p>
           </div>
+
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl flex items-center gap-3 text-red-600 dark:text-red-400">
+              <AlertCircle className="w-5 h-5 flex-shrink-0" />
+              <p className="text-sm font-medium">{error}</p>
+            </div>
+          )}
 
           {/* Tabs */}
           <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl mb-8">
@@ -43,7 +96,7 @@ const LoginPage = () => {
             </button>
           </div>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleLogin}>
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Email Address
@@ -52,6 +105,9 @@ const LoginPage = () => {
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                   className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:text-white"
                   placeholder="name@example.com"
                 />
@@ -66,6 +122,9 @@ const LoginPage = () => {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                   className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:text-white"
                   placeholder="••••••••"
                 />
@@ -84,34 +143,42 @@ const LoginPage = () => {
 
             <button
               type="submit"
+              disabled={isLoading}
               className={`w-full py-3.5 px-4 rounded-xl text-white font-medium shadow-lg transition-all flex items-center justify-center gap-2 group ${
                 activeTab === 'user'
                   ? 'bg-primary hover:bg-primary-hover shadow-primary/25 hover:shadow-primary/40'
                   : 'bg-secondary hover:bg-secondary-hover shadow-secondary/25 hover:shadow-secondary/40'
-              }`}
+              } ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-              Sign In
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              {isLoading ? 'Signing in...' : 'Sign In'}
+              {!isLoading && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
             </button>
           </form>
 
-          {activeTab === 'user' && (
-            <>
-              <div className="relative my-8">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-200 dark:border-slate-700"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white dark:bg-dark-card text-slate-500">Or continue with</span>
-                </div>
+          <div className="mt-8">
+            <div className="relative mb-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200 dark:border-slate-700"></div>
               </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white dark:bg-dark-card text-slate-500 dark:text-slate-400">
+                  Or continue with
+                </span>
+              </div>
+            </div>
 
-              <button className="w-full py-3 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-3">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
-                Sign in with Google
-              </button>
-            </>
-          )}
+            <div className="flex justify-center">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => setError('Google login failed')}
+                theme="outline"
+                size="large"
+                width="100%"
+                text="signin_with"
+                shape="pill"
+              />
+            </div>
+          </div>
 
           <p className="mt-8 text-center text-sm text-slate-600 dark:text-slate-400">
             Don't have an account?{' '}

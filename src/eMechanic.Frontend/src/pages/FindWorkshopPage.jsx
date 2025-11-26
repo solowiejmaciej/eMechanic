@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Search, MapPin, Star, Filter } from 'lucide-react';
 import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
 import { getWorkshops, getWorkshopDocuments } from '../api/workshops';
 
 const WorkshopCard = ({ workshop }) => {
@@ -149,6 +150,7 @@ const FindWorkshopPage = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
