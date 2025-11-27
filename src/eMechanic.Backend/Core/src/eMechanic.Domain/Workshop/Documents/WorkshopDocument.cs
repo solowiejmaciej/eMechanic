@@ -1,5 +1,6 @@
 namespace eMechanic.Domain.Workshop.Documents;
 
+using Common.Attributes;
 using Common.DDD;
 using Common.Result;
 using Enums;
@@ -9,6 +10,8 @@ public class WorkshopDocument : AggregateRoot, IWorkshopReference
 {
     public Guid WorkshopId { get; private set; }
     public string FullPath { get; private set; }
+
+    [Searchable]
     public string FileName { get; private set; }
     public EWorkshopDocumentType DocumentType { get; private set; }
 

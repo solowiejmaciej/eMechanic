@@ -56,21 +56,21 @@ Accept: application/json
 
 ### Register Workshop
 # @name RegisterWorkshop
-POST {{base_url}}/workshops/register
+POST {{base_url}}/workshops
 Content-Type: application/json
 
 {
-  "email": "workshop_2@example.com",
-  "password": "Password123!",
-  "contactEmail": "contact_{{$randomInt}}@workshop.com",
-  "name": "Super Warsztat",
-  "displayName": "SuperW_2",
-  "phoneNumber": "123456789",
-  "address": "ul. Testowa 1",
-  "city": "Poznań",
-  "postalCode": "60-123",
-  "country": "Polska"
-}
+    "email": "warsztat.wola@emechanic.pl",
+    "password": "P@ssword123!",
+    "contactEmail": "kontakt@auto-wola.pl",
+    "name": "Auto Serwis Wola Sp. z o.o.",
+    "displayName": "Auto Serwis Wola",
+    "phoneNumber": "+48221234567",
+    "address": "ul. Górczewska 124",
+    "city": "Warszawa",
+    "postalCode": "01-460",
+    "country": "Poland"
+},
 
 ### Login Workshop (and capture token)
 # @name LoginWorkshop
