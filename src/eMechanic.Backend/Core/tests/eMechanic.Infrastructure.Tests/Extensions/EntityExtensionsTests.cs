@@ -20,6 +20,20 @@ public class EntityExtensionsTests
         public string SecretField { get; set; } = string.Empty;
     }
 
+    private sealed class TestValueObject
+    {
+        public string Value { get; set; }
+    }
+
+    private sealed class ComplexTestEntity
+    {
+        [Searchable]
+        public string? NullableString { get; set; }
+
+        [Searchable]
+        public TestValueObject? SearchableVo { get; set; }
+    }
+
     [Fact]
     public void ApplySearch_ShouldFilterBySearchPhrase_OnMarkedProperties()
     {
@@ -77,5 +91,40 @@ public class EntityExtensionsTests
         var data = new List<TestEntity> { new() { Name = "A" } }.AsQueryable();
         var result = data.ApplySearch("").ToList();
         result.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void ApplySearch_ShouldHandle_NullableProperties()
+    {
+        // Arrange
+        var data = new List<ComplexTestEntity>
+        {
+            new() { NullableString = "findme" },
+            new() { NullableString = null }
+        }.AsQueryable();
+
+        // Act
+        var result = data.ApplySearch("findme").ToList();
+
+        // Assert
+        result.Should().ContainSingle();
+    }
+
+    [Fact]
+    public void ApplySearch_ShouldWorkWithValueObjects()
+    {
+        // Arrange
+        var data = new List<ComplexTestEntity>
+        {
+            new() { SearchableVo = new TestValueObject { Value = "findme" } },
+            new() { SearchableVo = new TestValueObject { Value = "ignore" } },
+            new() { SearchableVo = null }
+        }.AsQueryable();
+
+        // Act
+        var result = data.ApplySearch("findme").ToList();
+
+        // Assert
+        result.Should().ContainSingle();
     }
 }
