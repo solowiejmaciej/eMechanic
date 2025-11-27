@@ -102,6 +102,7 @@ public static class DependencyInjection
         services.AddScoped<IWorkshopDocumentPathBuilder, WorkshopDocumentPathBuilder>();
         services.AddScoped<IOutboxWriter, OutboxWriter>();
         services.AddScoped<IGoogleAuthService, GoogleAuthService>();
+        services.AddScoped<IGoogleTokenValidator, GoogleTokenValidator>();
         services.RegisterLlmServices();
     }
 

@@ -1,6 +1,7 @@
 namespace eMechanic.Domain.Vehicle.Vehicle;
 
 using System;
+using Common.Attributes;
 using DomainEvents;
 using eMechanic.Common.DDD;
 using eMechanic.Common.Result;
@@ -11,12 +12,23 @@ using ValueObjects;
 public class Vehicle : AggregateRoot, IUserReferenced
 {
     public Guid UserId { get; private set; }
+
+
+    [Searchable]
     public Vin Vin { get; private set; }
+
+    [Searchable]
     public Manufacturer Manufacturer { get; private set; }
+
+    [Searchable]
     public Model Model { get; private set; }
+
+    [Searchable]
     public ProductionYear ProductionYear { get; private set; }
     public EngineCapacity? EngineCapacity { get; private set; }
     public Mileage Mileage { get; private set; }
+
+    [Searchable]
     public LicensePlate LicensePlate { get; private set; }
     public HorsePower HorsePower { get; private set; }
     public EFuelType FuelType { get; private set; }

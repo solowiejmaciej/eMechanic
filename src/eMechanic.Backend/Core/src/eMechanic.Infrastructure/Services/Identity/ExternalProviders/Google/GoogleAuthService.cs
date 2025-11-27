@@ -5,43 +5,39 @@ using eMechanic.Application.Abstractions.Identity;
 using eMechanic.Application.Identity;
 using eMechanic.Application.Users.Services;
 using eMechanic.Common.Result;
-using global::Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 internal sealed class GoogleAuthService : IGoogleAuthService
 {
-    private readonly string _clientId;
-
     private readonly UserManager<Infrastructure.Identity.Identity> _userManager;
     private readonly IUserService _userService;
-    private readonly ITokenGenerator _tokenGenerator;
     private readonly IUserRepository _userRepository;
     private readonly ILogger<GoogleAuthService> _logger;
+    private readonly IGoogleTokenValidator _googleTokenValidator;
 
     public GoogleAuthService(UserManager<Infrastructure.Identity.Identity> userManager,
         IUserService userService,
-        ITokenGenerator tokenGenerator,
-        IConfiguration configuration,
         IUserRepository userRepository,
-        ILogger<GoogleAuthService> logger)
+        ILogger<GoogleAuthService> logger,
+        IGoogleTokenValidator googleTokenValidator)
     {
         _userManager = userManager;
         _userService = userService;
-        _tokenGenerator = tokenGenerator;
         _userRepository = userRepository;
         _logger = logger;
-        _clientId = configuration["Authentication:Google:ClientId"]
-                    ?? throw new ArgumentNullException("Authentication:Google:ClientId is missing");
+        _googleTokenValidator = googleTokenValidator;
     }
 
     public async Task<Result<AuthenticatedIdentity, Error>> LoginAsync(string idToken, CancellationToken cancellationToken)
     {
         try
         {
-            var settings = new GoogleJsonWebSignature.ValidationSettings { Audience = [_clientId] };
-            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+            var payload = await _googleTokenValidator.ValidateAndGetPayload(idToken);
+            if (payload is null || string.IsNullOrEmpty(payload.Email) || string.IsNullOrEmpty(payload.Subject))
+            {
+                return new Error(EErrorCode.ValidationError, "Provided token is invalid");
+            }
 
             var identityUser = await _userManager.FindByEmailAsync(payload.Email);
 

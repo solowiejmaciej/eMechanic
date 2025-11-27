@@ -1,5 +1,6 @@
 namespace eMechanic.Domain.Vehicle.Documents;
 
+using Common.Attributes;
 using DomainEvents;
 using eMechanic.Common.DDD;
 using eMechanic.Common.Result;
@@ -10,6 +11,8 @@ public class VehicleDocument : AggregateRoot, IVehicleReference
 {
     public Guid VehicleId { get; private set; }
     public string FullPath { get; private set; }
+
+    [Searchable]
     public string OriginalFileName { get; private set; }
     public string ContentType { get; private set; }
     public EVehicleDocumentType DocumentType { get; private set; }
