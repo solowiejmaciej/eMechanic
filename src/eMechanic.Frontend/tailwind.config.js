@@ -38,4 +38,10 @@ export default {
     },
   },
   plugins: [],
+
+  // --- TUTAJ DODAJESZ TĘ ZMIANĘ ---
+  corePlugins: {
+    preflight: false, // To wyłącza reset stylów, który psuje Chakrę
+  },
+  // --------------------------------
 }
