@@ -17,5 +17,19 @@
   }
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400;
+    
   }
+
+  .chakra-button[data-variant="solid"] {
+    background-color: var(--chakra-colors-brand-solid) !important;
+    color: var(--chakra-colors-brand-contrast) !important;
+}
+
+button {
+    background-color: revert;
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 }

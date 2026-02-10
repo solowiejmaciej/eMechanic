@@ -15,10 +15,14 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import HelpPage from './pages/HelpPage';
 import CookiesPage from './pages/CookiesPage';
+import ChakraHero from './features/landing/ChakraHero';
+import ChakraLandingPage from './pages/ChakraLandingPage';
+import ChakraFeature from './features/landing/ChakraFeature';
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+
 
 function App() {
   return (
@@ -35,6 +39,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/chakrahero" element={<ChakraHero/>}/>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterUserPage />} />
             <Route path="/register-workshop" element={<RegisterWorkshopPage />} />
@@ -47,6 +52,7 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/help" element={<HelpPage />} />
             <Route path="/cookies" element={<CookiesPage />} />
+            <Route path="/chakralp" element={<ChakraLandingPage/>} />
           </Routes>
         </Router>
       </AuthProvider>

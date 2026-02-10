@@ -6,6 +6,7 @@ import ThemeToggle from '../ui/ThemeToggle';
 import logo from '../../assets/logo.png';
 import { useAuth } from '../../context/AuthContext';
 
+
 const Navbar = () => {
   const { user, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
