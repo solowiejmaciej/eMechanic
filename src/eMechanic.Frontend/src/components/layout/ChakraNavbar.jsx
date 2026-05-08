@@ -91,7 +91,7 @@ const ChakraNavbar = () => {
                         {user ? (
 
                             <>
-                                <IconButton p={1} rounded="full" bg={userColor} color="slate.600" position="relative" overflow="hidden" transition="all 0.2s" _hover={{ bg: iconHoverColor }} _dark={{ color: "white" }}>
+                                <IconButton p={1} rounded="full" bg={userColor} color="gray.600" position="relative" overflow="hidden" transition="all 0.2s" _hover={{ bg: iconHoverColor }} _dark={{ color: "white" }}>
                                     <Icon as={Cog} />
                                 </IconButton>
                                 <Button bg={userColor} onClick={logout} _dark={{ color: "white" }} colorPalette="brand" rounded="full" variant="solid" _hover={{ bg: iconHoverColor }}>
