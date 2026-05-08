@@ -72,8 +72,11 @@ const ChakraFindWorshop = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setPageNumber(1); // Reset to first page on new search
-    fetchWorkshops();
+    if (pageNumber === 1) {
+      fetchWorkshops();
+    } else {
+      setPageNumber(1);
+    }
   };
 
   const handlePageChange = (newPage) => {
