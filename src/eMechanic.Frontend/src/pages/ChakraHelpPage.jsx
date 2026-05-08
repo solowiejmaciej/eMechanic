@@ -89,7 +89,7 @@ const ChakraHelpPage = () => {
                     <Heading size="2xl" _dark={{ color: "white" }}>Frequently Asked Questions</Heading>
                     <SimpleGrid w="full" gap={4} maxW="800px" mx="auto" columns="1" mt={10}>
                         {faq.map((faq, index) => (
-                            <Collapsible.Root>
+                            <Collapsible.Root key={index}>
                                 <Box w="full" justifyContent="flex-start" displayflexDirection="column" key={index} border="sm" rounded="2xl" boxShadow="lg" borderColor="gray.100" bg="gray.50" _dark={{ bgcolor: "whiteAlpha.50", bg: "rgb(25, 36, 54)", color: "white", borderColor: "whiteAlpha.100" }} transition="all 0.3 ease" _hover={{ borderColor: "brand.600", cursor: "pointer" }}>
                                     <Collapsible.Trigger rounded="2xl" display="flex" textAlign="left" p="6" w="full" fontWeight="semibold" bg="gray.50" _dark={{ bgcolor: "whiteAlpha.50", bg: "rgb(25, 36, 54)", color: "white", borderColor: "whiteAlpha.100" }} _hover={{ cursor: "pointer" }}>{faq.title}</Collapsible.Trigger>
                                     <Collapsible.Content>
