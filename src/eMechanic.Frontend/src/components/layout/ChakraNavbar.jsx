@@ -43,7 +43,7 @@ const ChakraNavbar = () => {
     const isHomePage = location.pathname === '/';
     const showBg = isScrolled || !isHomePage;
 
-    const homePath = user ? "/dashboard" : "/";
+    const homePath = user ? "/home" : "/";
     const userColor = user?.role === 'workshop' ? "orange.500" : "brand.500";
     const iconHoverColor = user?.role === 'workshop' ? "orange.400" : "brand.400";
     return (
