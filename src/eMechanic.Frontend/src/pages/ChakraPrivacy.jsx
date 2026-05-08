@@ -10,7 +10,7 @@ const privacyData = [
         description: "We collect information you provide directly to us when you create an account, update your profile, or communicate with us. This may include:",
         subItems: [
             "Name and contact information",
-            "Vechicle information",
+            "Vehicle information",
             "Service history and preferences",
             "Payment information"
         ]
