@@ -30,7 +30,7 @@ const WorkshopCard = ({ workshop }) => {
   
   return(
     <Box p={6} bg="white" _dark={{ bg: "gray.800", borderColor: "gray.700" }} rounded="xl" borderWidth="1px" w="full" shadow="sm">
-      <Heading size="md" _dark={{ color: "white" }}>{workshop.name || "Nazwa Warsztatu"}</Heading>
+      <Heading size="md" _dark={{ color: "white" }}>{workshop.name || "Workshop Name"}</Heading>
       <Text mt={2} color="gray.500"></Text>
     </Box>
   )
