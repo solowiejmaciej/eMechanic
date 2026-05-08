@@ -63,7 +63,7 @@ const ChakraFeature = () => {
                                     <Icon boxSize={6} strokeWidth={1.5} as={features.icon} />
                                 </Flex>
                                 <Heading size="2xl">{features.title}</Heading>
-                                <Text color="gray.600" _dark={{ color: "gray.400" }}>{features.descirption}</Text>
+                                <Text color="gray.600" _dark={{ color: "gray.400" }}>{features.description}</Text>
                             </Box>
                         ))}
                     </VStack>
