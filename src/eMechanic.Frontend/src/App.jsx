@@ -1,27 +1,28 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LandingPage from './pages/LandingPage';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/auth/LoginPage';
-import RegisterUserPage from './pages/auth/RegisterUserPage';
-import RegisterWorkshopPage from './pages/auth/RegisterWorkshopPage';
-import FindWorkshopPage from './pages/FindWorkshopPage';
-import ForMechanicsPage from './pages/ForMechanicsPage';
-import HowItWorksPage from './pages/HowItWorksPage';
-import TermsPage from './pages/TermsPage';
-import PrivacyPage from './pages/PrivacyPage';
 
-import AboutPage from './pages/AboutPage';
-import ContactPage from './pages/ContactPage';
-import HelpPage from './pages/HelpPage';
-import CookiesPage from './pages/CookiesPage';
+
 import ChakraHero from './features/landing/ChakraHero';
 import ChakraLandingPage from './pages/ChakraLandingPage';
 import ChakraFeature from './features/landing/ChakraFeature';
+import ChakraHelpPage from './pages/ChakraHelpPage';
+
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import ChakraContact from './pages/ChakraContact';
+import ChakraCookies from './pages/ChakraCookies';
+import ChakraAbout from './pages/ChakraAbout';
+import ChakraPrivacy from './pages/ChakraPrivacy';
+import ChakraFindWorshop from './pages/ChakraFindWorkshop';
+import ChakraHowItWorks from './pages/ChakraHowItWorks';
+import CharkaForMechanics from './pages/ChakraForMechanics';
+import ChakraTerms from './pages/ChakraTerms';
+import ChakraLogin from './pages/auth/ChakraLogin';
+import ChakraRegister from './pages/auth/ChakraRegisterPage';
+import ChakraHomePage from './pages/ChakraHomePage';
+import WorkshopDashboard from './pages/WorkshopDashboard';
 
 
 function App() {
@@ -30,29 +31,27 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            <Route path="/" element={<LandingPage />} />
+            <Route path="/" element={<ChakraLandingPage />} />
             <Route
               path="/home"
               element={
-                <ProtectedRoute>
-                  <HomePage />
+               <ProtectedRoute>
+                  <ChakraHomePage />
                 </ProtectedRoute>
-              }
+             }
             />
-            <Route path="/chakrahero" element={<ChakraHero/>}/>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterUserPage />} />
-            <Route path="/register-workshop" element={<RegisterWorkshopPage />} />
-            <Route path="/find-workshop" element={<FindWorkshopPage />} />
-            <Route path="/for-mechanics" element={<ForMechanicsPage />} />
-            <Route path="/how-it-works" element={<HowItWorksPage />} />
-            <Route path="/terms" element={<TermsPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/help" element={<HelpPage />} />
-            <Route path="/cookies" element={<CookiesPage />} />
-            <Route path="/chakralp" element={<ChakraLandingPage/>} />
+            <Route path= "/help" element={<ChakraHelpPage/>} />
+            <Route path= "/contact" element={<ChakraContact/>} />
+            <Route path="/cookies" element={<ChakraCookies/>} />
+            <Route path="/about" element={<ChakraAbout />} />
+            <Route path="/privacy" element={<ChakraPrivacy />} />
+            <Route path="/find-workshop" element={<ChakraFindWorshop/>}/>
+            <Route path="/how-it-works" element={<ChakraHowItWorks/>}/>
+            <Route path="/for-mechanics" element ={<CharkaForMechanics/>}/>
+            <Route path="/terms" element={<ChakraTerms/>}/>
+            <Route path="/login" element={<ChakraLogin/>}/>
+            <Route path="/register" element={<ChakraRegister/>}/>
+            <Route path="/chakraworkshopdashboard" element={<WorkshopDashboard/>} />
           </Routes>
         </Router>
       </AuthProvider>
