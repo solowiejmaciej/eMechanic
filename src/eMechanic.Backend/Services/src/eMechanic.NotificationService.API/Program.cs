@@ -25,7 +25,6 @@ public sealed class Program
 
 
         builder.Services.AddEventConsuming(builder.Configuration, Assembly.GetExecutingAssembly());
-        builder.Services.AddNotificationService(builder.Configuration);
 
 
         builder.Services.AddMediatR(cfg =>

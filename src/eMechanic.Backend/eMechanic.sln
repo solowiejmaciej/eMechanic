@@ -45,6 +45,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eMechanic.Integration.Tests", "Core\tests\eMechanic.Integration.Tests\eMechanic.Integration.Tests.csproj", "{0068B523-E6E2-4BF9-82DD-C859C4927363}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DE0C51B8-46D8-4699-9593-B2A94DCB48D9}"
+	ProjectSection(SolutionItems) = preProject
+		Services\src\SendSMSNotificationConsumer.cs = Services\src\SendSMSNotificationConsumer.cs
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eMechanic.OutboxPublisher", "Services\src\eMechanic.OutboxPublisher\eMechanic.OutboxPublisher.csproj", "{F1ADB012-796E-440D-A010-F05C490261A6}"
 EndProject

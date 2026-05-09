@@ -26,7 +26,7 @@ public class RepairRequestEstimatedConsumer : IEventConsumer<RepairRequestEstima
         <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px;'>
             <h2 style='color: #f39c12;'>Nowa Wycena Naprawy</h2>
             <p>Mechanik przygotował kosztorys dla Twojego pojazdu.</p>
-            <p>Szacowany koszt: <span style='font-size: 18px; color: #e67e22;'><b>{msg.EstimatedCostAmount} {msg.EstimatedCostCurrency}</b></span></p>
+            <p>Szacowany koszt: <span style='font-size: 18px; color: #e67e22;'><b>{msg.EstimatedCost} {msg.Currency}</b></span></p>
             <p>Zaloguj się do panelu eMechanic, aby zaakceptować lub odrzucić wycenę.</p>
         </div>";
 
@@ -38,6 +38,6 @@ public class RepairRequestEstimatedConsumer : IEventConsumer<RepairRequestEstima
 
 
 
-        _logger.LogInformation("Wysłano powiadomienie o wycenie dla zgłoszenia {RequestId}", msg.RepairRequestId);
+        _logger.LogInformation("Pricing notification has been sent for the request: {RequestId}", msg.RepairRequestId);
     }
 }

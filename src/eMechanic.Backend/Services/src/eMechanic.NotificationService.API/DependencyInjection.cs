@@ -13,16 +13,12 @@ public static class DependencyInjection
     public static IServiceCollection AddNotificationService(this IServiceCollection services,
         IConfiguration configuration)
     {
-        //rejestracja ustawień appsentting w notifications
         services.Configure<NotificationSettings>(configuration.GetSection(NotificationSettings.SECTION_NAME));
 
-        //rejestracja EmailLabs
         services.AddHttpClient<IEmailService, EmailLabsApiService>();
 
-        //reejestacja Twilio
         services.AddScoped<ISmsService, TwilioSmsService>();
 
-        //dispatcher - logika sterująca
         services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
 
         return services;

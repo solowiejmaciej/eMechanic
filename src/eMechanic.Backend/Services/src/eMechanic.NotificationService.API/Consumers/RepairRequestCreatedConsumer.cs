@@ -36,6 +36,6 @@ public class RepairRequestCreatedConsumer : IEventConsumer<RepairRequestCreatedE
             html,
             context.CancellationToken);
 
-        _logger.LogInformation("Powiadomienie e-mail wysłane dla zgłoszenia: {EventUserId}", msg.UserId);
+        _logger.LogInformation("Email notification has been sent for the report: {EventUserId}", msg.UserId);
     }
 }

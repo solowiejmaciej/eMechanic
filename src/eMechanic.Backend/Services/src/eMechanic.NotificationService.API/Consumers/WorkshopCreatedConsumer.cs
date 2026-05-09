@@ -21,9 +21,9 @@ public class WorkshopCreatedConsumer : IConsumer<WorkshopCreatedEvent>
     {
         var msg = context.Message;
 
-        if (await _dbContext.Users.AnyAsync(w => w.Id == msg.WorkshopId))
+        if (await _dbContext.Workshops.AnyAsync(w => w.Id == msg.WorkshopId))
         {
-            _logger.LogWarning("Warsztat o ID {WorkshopId} już istnieje w bazie powiadomień.", msg.WorkshopId);
+            _logger.LogWarning("Workshop with ID: {WorkshopId} already exist in notification database.", msg.WorkshopId);
             return;
         }
 
@@ -39,6 +39,6 @@ public class WorkshopCreatedConsumer : IConsumer<WorkshopCreatedEvent>
             _dbContext.Workshops.Add(workshop);
             await _dbContext.SaveChangesAsync();
 
-            _logger.LogInformation("Zarejestrowano warsztat w systenie powiadomień: {Name}", msg.Name);
+            _logger.LogInformation("Workshop {Name} has been registered in notification system", msg.Name);
     }
 }

@@ -41,24 +41,27 @@ public class EmailLabsApiService : IEmailService
         };
 
         var content = new FormUrlEncodedContent(values);
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authString);
+
+        using var request =
+            new HttpRequestMessage(HttpMethod.Post, "https://api.emaillabs.io/v1/send_mail") { Content = content };
+        request.Headers.Authorization = new AuthenticationHeaderValue("Basic", authString);
 
         try
         {
-            var response = await _httpClient.PostAsync("https://api.emaillabs.io/v1/send_mail", content, cancellationToken);
+            var response = await _httpClient.SendAsync(request, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync(cancellationToken);
                 _logger.LogError("EmailLabs API error: {Status} - {Detail}", response.StatusCode, error);
-                throw new InvalidOperationException("Nie udało się wysłać maila.");
+                throw new InvalidOperationException("The email could not be sent.");
             }
 
-            _logger.LogInformation("E-mail do {To} został wysłany pomyślnie.", to);
+            _logger.LogInformation("E-mail to {To} was sent successfully.", to);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Wystąpił błąd podczas komunikacji z EmailLabs dla adresu {To}", to);
+            _logger.LogError(ex, "Error occurred while communicating with EmailLabs for the address {To}", to);
             throw;
         }
     }

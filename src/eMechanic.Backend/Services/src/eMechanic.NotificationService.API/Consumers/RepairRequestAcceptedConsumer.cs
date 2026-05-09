@@ -38,6 +38,6 @@ public class RepairRequestAcceptedConsumer : IEventConsumer<RepairRequestAccepte
 
 
 
-        _logger.LogInformation("Powiadomiono warsztat o akceptacji zlecenia {RequestId}", msg.RepairRequestId);
+        _logger.LogInformation("User has been notified that the request: {RequestId} has been accepted.", msg.RepairRequestId);
     }
 }

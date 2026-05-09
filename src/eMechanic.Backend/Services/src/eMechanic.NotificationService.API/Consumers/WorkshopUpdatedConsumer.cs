@@ -25,7 +25,7 @@ public class WorkshopUpdatedConsumer : IConsumer<WorkshopUpdatedEvent>
 
         if (workshop == null)
         {
-            _logger.LogWarning("Otrzymano WorkshopUpdatedEvent dla nieistniejącego warsztatu: {WorkshopId}", msg.WorkshopId);
+            _logger.LogWarning("WorkshopUpdatedEvent was received for a non-existent workshop: {WorkshopId}", msg.WorkshopId);
             return;
         }
 
@@ -35,6 +35,6 @@ public class WorkshopUpdatedConsumer : IConsumer<WorkshopUpdatedEvent>
         _dbContext.Workshops.Update(workshop);
         await _dbContext.SaveChangesAsync();
 
-        _logger.LogInformation("Zaktualizowano dane kontaktowe warsztatu {WorkshopId} w module powiadomień.", msg.WorkshopId);    }
+        _logger.LogInformation("Contact inormation for the workshop {WorkshopId} has been updated in the notification module.", msg.WorkshopId);    }
 }
 

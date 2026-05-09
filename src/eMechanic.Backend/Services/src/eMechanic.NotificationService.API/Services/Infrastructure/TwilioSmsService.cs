@@ -30,11 +30,11 @@ public class TwilioSmsService : ISmsService
                 to: new PhoneNumber(phoneNumber)
             );
 
-            _logger.LogInformation("SMS wysłany do {Phone}. SID: {Sid}", phoneNumber, messageResource.Sid);
+            _logger.LogInformation("SMS sent to {Phone}. SID: {Sid}", phoneNumber, messageResource.Sid);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Błąd wysyłki SMS do {Phone}", phoneNumber);
+            _logger.LogError(ex, "Error sending SMS to {Phone}", phoneNumber);
             throw;
         }
     }

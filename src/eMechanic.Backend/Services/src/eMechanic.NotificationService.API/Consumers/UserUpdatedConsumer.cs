@@ -24,7 +24,7 @@ public class UserUpdatedConsumer : IConsumer<UserUpdatedEvent>
 
         if (user == null)
         {
-            _logger.LogWarning("Otrzymano UserUpdatedEvent dla nieistniejącego użytkownika: {UserId}", msg.UserId);
+            _logger.LogWarning("UserUpdatedEvent was receiver for a non-exist user: {UserId}", msg.UserId);
             return;
         }
 
@@ -33,7 +33,7 @@ public class UserUpdatedConsumer : IConsumer<UserUpdatedEvent>
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
 
-        _logger.LogInformation("Zaktualizowano dane kontaktowe użytkownika {UserId} w module powiadomień.", msg.UserId);
+        _logger.LogInformation("Contact information for user: {UserId} has been updated in the notification module.", msg.UserId);
     }
 
 }

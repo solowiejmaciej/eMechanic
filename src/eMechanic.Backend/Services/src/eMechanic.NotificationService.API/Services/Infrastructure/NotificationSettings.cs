@@ -1,11 +1,5 @@
 ﻿namespace eMechanic.NotificationService.Services;
 
-/// <summary>
-/// Klasa konfiguracyjna przechowująca klucze API i ustawienia nadawców
-/// dla systemów e-mail oraz SMS.
-/// </summary>
-
-
 public class NotificationSettings
 {
     public const string SECTION_NAME = "Notifications";

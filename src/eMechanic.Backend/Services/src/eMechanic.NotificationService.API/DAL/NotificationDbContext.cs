@@ -30,7 +30,6 @@ public class NotificationDbContext : DbContext
             builder.Property(x => x.PhoneNumber);
         });
 
-        //indeksacja na maila żeby szybciej wyszukać
         modelBuilder.Entity<NotificationUser>().HasIndex(u => u.Email).IsUnique();
         modelBuilder.Entity<NotificationWorkshop>().HasIndex(u => u.Email).IsUnique();
     }

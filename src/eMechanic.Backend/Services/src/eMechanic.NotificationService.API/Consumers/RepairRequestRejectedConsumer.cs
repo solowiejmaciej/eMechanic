@@ -36,7 +36,7 @@ public class RepairRequestRejectedConsumer : IEventConsumer<RepairRequestRejecte
 
 
 
-        _logger.LogInformation("Powiadomiono warsztat o odrzuceniu zlecenia {RequestId}", msg.RepairRequestId);
+        _logger.LogInformation("Workshop has been notified that request: {RequestId} has been rejected.", msg.RepairRequestId);
 
     }
 }

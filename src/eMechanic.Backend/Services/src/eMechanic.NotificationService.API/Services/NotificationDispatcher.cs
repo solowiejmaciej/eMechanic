@@ -30,7 +30,7 @@ public class NotificationDispatcher : INotificationDispatcher
 
         if (user == null)
         {
-            _logger.LogWarning("Nie znaleziono użytkownika {UserId} w bazie powiadomień.", userId);
+            _logger.LogWarning("User {UserId} was not found in the notification database.", userId);
             return;
         }
 
