@@ -38,7 +38,7 @@ const termsData = [
     },
     {
         title: "Contact Us",
-        description: "If you have any questions about this Privacy Policy, please contact us at privacy@emechanic.com."
+        description: "If you have any questions about this Terms of Service, please contact us at support@emechanic.com."
     },
 ]
 

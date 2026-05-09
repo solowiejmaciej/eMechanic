@@ -8,32 +8,32 @@ import { motion } from "framer-motion";
 const features = [
     {
         title: "Find Trusted Mechanics",
-        descirption: "Browse verified workshops with real reviews and ratings from other car owners.",
+        description: "Browse verified workshops with real reviews and ratings from other car owners.",
         icon: Search
     },
     {
         title: "Transparent Pricing",
-        descirption: "Get detailed quotes upfront. No hidden fees or surprise charges.",
+        description: "Get detailed quotes upfront. No hidden fees or surprise charges.",
         icon: DollarSign
     },
     {
         title: "Real-time Updates",
-        descirption: "Track your repair status live and get notified when your car is ready.",
+        description: "Track your repair status live and get notified when your car is ready.",
         icon: Clock
     },
     {
         title: "Business Growth",
-        descirption: "Access a steady stream of new customers and grow your revenue",
+        description: "Access a steady stream of new customers and grow your revenue",
         icon: BarChart3
     },
     {
         title: "Digital Management",
-        descirption: "Manage bookings, quotes and customer communications in one dashboard",
+        description: "Manage bookings, quotes and customer communications in one dashboard",
         icon: ShieldCheck
     },
     {
         title: "Guaranteed Payments",
-        descirption: "Secure payment processsing and automated invoicing for every job",
+        description: "Secure payment processsing and automated invoicing for every job",
         icon: DollarSign
     }
 
@@ -82,7 +82,7 @@ const ChakraFeature = () => {
                                     <Icon boxSize={6} strokeWidth={1.5} as={features.icon} />
                                 </Flex>
                                 <Heading size="2xl">{features.title}</Heading>
-                                <Text color="gray.600" _dark={{ color: "gray.400" }}>{features.descirption}</Text>
+                                <Text color="gray.600" _dark={{ color: "gray.400" }}>{features.description}</Text>
                             </Box>
                         ))}
                     </VStack>
