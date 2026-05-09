@@ -1,13 +1,13 @@
 
-namespace eMechanic.Application.Tests.Builders.RepairRequest;
+using eMechanic.Application.RepairRequest.Features.Create;
 
-using Application.RepairRequest.Features.Create;
+namespace eMechanic.Application.Tests.Builders.RepairRequest;
 
 public class CreateRepairRequestCommandBuilder
 {
     private Guid _vehicleId = Guid.NewGuid();
     private Guid _workshopId = Guid.NewGuid();
-    private string _description = "My car is broken, please fix it.";
+    private string _description = "Test description";
 
     public CreateRepairRequestCommandBuilder WithVehicleId(Guid vehicleId)
     {

@@ -17,11 +17,11 @@ public sealed class GetRepairRequestsForUserVehicleFeature : IFeature
         app.MapGet(RepairRequestPrefix.GET_BY_VEHICLE_ID, async (
                 [FromRoute] Guid vehicleId,
                 [AsParameters] PaginationParameters pagination,
-                ISender sender,
+                IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
                 var query = new GetRepairRequestsForUserVehicleQuery(vehicleId, pagination);
-                var result = await sender.Send(query, cancellationToken);
+                var result = await mediator.Send(query, cancellationToken);
                 return result.ToStatusCode(Results.Ok, MapError);
             })
             .WithName("GetRepairRequestsForVehicle")

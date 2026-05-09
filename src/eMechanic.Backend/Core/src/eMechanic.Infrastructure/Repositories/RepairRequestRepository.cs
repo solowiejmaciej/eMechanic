@@ -7,6 +7,7 @@ using Common.Result;
 using DAL;
 using Domain.RepairRequest;
 using Extensions;
+using Microsoft.EntityFrameworkCore;
 using Services;
 
 internal sealed class RepairRequestRepository : Repository<RepairRequest>, IRepairRequestRepository
@@ -29,5 +30,14 @@ internal sealed class RepairRequestRepository : Repository<RepairRequest>, IRepa
             .FilterByWorkshopId(workshopId);
 
         return GetPaginatedAsync(query, paginationParameters, cancellationToken);
+    }
+
+    public async Task<RepairRequest?> GetForUserByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken)
+    {
+        var query = GetQuery()
+            .FilterByUserId(userId)
+            .FilterById(id);
+
+        return await query.FirstOrDefaultAsync(cancellationToken);
     }
 }

@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using Xunit;
 
 public class UserServiceTests
 {
@@ -73,7 +74,7 @@ public class UserServiceTests
 
         // Act
         var result = await _userService.CreateUserWithIdentityAsync(
-            TEST_EMAIL, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME, CancellationToken.None);
+            TEST_EMAIL, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -97,7 +98,7 @@ public class UserServiceTests
 
         // Act
         var result = await _userService.CreateUserWithIdentityAsync(
-            TEST_EMAIL, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME, CancellationToken.None);
+            TEST_EMAIL, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -123,7 +124,7 @@ public class UserServiceTests
 
         // Act
         var result = await _userService.CreateUserWithIdentityAsync(
-            TEST_EMAIL, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME, CancellationToken.None);
+            TEST_EMAIL, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
 
         // Assert
         result.HasError().Should().BeTrue();
@@ -146,11 +147,13 @@ public class UserServiceTests
 
         // Act
         var result = await _userService.CreateUserWithIdentityAsync(
-            TEST_EMAIL, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME, CancellationToken.None);
+            TEST_EMAIL, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
 
         // Assert
         result.HasError().Should().BeFalse();
-        result.Value.Should().NotBeEmpty();
+        // POPRAWKA: Sprawdzamy elementy krotki zamiast całej krotki
+        result.Value.UserId.Should().NotBeEmpty();
+        result.Value.IdentityId.Should().NotBeEmpty();
 
         await _transactionalExecutor.Received(1).ExecuteAsync(Arg.Any<Func<Task>>(), Arg.Any<CancellationToken>());
         await _userManager.Received(1).CreateAsync(Arg.Is<Identity>(i => i.Email == TEST_EMAIL), TEST_PASSWORD);
@@ -185,7 +188,7 @@ public class UserServiceTests
         await _userManager.DidNotReceiveWithAnyArgs().SetEmailAsync(default!, default!);
         await _userManager.DidNotReceiveWithAnyArgs().SetUserNameAsync(default!, default!);
 
-        _userRepository.Received(1).UpdateAsync(Arg.Is<User>(u =>
+        await _userRepository.Received(1).UpdateAsync(Arg.Is<User>(u =>
             u.FirstName == newFirstName &&
             u.LastName == newLastName &&
             u.Email == TEST_EMAIL
@@ -225,7 +228,7 @@ public class UserServiceTests
         await _userManager.Received(1).SetEmailAsync(_fakeIdentity, newEmail);
         await _userManager.Received(1).SetUserNameAsync(_fakeIdentity, newEmail);
 
-        _userRepository.Received(1).UpdateAsync(Arg.Is<User>(u => u.Email == newEmail), Arg.Any<CancellationToken>());
+        await _userRepository.Received(1).UpdateAsync(Arg.Is<User>(u => u.Email == newEmail), Arg.Any<CancellationToken>());
         await _userRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 

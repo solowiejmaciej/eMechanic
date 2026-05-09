@@ -1,6 +1,6 @@
 namespace eMechanic.Application.Tests.Builders;
 
-using eMechanic.Application.Vehicle.Features.Delete;
+using Application.Vehicle.Vehicle.Features.Delete;
 
 public class DeleteVehicleCommandBuilder
 {

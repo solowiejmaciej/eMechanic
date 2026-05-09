@@ -1,8 +1,8 @@
 namespace eMechanic.Domain.Tests.Builders;
 
+using Domain.Vehicle.Documents;
+using Domain.Vehicle.Documents.Enums;
 using eMechanic.Common.Result;
-using eMechanic.Domain.VehicleDocument;
-using eMechanic.Domain.VehicleDocument.Enums;
 
 public class VehicleDocumentBuilder
 {

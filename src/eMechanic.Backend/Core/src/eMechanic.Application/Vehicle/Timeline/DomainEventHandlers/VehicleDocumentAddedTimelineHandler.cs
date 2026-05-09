@@ -1,0 +1,34 @@
+namespace eMechanic.Application.Vehicle.Timeline.DomainEventHandlers;
+
+using Domain.Vehicle.Documents.DomainEvents;
+using eMechanic.Application.Abstractions.DomainEvents;
+using eMechanic.Application.Timeline;
+using Vehicle.Repostories;
+
+internal sealed class VehicleDocumentAddedTimelineHandler
+    : BaseTimelineEventHandler, IDomainEventHandler<VehicleDocumentAddedDomainEvent>
+{
+    public VehicleDocumentAddedTimelineHandler(IVehicleTimelineRepository vehicleVehicleTimelineRepository)
+        : base(vehicleVehicleTimelineRepository)
+    {
+    }
+
+    public Task Handle(VehicleDocumentAddedDomainEvent notification, CancellationToken cancellationToken)
+    {
+        var doc = notification.Document;
+
+        var payload = new
+        {
+            DocumentId = doc.Id,
+            FileName = doc.OriginalFileName,
+            DocumentType = doc.DocumentType.ToString(),
+            FullPath = doc.FullPath
+        };
+
+        return CreateTimelineEntryAsync(
+            doc.VehicleId,
+            nameof(VehicleDocumentAddedDomainEvent),
+            payload,
+            cancellationToken);
+    }
+}

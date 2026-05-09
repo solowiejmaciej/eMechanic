@@ -77,4 +77,6 @@ public class MockFileStorageService : IFileStorageService
 
         return Task.FromResult<Result<FileDownloadResult, Error>>(downloadResult);
     }
+
+    public Uri GetPublicUrl(string fullPath) => new Uri($"https://mockstorage.example.com/{fullPath}");
 }

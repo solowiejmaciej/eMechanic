@@ -1,6 +1,6 @@
 namespace eMechanic.Application.Tests.Builders;
 
-using eMechanic.Application.Vehicle.Features.Get.ById;
+using Application.Vehicle.Vehicle.Features.Get.ById;
 
 public class GetVehicleByIdQueryBuilder
 {

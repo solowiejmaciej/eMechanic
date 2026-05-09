@@ -2,6 +2,7 @@ namespace eMechanic.Infrastructure.Services;
 
 using Common.Result;
 using Microsoft.EntityFrameworkCore;
+using Repositories.Extensions;
 
 public class PaginationService : IPaginationService
 {
@@ -9,6 +10,7 @@ public class PaginationService : IPaginationService
         GetPaginatedResultAsync<TEntity>(IQueryable<TEntity> query, IPaginationParameters paginationParameters,
             CancellationToken cancellationToken)
     {
+        query = query.ApplySearch(paginationParameters.SearchPhrase);
         var count = await query.CountAsync(cancellationToken);
         var items = await query
             .Skip((paginationParameters.PageNumber - 1) * paginationParameters.PageSize)

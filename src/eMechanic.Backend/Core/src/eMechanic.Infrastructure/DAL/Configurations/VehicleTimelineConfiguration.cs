@@ -1,6 +1,6 @@
 namespace eMechanic.Infrastructure.DAL.Configurations;
 
-using Domain.VehicleTimeline;
+using Domain.Vehicle.Timeline;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

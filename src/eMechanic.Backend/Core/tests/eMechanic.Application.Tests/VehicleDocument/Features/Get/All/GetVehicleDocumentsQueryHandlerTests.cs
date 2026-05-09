@@ -2,16 +2,17 @@ namespace eMechanic.Application.Tests.VehicleDocument.Features.Get.All;
 
 using System.Threading;
 using System.Threading.Tasks;
-using eMechanic.Application.Tests.Builders;
-using eMechanic.Application.Vehicle.Services;
-using eMechanic.Application.VehicleDocument.Features.Get.All;
-using eMechanic.Application.VehicleDocument.Repositories;
+using Application.Vehicle.Document.Features.Get.All;
+using Application.Vehicle.Document.Repositories;
+using Application.Vehicle.Vehicle.Services;
+using Domain.Vehicle.Documents;
+using Domain.Vehicle.Vehicle;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Tests.Builders;
 using eMechanic.Domain.Vehicle;
-using eMechanic.Domain.VehicleDocument;
 using FluentAssertions;
 using NSubstitute;
+using eMechanic.Application.Tests.Builders.VehicleDocument;
 
 public class GetVehicleDocumentsQueryHandlerTests
 {
@@ -34,7 +35,7 @@ public class GetVehicleDocumentsQueryHandlerTests
         _query = new GetVehicleDocumentsQueryBuilder().WithVehicleId(_vehicleId).Build();
 
         _ownershipService.GetAndVerifyOwnershipAsync(_vehicleId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<Result<Vehicle, Error>>(vehicle));
+            .Returns(new Result<Vehicle, Error>(vehicle));
     }
 
     [Fact]

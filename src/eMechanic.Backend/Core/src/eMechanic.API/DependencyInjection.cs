@@ -134,10 +134,24 @@ public static class DependencyInjection
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString!))
                 };
             });
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll",
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:5173", "http://localhost:5178", "https://e-mechanic.net", "http://e-mechanic.net")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                });
+        });
     }
 
     public static void AddApi(this WebApplication app)
     {
+        app.UseCors("AllowAll");
+
         app.UseMiddleware<ExceptionHandlingMiddleware>();
 
         app.UseHttpsRedirection();

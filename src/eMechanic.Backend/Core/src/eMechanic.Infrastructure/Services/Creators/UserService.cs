@@ -32,8 +32,14 @@ internal sealed class UserService : IUserService
         _logger = logger;
     }
 
-    public async Task<Result<Guid, Error>> CreateUserWithIdentityAsync(
-        string email, string password, string firstName, string lastName, CancellationToken cancellationToken)
+    public async Task<Result<(Guid UserId, Guid IdentityId), Error>> CreateUserWithIdentityAsync(
+        string email,
+        string password,
+        string firstName,
+        string lastName,
+        string? providerName = null,
+        string? providerKey = null,
+        CancellationToken cancellationToken = default)
     {
         var identityExists = await _userManager.FindByEmailAsync(email);
         if (identityExists is not null)
@@ -42,7 +48,6 @@ internal sealed class UserService : IUserService
         }
 
         var identity = Identity.Create(email, EIdentityType.User);
-
         Guid domainUserId = Guid.Empty;
 
         try
@@ -53,10 +58,18 @@ internal sealed class UserService : IUserService
 
                 if (!identityResult.Succeeded)
                 {
-                    var errors = identityResult.Errors.Select(e => e.Description).ToArray();
-                    var errorDict = new ReadOnlyDictionary<string, string[]>(
-                        new Dictionary<string, string[]> { { "IdentityErrors", errors } });
-                    throw new RegistrationException(new Error(EErrorCode.ValidationError, errorDict));
+                    throw new RegistrationException(MapIdentityErrors(identityResult.Errors));
+                }
+
+                if (!string.IsNullOrWhiteSpace(providerName) && !string.IsNullOrWhiteSpace(providerKey))
+                {
+                    var loginInfo = new UserLoginInfo(providerName, providerKey, providerName.ToUpperInvariant());
+                    var loginResult = await _userManager.AddLoginAsync(identity, loginInfo);
+
+                    if (!loginResult.Succeeded)
+                    {
+                         throw new RegistrationException(MapIdentityErrors(loginResult.Errors));
+                    }
                 }
 
                 var domainUser = User.Create(email, firstName, lastName, identity.Id);
@@ -83,7 +96,15 @@ internal sealed class UserService : IUserService
             return new Error(EErrorCode.InternalServerError);
         }
 
-        return domainUserId;
+        return (domainUserId, identity.Id);
+    }
+
+    private static Error MapIdentityErrors(IEnumerable<IdentityError> errors)
+    {
+        var errorMessages = errors.Select(e => e.Description).ToArray();
+        var errorDict = new ReadOnlyDictionary<string, string[]>(
+            new Dictionary<string, string[]> { { "IdentityErrors", errorMessages } });
+        return new Error(EErrorCode.ValidationError, errorDict);
     }
 
     public async Task<Result<Success, Error>> UpdateUserWithIdentityAsync(
@@ -131,7 +152,7 @@ internal sealed class UserService : IUserService
 
                 domainUser.Update(email, firstName, lastName);
 
-                _userRepository.UpdateAsync(domainUser, cancellationToken);
+                await _userRepository.UpdateAsync(domainUser, cancellationToken);
                 await _userRepository.SaveChangesAsync(cancellationToken);
 
             }, cancellationToken);

@@ -1,6 +1,6 @@
 namespace eMechanic.Application.Tests.Builders;
 
-using eMechanic.Application.Workshop.Features.Create;
+using Application.Workshop.Workshop.Features.Create;
 
 public class CreateWorkshopCommandBuilder
 {

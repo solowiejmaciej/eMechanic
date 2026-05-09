@@ -4,8 +4,9 @@ using System.Globalization;
 using Builders;
 using Common.Result;
 using Domain.Vehicle;
-using Domain.Vehicle.Enums;
-using Domain.Vehicle.ValueObjects;
+using Domain.Vehicle.Vehicle.DomainEvents;
+using Domain.Vehicle.Vehicle.Enums;
+using Domain.Vehicle.Vehicle.ValueObjects;
 using FluentAssertions;
 
 public class VehicleTests

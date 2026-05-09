@@ -1,16 +1,17 @@
+
 namespace eMechanic.Application.Tests.Vehicle.Features.Delete;
 
-using Application.Tests.Builders;
-using Application.Vehicle.Repostories;
-using Domain.Tests.Builders;
+using Application.Vehicle.Vehicle.Features.Delete;
+using Application.Vehicle.Vehicle.Repostories;
+using Domain.Vehicle.Vehicle;
 using eMechanic.Application.Abstractions.Identity.Contexts;
-using eMechanic.Application.Vehicle.Features.Delete;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;
-using eMechanic.Domain.Vehicle.Enums;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using eMechanic.Domain.Tests.Builders;
+using eMechanic.Application.Tests.Builders.Vehicle;
 
 public class DeleteVehicleHandlerTests
 {
@@ -52,7 +53,7 @@ public class DeleteVehicleHandlerTests
 
         // Assert
         result.HasError().Should().BeFalse();
-        _vehicleRepository.Received(1).DeleteAsync(Arg.Is(_existingVehicle), Arg.Any<CancellationToken>());
+        await _vehicleRepository.Received(1).DeleteAsync(Arg.Is(_existingVehicle), Arg.Any<CancellationToken>());
         await _vehicleRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
@@ -71,7 +72,7 @@ public class DeleteVehicleHandlerTests
         // Assert
         result.HasError().Should().BeTrue();
         result.Error!.Code.Should().Be(EErrorCode.NotFoundError);
-        _vehicleRepository.DidNotReceiveWithAnyArgs().DeleteAsync(default!, default);
+        await _vehicleRepository.DidNotReceiveWithAnyArgs().DeleteAsync(default!, default);
         await _vehicleRepository.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
     }
 

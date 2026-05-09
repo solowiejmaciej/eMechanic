@@ -1,6 +1,6 @@
-namespace eMechanic.Domain.Vehicle;
+namespace eMechanic.Domain.Vehicle.Vehicle.DomainEvents;
 
-using Common.DDD;
+using eMechanic.Common.DDD;
 using ValueObjects;
 
 public record VehicleHorsePowerChangedDomainEvent(Guid Id, HorsePower OldHorsePower, HorsePower HorsePower) : IDomainEvent;

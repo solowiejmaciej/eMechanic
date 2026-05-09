@@ -1,12 +1,17 @@
-namespace eMechanic.Domain.VehicleTimeline;
+namespace eMechanic.Domain.Vehicle.Timeline;
 
-using Common.DDD;
-using Shared.References.Vehicle;
+using Common.Attributes;
+using eMechanic.Common.DDD;
+using eMechanic.Domain.Shared.References.Vehicle;
 
 public class VehicleTimeline : AggregateRoot, IVehicleReference
 {
     public Guid VehicleId { get; private set; }
+
+    [Searchable]
     public string EventType { get; private set; }
+
+    [Searchable]
     public string Data { get; private set; }
 
     private VehicleTimeline() { }

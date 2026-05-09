@@ -29,9 +29,17 @@ public class Repository<T> : IRepository<T> where T : Entity
         return entry.Entity.Id;
     }
 
-    public void UpdateAsync(T entity, CancellationToken cancellationToken) => _context.Entry(entity).CurrentValues.SetValues(entity);
+    public Task UpdateAsync(T entity, CancellationToken cancellationToken)
+    {
+        _context.Entry(entity).CurrentValues.SetValues(entity);
+        return Task.CompletedTask;
+    }
 
-    public void DeleteAsync(T entity, CancellationToken cancellationToken) => DbSet.Remove(entity);
+    public Task DeleteAsync(T entity, CancellationToken cancellationToken)
+    {
+        DbSet.Remove(entity);
+        return Task.CompletedTask;
+    }
 
     protected Task<PaginationResult<T>> GetPaginatedAsync(IQueryable<T> query, PaginationParameters paginationParameters, CancellationToken cancellationToken) => _paginationService.GetPaginatedResultAsync(query, paginationParameters, cancellationToken);
 

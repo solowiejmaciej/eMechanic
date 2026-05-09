@@ -1,8 +1,8 @@
 namespace eMechanic.API.Features.Vehicle.Document.Get;
 
+using Application.Vehicle.Document.Features.Get.ById;
 using eMechanic.API.Features.Vehicle.Document;
 using eMechanic.API.Security;
-using eMechanic.Application.VehicleDocument.Features.Get.ById;
 using eMechanic.Common.Result;
 using eMechanic.Common.Web;
 using MediatR;

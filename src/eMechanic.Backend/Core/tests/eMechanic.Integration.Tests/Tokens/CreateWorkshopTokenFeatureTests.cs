@@ -2,13 +2,13 @@ namespace eMechanic.Integration.Tests.Tokens;
 
 using System.Net;
 using System.Net.Http.Json;
+using Application.Workshop.Workshop.Features.Create;
 using eMechanic.API.Constans;
 using eMechanic.API.Features.Tokens;
 using eMechanic.API.Features.User;
 using eMechanic.API.Features.Workshop;
 using eMechanic.Application.Token.Features.Create.Workshop;
 using eMechanic.Application.Users.Features.Create;
-using eMechanic.Application.Workshop.Features.Create;
 using eMechanic.Integration.Tests.TestContainers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;

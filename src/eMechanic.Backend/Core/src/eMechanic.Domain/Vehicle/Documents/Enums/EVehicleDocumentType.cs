@@ -1,4 +1,4 @@
-namespace eMechanic.Domain.VehicleDocument.Enums;
+namespace eMechanic.Domain.Vehicle.Documents.Enums;
 
 public enum EVehicleDocumentType
 {

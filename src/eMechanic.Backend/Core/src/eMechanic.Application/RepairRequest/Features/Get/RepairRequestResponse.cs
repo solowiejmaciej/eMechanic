@@ -13,4 +13,5 @@ public record RepairRequestResponse(
     string? EstimatedCostCurrency,
     ERepairRequestStatus Status,
     string? RejectionReason,
-    DateTime CreatedAt);
+    DateTime CreatedAt,
+    string? SummaryReport);

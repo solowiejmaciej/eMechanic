@@ -1,13 +1,14 @@
 namespace eMechanic.Domain.RepairRequest;
 
 using System;
+using Common.Attributes;
 using Common.DDD;
 using Common.Result;
 using Enums;
 using ValueObjects;
 using Shared.ValueObjects;
 using DomainEvents;
-using References.User;
+using Shared.References.User;
 using Shared.References.Vehicle;
 using Shared.References.Workshop;
 
@@ -17,12 +18,20 @@ public class RepairRequest : AggregateRoot, IVehicleReference, IWorkshopReferenc
     public Guid WorkshopId { get; private set; }
     public Guid UserId { get; private set; }
 
+    [Searchable]
     public RepairDescription Description { get; private set; }
+
+    [Searchable]
     public RepairDiagnosis? Diagnosis { get; private set; }
     public Money? EstimatedCost { get; private set; }
 
     public ERepairRequestStatus Status { get; private set; }
+
+    [Searchable]
     public string? RejectionReason { get; private set; }
+
+    [Searchable]
+    public string? SummaryReport { get; private set; }
 
     private RepairRequest() { }
 
@@ -117,4 +126,5 @@ public class RepairRequest : AggregateRoot, IVehicleReference, IWorkshopReferenc
         return Result.Success;
     }
 
+    public void SetSummaryReport(string summaryReport) => SummaryReport = summaryReport;
 }

@@ -3,6 +3,7 @@ namespace eMechanic.Integration.Tests.TestContainers;
 
 using API;
 using Application.Abstractions.Storage;
+using Application.Summary;
 using DotNet.Testcontainers.Builders;
 using eMechanic.Infrastructure.DAL;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Mocks;
+using NSubstitute;
 using Testcontainers.PostgreSql;
 
 public sealed class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
@@ -45,7 +47,13 @@ public sealed class IntegrationTestWebAppFactory : WebApplicationFactory<Program
             }
             services.RemoveAll<AppDbContext>();
             services.RemoveAll<IdentityAppDbContext>();
+            services.RemoveAll<IModelFacade>();
 
+            var mockFacade = Substitute.For<IModelFacade>();
+            mockFacade.GetResponseAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+                .Returns(Task.FromResult("AI Generated Summary Test Content"));
+
+            services.AddScoped(_ => mockFacade);
 
             var connectionString = _dbContainer.GetConnectionString();
 

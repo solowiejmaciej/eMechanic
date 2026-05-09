@@ -2,8 +2,8 @@ namespace eMechanic.Infrastructure.Tests.Services.Creators;
 
 using Application.Abstractions.Identity;
 using Application.Identity;
-using Application.Workshop.Features.Update;
-using Application.Workshop.Repositories;
+using Application.Workshop.Workshop.Features.Update;
+using Application.Workshop.Workshop.Repositories;
 using Common.Result;
 using Common.Result.Fields;
 using Domain.Tests.Builders;
@@ -193,11 +193,9 @@ public class WorkshopServiceTests
         result.HasError().Should().BeFalse();
         await _transactionalExecutor.Received(1).ExecuteAsync(Arg.Any<Func<Task>>(), Arg.Any<CancellationToken>());
 
-        // Email się nie zmienił, nie wołamy Usermanagera
         await _userManager.DidNotReceiveWithAnyArgs().SetEmailAsync(default!, default!);
 
-        // Weryfikujemy aktualizację domeny
-        _workshopRepository.Received(1).UpdateAsync(Arg.Is<Workshop>(w =>
+        await _workshopRepository.Received(1).UpdateAsync(Arg.Is<Workshop>(w =>
             w.Name == command.Name && w.ContactEmail == command.ContactEmail
         ), Arg.Any<CancellationToken>());
         await _workshopRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
@@ -227,7 +225,7 @@ public class WorkshopServiceTests
         result.HasError().Should().BeFalse();
         await _userManager.Received(1).SetEmailAsync(_fakeIdentity, newEmail);
         await _userManager.Received(1).SetUserNameAsync(_fakeIdentity, newEmail);
-        _workshopRepository.Received(1).UpdateAsync(Arg.Is<Workshop>(w => w.Email == newEmail), Arg.Any<CancellationToken>());
+        await _workshopRepository.Received(1).UpdateAsync(Arg.Is<Workshop>(w => w.Email == newEmail), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -254,11 +252,11 @@ public class WorkshopServiceTests
         // Arrange
         var newEmail = "taken@workshop.com";
         var command = CreateValidUpdateCommand(newEmail);
-        var otherIdentity = Identity.Create(newEmail, EIdentityType.User); // Inne ID
+        var otherIdentity = Identity.Create(newEmail, EIdentityType.User);
 
         _workshopRepository.GetByIdAsync(_domainWorkshopId, Arg.Any<CancellationToken>()).Returns(_fakeWorkshop);
         _userManager.FindByIdAsync(_identityId.ToString()).Returns(_fakeIdentity);
-        _userManager.FindByEmailAsync(newEmail).Returns(otherIdentity); // Email zajęty
+        _userManager.FindByEmailAsync(newEmail).Returns(otherIdentity);
 
         // Act
         var result = await _workshopService.UpdateWorkshopWithIdentityAsync(

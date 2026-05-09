@@ -1,8 +1,8 @@
 namespace eMechanic.Application.Tests.Workshop.Features.Update
 {
+    using Application.Workshop.Workshop.Features.Update;
+    using Application.Workshop.Workshop.Services;
     using eMechanic.Application.Abstractions.Identity.Contexts;
-    using eMechanic.Application.Workshop.Features.Update;
-    using eMechanic.Application.Workshop.Services;
     using eMechanic.Common.Result;
     using FluentAssertions;
     using NSubstitute;

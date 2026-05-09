@@ -1,10 +1,10 @@
 namespace eMechanic.Infrastructure.Repositories;
 
-using Application.VehicleDocument.Repositories;
+using Application.Vehicle.Document.Repositories;
 using Base;
 using Common.Result;
 using DAL;
-using Domain.VehicleDocument;
+using Domain.Vehicle.Documents;
 using Extensions;
 using Services;
 

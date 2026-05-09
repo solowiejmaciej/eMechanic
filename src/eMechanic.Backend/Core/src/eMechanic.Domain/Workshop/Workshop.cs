@@ -1,19 +1,35 @@
 namespace eMechanic.Domain.Workshop;
 
+using Common.Attributes;
 using Common.DDD;
 using DomainEvents;
-using References.Identity;
+using Shared.References.Identity;
 
 public class Workshop : AggregateRoot, IIdentityReference
 {
     public string Email { get; private set; }
+
+    [Searchable]
     public string ContactEmail { get; private set; }
+
     public string Name { get; private set; }
+
+    [Searchable]
     public string DisplayName { get; private set; }
+
+    [Searchable]
     public string PhoneNumber { get; private set; }
+
+    [Searchable]
     public string Address { get; private set; }
+
+    [Searchable]
     public string City { get; private set; }
+
+    [Searchable]
     public string PostalCode { get; private set; }
+
+    [Searchable]
     public string Country { get; private set; }
     public Guid IdentityId { get; private set; }
 

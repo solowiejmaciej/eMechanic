@@ -8,4 +8,5 @@ public static class TokenPrefix
     public const string CREATE_USER_TOKEN_ENDPOINT = ENDPOINT + "/user";
     public const string CREATE_WORKSHOP_TOKEN_ENDPOINT = ENDPOINT + "/workshop";
     public const string REFRESH_TOKEN_ENDPOINT = ENDPOINT + "/refresh";
+    public const string CREATE_EXTERNAL_USER_TOKEN_ENDPOINT = ENDPOINT + "/external/user/google";
 }

@@ -1,7 +1,7 @@
 namespace eMechanic.Application.Tests.Builders;
 
-using eMechanic.Application.VehicleDocument.Features.Create;
-using eMechanic.Domain.VehicleDocument.Enums;
+using Application.Vehicle.Document.Features.Create;
+using Domain.Vehicle.Documents.Enums;
 using Microsoft.AspNetCore.Http;
 using NSubstitute;
 

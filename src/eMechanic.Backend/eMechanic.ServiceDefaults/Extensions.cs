@@ -85,15 +85,11 @@ public static class Extensions
 
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
+        app.MapHealthChecks(HEALTH_ENDPOINT_PATH);
+        app.MapHealthChecks(ALIVENESS_ENDPOINT_PATH, new HealthCheckOptions
         {
-            app.MapHealthChecks(HEALTH_ENDPOINT_PATH);
-
-            app.MapHealthChecks(ALIVENESS_ENDPOINT_PATH, new HealthCheckOptions
-            {
-                Predicate = r => r.Tags.Contains("live")
-            });
-        }
+            Predicate = r => r.Tags.Contains("live")
+        });
 
         return app;
     }

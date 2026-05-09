@@ -3,12 +3,15 @@ namespace eMechanic.Infrastructure.DAL;
 using System.Reflection;
 using System.Text.Json;
 using Common.DDD;
+using Domain.RepairRequest;
 using Domain.User;
 using Domain.UserRepairPreferences;
 using Domain.Vehicle;
-using Domain.VehicleDocument;
-using Domain.VehicleTimeline;
+using Domain.Vehicle.Documents;
+using Domain.Vehicle.Timeline;
+using Domain.Vehicle.Vehicle;
 using Domain.Workshop;
+using Domain.Workshop.Documents;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Outbox;
@@ -29,6 +32,8 @@ public class AppDbContext : DbContext
     public DbSet<VehicleTimeline> VehicleTimelines { get; set; }
     public DbSet<UserRepairPreferences> UserRepairPreferences { get; set; }
     public DbSet<VehicleDocument> VehicleDocuments { get; set; }
+    public DbSet<WorkshopDocument> WorkshopDocuments { get; set; }
+    public DbSet<RepairRequest> RepairRequests { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

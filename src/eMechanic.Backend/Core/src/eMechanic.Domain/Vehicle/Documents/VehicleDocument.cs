@@ -1,16 +1,18 @@
-namespace eMechanic.Domain.VehicleDocument;
+namespace eMechanic.Domain.Vehicle.Documents;
 
-using Common.DDD;
-using Common.Result;
-using Domain.VehicleDocument.Enums;
+using Common.Attributes;
 using DomainEvents;
-using Shared.References.Vehicle;
-using Vehicle.Documents.DomainEvents;
+using eMechanic.Common.DDD;
+using eMechanic.Common.Result;
+using eMechanic.Domain.Shared.References.Vehicle;
+using Enums;
 
 public class VehicleDocument : AggregateRoot, IVehicleReference
 {
     public Guid VehicleId { get; private set; }
     public string FullPath { get; private set; }
+
+    [Searchable]
     public string OriginalFileName { get; private set; }
     public string ContentType { get; private set; }
     public EVehicleDocumentType DocumentType { get; private set; }

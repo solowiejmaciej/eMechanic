@@ -1,12 +1,12 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Create;
 
 using Application.Tests.Builders;
-using Application.Vehicle.Repostories;
+using Application.Vehicle.Vehicle.Features.Create;
+using Application.Vehicle.Vehicle.Repostories;
+using Domain.Vehicle.Vehicle;
 using eMechanic.Application.Abstractions.Identity.Contexts;
-using eMechanic.Application.Vehicle.Features.Create;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;
-using eMechanic.Domain.Vehicle.Enums;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;

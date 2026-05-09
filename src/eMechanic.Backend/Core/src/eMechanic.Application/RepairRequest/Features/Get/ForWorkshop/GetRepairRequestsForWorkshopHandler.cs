@@ -33,7 +33,8 @@ public sealed class GetRepairRequestsForWorkshopHandler : IResultQueryHandler<Ge
             rr.EstimatedCost?.Currency,
             rr.Status,
             rr.RejectionReason,
-            rr.CreatedAt
+            rr.CreatedAt,
+            rr.SummaryReport
         ));
 
         return result;
