@@ -2,10 +2,32 @@ namespace eMechanic.NotificationService;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
+using eMechanic.NotificationService.Services;
+using eMechanic.NotificationService.Services.Infrastructure;
+using eMechanic.NotificationService.Services.Abstractions;
 
 public static class DependencyInjection
 {
+    public static IServiceCollection AddNotificationService(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        //rejestracja ustawień appsentting w notifications
+        services.Configure<NotificationSettings>(configuration.GetSection(NotificationSettings.SECTION_NAME));
+
+        //rejestracja EmailLabs
+        services.AddHttpClient<IEmailService, EmailLabsApiService>();
+
+        //reejestacja Twilio
+        services.AddScoped<ISmsService, TwilioSmsService>();
+
+        //dispatcher - logika sterująca
+        services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
+
+        return services;
+    }
+
     public static void AddSwagger(this IServiceCollection services, string title, string version)
     {
         services.AddSwaggerGen();

@@ -11,6 +11,8 @@ var postgresDb = postgresServer.AddDatabase("eMechanic");
 var redisCache = builder.AddRedis("emechanic-cache");
 var serviceBus = builder.AddConnectionString("AzureServiceBus");
 var azureStorage = builder.AddConnectionString("Storage");
+var emailAppID = builder.AddParameter("EmailAppID", secret: true);
+var emailSecret = builder.AddParameter("EmailLabsServiceKey", secret: true);
 
 builder
     .AddProject<Projects.eMechanic_API>("eMechanic-Core")
@@ -25,6 +27,9 @@ builder.AddAzureFunctionsProject<Projects.eMechanic_OutboxPublisher>("outbox-pub
 
 builder
     .AddProject<Projects.eMechanic_NotificationService_API>("eMechanic-NotificationService")
-    .WithReference(serviceBus);
+    .WithReference(serviceBus)
+    .WithEnvironment("Notifications__EmailAppID", emailAppID)
+    .WithEnvironment("Notifications__EmailSecret", emailSecret);
+
 
 await builder.Build().RunAsync();

@@ -1,10 +1,11 @@
 namespace eMechanic.NotificationService;
 
 using System.Reflection;
-using Common.Web;
-using Constans;
+using eMechanic.NotificationService.DAL;
+using eMechanic.NotificationService.Constans;
+using Microsoft.EntityFrameworkCore;
+using eMechanic.ServiceDefaults;
 using Events;
-using ServiceDefaults;
 
 public sealed class Program
 {
@@ -15,13 +16,30 @@ public sealed class Program
         builder.AddServiceDefaults();
         builder.Services.AddOpenApi();
         builder.Services.AddSwagger("eMechanic.NotificationService", WebApiConstans.CURRENT_API_VERSION);
+
+        builder.Services.AddDbContext<NotificationDbContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("NotificationDb")));
+
+        builder.Services.AddNotificationService(builder.Configuration);
+
+
+
         builder.Services.AddEventConsuming(builder.Configuration, Assembly.GetExecutingAssembly());
+        builder.Services.AddNotificationService(builder.Configuration);
+
+
+        builder.Services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+        });
 
         var app = builder.Build();
-
-        app.MapOpenApi();
-        app.UseSwagger();
-        app.UseSwaggerUI();
+        if (app.Environment.IsDevelopment())
+        {
+            app.MapOpenApi();
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
 
         app.MapDefaultEndpoints();
 
@@ -30,5 +48,6 @@ public sealed class Program
 
         app.UseHttpsRedirection();
         app.Run();
+
     }
 }
