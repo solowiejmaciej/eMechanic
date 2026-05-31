@@ -22,6 +22,44 @@ namespace eMechanic.Infrastructure.Migrations.Core
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("eMechanic.Domain.Repair.Repair", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("RepairRequestId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("VehicleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("WorkshopId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RepairRequestId")
+                        .IsUnique();
+
+                    b.HasIndex("VehicleId");
+
+                    b.HasIndex("WorkshopId");
+
+                    b.ToTable("Repairs", (string)null);
+                });
+
             modelBuilder.Entity("eMechanic.Domain.RepairRequest.RepairRequest", b =>
                 {
                     b.Property<Guid>("Id")
@@ -149,7 +187,80 @@ namespace eMechanic.Infrastructure.Migrations.Core
                     b.ToTable("UserRepairPreferences", (string)null);
                 });
 
-            modelBuilder.Entity("eMechanic.Domain.Vehicle.Vehicle", b =>
+            modelBuilder.Entity("eMechanic.Domain.Vehicle.Documents.VehicleDocument", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DocumentType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("FullPath")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.Property<string>("OriginalFileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("VehicleId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FullPath")
+                        .IsUnique();
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("VehicleDocuments", (string)null);
+                });
+
+            modelBuilder.Entity("eMechanic.Domain.Vehicle.Timeline.VehicleTimeline", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("VehicleId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VehicleTimelines");
+                });
+
+            modelBuilder.Entity("eMechanic.Domain.Vehicle.Vehicle.Vehicle", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -215,79 +326,6 @@ namespace eMechanic.Infrastructure.Migrations.Core
                     b.HasIndex("UserId");
 
                     b.ToTable("Vehicles", (string)null);
-                });
-
-            modelBuilder.Entity("eMechanic.Domain.VehicleDocument.VehicleDocument", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("DocumentType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("FullPath")
-                        .IsRequired()
-                        .HasMaxLength(1024)
-                        .HasColumnType("character varying(1024)");
-
-                    b.Property<string>("OriginalFileName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("VehicleId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FullPath")
-                        .IsUnique();
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("VehicleDocuments", (string)null);
-                });
-
-            modelBuilder.Entity("eMechanic.Domain.VehicleTimeline.VehicleTimeline", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Data")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("EventType")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("VehicleId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("VehicleTimelines");
                 });
 
             modelBuilder.Entity("eMechanic.Domain.Workshop.Documents.WorkshopDocument", b =>
@@ -426,6 +464,60 @@ namespace eMechanic.Infrastructure.Migrations.Core
                     b.ToTable("OutboxMessages", (string)null);
                 });
 
+            modelBuilder.Entity("eMechanic.Domain.Repair.Repair", b =>
+                {
+                    b.OwnsOne("eMechanic.Domain.Shared.ValueObjects.Money", "EstimatedCost", b1 =>
+                        {
+                            b1.Property<Guid>("RepairId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("EstimatedCostAmount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("character varying(3)")
+                                .HasColumnName("EstimatedCostCurrency");
+
+                            b1.HasKey("RepairId");
+
+                            b1.ToTable("Repairs");
+
+                            b1.WithOwner()
+                                .HasForeignKey("RepairId");
+                        });
+
+                    b.OwnsOne("eMechanic.Domain.Shared.ValueObjects.Money", "FinalCost", b1 =>
+                        {
+                            b1.Property<Guid>("RepairId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("FinalCostAmount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("character varying(3)")
+                                .HasColumnName("FinalCostCurrency");
+
+                            b1.HasKey("RepairId");
+
+                            b1.ToTable("Repairs");
+
+                            b1.WithOwner()
+                                .HasForeignKey("RepairId");
+                        });
+
+                    b.Navigation("EstimatedCost")
+                        .IsRequired();
+
+                    b.Navigation("FinalCost");
+                });
+
             modelBuilder.Entity("eMechanic.Domain.RepairRequest.RepairRequest", b =>
                 {
                     b.OwnsOne("eMechanic.Domain.Shared.ValueObjects.Money", "EstimatedCost", b1 =>
@@ -454,9 +546,9 @@ namespace eMechanic.Infrastructure.Migrations.Core
                     b.Navigation("EstimatedCost");
                 });
 
-            modelBuilder.Entity("eMechanic.Domain.Vehicle.Vehicle", b =>
+            modelBuilder.Entity("eMechanic.Domain.Vehicle.Vehicle.Vehicle", b =>
                 {
-                    b.OwnsOne("eMechanic.Domain.Vehicle.ValueObjects.Mileage", "Mileage", b1 =>
+                    b.OwnsOne("eMechanic.Domain.Vehicle.Vehicle.ValueObjects.Mileage", "Mileage", b1 =>
                         {
                             b1.Property<Guid>("VehicleId")
                                 .HasColumnType("uuid");

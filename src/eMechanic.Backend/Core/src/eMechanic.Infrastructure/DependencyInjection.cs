@@ -13,6 +13,8 @@ using Application.Vehicle.Vehicle.Repostories;
 using Application.Workshop.Document.Repositories;
 using Application.Workshop.Workshop.Repositories;
 using Application.Workshop.Workshop.Services;
+using eMechanic.Application.Payments.Abstractions;
+using eMechanic.Application.Repair.Repositories;
 using eMechanic.Application.RepairRequest.Repositories;
 using DAL;
 using DAL.Transactions;
@@ -31,6 +33,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Outbox;
+using Payments;
 using Repositories;
 using Services;
 using Services.Creators;
@@ -69,6 +72,8 @@ public static class DependencyInjection
             clientBuilder.AddBlobServiceClient(configuration.GetConnectionString("Storage"));
         });
 
+        services.AddOptions<StripeOptions>().BindConfiguration("Stripe");
+
         services.AddRepositories();
         services.AddServices();
     }
@@ -83,6 +88,7 @@ public static class DependencyInjection
         services.AddScoped<IVehicleDocumentRepository, VehicleDocumentRepository>();
         services.AddScoped<IWorkshopDocumentRepository, WorkshopDocumentRepository>();
         services.AddScoped<IRepairRequestRepository, RepairRequestRepository>();
+        services.AddScoped<IRepairRepository, RepairRepository>();
     }
 
     private static void AddServices(this IServiceCollection services)
@@ -103,6 +109,8 @@ public static class DependencyInjection
         services.AddScoped<IOutboxWriter, OutboxWriter>();
         services.AddScoped<IGoogleAuthService, GoogleAuthService>();
         services.AddScoped<IGoogleTokenValidator, GoogleTokenValidator>();
+        services.AddScoped<IPaymentService, StripePaymentService>();
+        services.AddScoped<IPaymentWebhookProcessor, StripePaymentWebhookProcessor>();
         services.RegisterLlmServices();
     }
 

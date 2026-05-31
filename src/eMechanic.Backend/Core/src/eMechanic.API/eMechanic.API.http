@@ -103,7 +103,7 @@ Content-Type: application/json
   "model": "Test Model",
   "productionYear": "2023",
   "engineCapacity": 1.9,
-  "mileage": 125000,
+  "mileageValue": 125000,
   "mileageUnit": 1,
   "licensePlate": "PZ1W924",
   "horsePower" : 320,
