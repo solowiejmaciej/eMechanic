@@ -1,9 +1,11 @@
 namespace eMechanic.Application.Workshop.Workshop.Features.Get.All;
 
+using Common.Cache;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
 using FluentValidation;
 
+[Cache(300, ECacheScope.Public)]
 public sealed record GetWorkshopsQuery(PaginationParameters PaginationParameters) : IResultQuery<PaginationResult<WorkshopResponse>>;
 
 public class GetWorkshopsQueryValidator : AbstractValidator<GetWorkshopsQuery>
