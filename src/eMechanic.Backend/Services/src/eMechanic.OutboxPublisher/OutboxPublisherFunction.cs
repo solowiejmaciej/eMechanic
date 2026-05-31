@@ -82,6 +82,16 @@ public class OutboxPublisherFunction
             _logger.LogInformation("Publishing message of type {MessageEventType} with payload {MessagePayload}", @event.GetType().Name, message.Payload);
 
             await _eventPublisher.PublishAsync(@event, type, cancellationToken);
+
+            const string updateSql = """
+                              UPDATE "OutboxMessages"
+                              SET "ProcessedAt" = @ProcessedAt
+                              WHERE "Id" = @Id
+                              """;
+
+            await connection.ExecuteAsync(updateSql, new { ProcessedAt = DateTime.UtcNow, Id = message.Id }, transaction: transaction);
         }
+
+        await transaction.CommitAsync(cancellationToken);
     }
 }

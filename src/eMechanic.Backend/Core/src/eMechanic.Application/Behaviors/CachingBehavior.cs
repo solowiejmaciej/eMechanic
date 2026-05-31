@@ -1,4 +1,3 @@
-// csharp
 namespace eMechanic.Application.Behaviors;
 
 using System;
@@ -6,8 +5,9 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Caching;
+using Common.Cache;
 using Common.Result;
-using eMechanic.Application.Caching;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
@@ -17,6 +17,8 @@ public sealed class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRe
     private readonly IDistributedCache _cache;
     private readonly ILogger<CachingBehavior<TRequest, TResponse>> _logger;
     private readonly ICacheConfiguration _config;
+    private readonly ICacheKeyGenerator _cacheKeyGenerator;
+
     private static readonly MethodInfo? HasErrorMethod = typeof(TResponse).IsGenericType && typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<,>)
         ? typeof(TResponse).GetMethod("HasError", BindingFlags.Public | BindingFlags.Instance) ?? typeof(TResponse).GetProperty("HasError")?.GetGetMethod()
         : null;
@@ -24,14 +26,19 @@ public sealed class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRe
     public CachingBehavior(
         IDistributedCache cache,
         ILogger<CachingBehavior<TRequest, TResponse>> logger,
-        ICacheConfiguration config)
+        ICacheConfiguration config,
+        ICacheKeyGenerator cacheKeyGenerator)
     {
         _cache = cache;
         _logger = logger;
         _config = config;
+        _cacheKeyGenerator = cacheKeyGenerator;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
     {
         if (!_config.TryGetRule(typeof(TRequest), out var boxedRule))
         {
@@ -44,16 +51,7 @@ public sealed class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRe
             return await next(cancellationToken);
         }
 
-        string cacheKey;
-        try
-        {
-            cacheKey = rule.KeyFactory(request);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "KeyFactory threw for {RequestType}. Proceeding without cache.", typeof(TRequest).Name);
-            return await next(cancellationToken);
-        }
+        var cacheKey = _cacheKeyGenerator.GenerateKey(rule, request);
 
         string? cachedValue;
         try
