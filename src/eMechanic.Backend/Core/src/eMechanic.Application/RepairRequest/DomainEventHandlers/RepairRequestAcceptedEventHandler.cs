@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using eMechanic.Application.Abstractions.DomainEvents;
 using eMechanic.Application.Abstractions.Outbox;
+using eMechanic.Application.Repair.Repositories;
 using eMechanic.Application.Users.Repositories;
 using eMechanic.Domain.RepairRequest.DomainEvents;
 using eMechanic.Events.Events.RepairRequest;
@@ -13,21 +14,42 @@ public class RepairRequestAcceptedEventHandler : IDomainEventHandler<RepairReque
 {
     private readonly IUserRepository _userRepository;
     private readonly IVehicleRepository _vehicleRepository;
+    private readonly IRepairRepository _repairRepository;
     private readonly IOutboxWriter _outboxWriter;
 
     public RepairRequestAcceptedEventHandler(
         IUserRepository userRepository,
         IVehicleRepository vehicleRepository,
+        IRepairRepository repairRepository,
         IOutboxWriter outboxWriter)
     {
         _userRepository = userRepository;
         _vehicleRepository = vehicleRepository;
+        _repairRepository = repairRepository;
         _outboxWriter = outboxWriter;
     }
 
     public async Task Handle(RepairRequestAcceptedDomainEvent notification, CancellationToken cancellationToken)
     {
         var repairRequest = notification.RepairRequest;
+
+        if (repairRequest.EstimatedCost is null)
+        {
+            return;
+        }
+
+        var createRepairResult = Domain.Repair.Repair.Create(
+            repairRequest.VehicleId,
+            repairRequest.WorkshopId,
+            repairRequest.EstimatedCost!,
+            repairRequest.Id);
+
+        if (createRepairResult.HasError())
+        {
+            return;
+        }
+
+        await _repairRepository.AddAsync(createRepairResult.Value!, cancellationToken);
 
         var user = await _userRepository.GetByIdAsync(repairRequest.UserId, cancellationToken);
         var vehicle = await _vehicleRepository.GetByIdAsync(repairRequest.VehicleId, cancellationToken);
@@ -41,7 +63,7 @@ public class RepairRequestAcceptedEventHandler : IDomainEventHandler<RepairReque
             repairRequest.Id,
             user.Id,
             user.Email,
-            "123-456-7890", // Placeholder for phone number
+            "123-456-7890",
             user.FirstName,
             vehicle.Id,
             vehicle.Vin.Value,

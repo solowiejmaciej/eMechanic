@@ -3,6 +3,7 @@ namespace eMechanic.Infrastructure.DAL;
 using System.Reflection;
 using System.Text.Json;
 using Common.DDD;
+using Domain.Repair;
 using Domain.RepairRequest;
 using Domain.User;
 using Domain.UserRepairPreferences;
@@ -34,6 +35,7 @@ public class AppDbContext : DbContext
     public DbSet<VehicleDocument> VehicleDocuments { get; set; }
     public DbSet<WorkshopDocument> WorkshopDocuments { get; set; }
     public DbSet<RepairRequest> RepairRequests { get; set; }
+    public DbSet<Repair> Repairs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
