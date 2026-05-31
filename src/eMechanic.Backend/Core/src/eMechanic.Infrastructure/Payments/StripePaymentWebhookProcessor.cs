@@ -27,7 +27,8 @@ internal sealed class StripePaymentWebhookProcessor : IPaymentWebhookProcessor
             var stripeEvent = EventUtility.ConstructEvent(
                 jsonPayload,
                 signatureHeader,
-                _options.Value.WebhookSecret);
+                _options.Value.WebhookSecret,
+                throwOnApiVersionMismatch: false);
 
             if (stripeEvent.Type != "checkout.session.completed")
             {
