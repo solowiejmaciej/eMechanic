@@ -4,7 +4,7 @@ using Domain.Vehicle.Vehicle;
 using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;
-using Repostories;
+using Repositories;
 
 public sealed class VehicleOwnershipService : IVehicleOwnershipService
 {

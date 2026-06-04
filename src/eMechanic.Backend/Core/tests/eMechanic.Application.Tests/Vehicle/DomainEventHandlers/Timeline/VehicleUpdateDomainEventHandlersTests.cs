@@ -3,7 +3,7 @@ namespace eMechanic.Application.Tests.Vehicle.DomainEventHandlers.Timeline;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Vehicle.Timeline.DomainEventHandlers;
-using Application.Vehicle.Vehicle.Repostories;
+using Application.Vehicle.Vehicle.Repositories;
 using Domain.Vehicle;
 using Domain.Vehicle.Timeline;
 using Domain.Vehicle.Vehicle.DomainEvents;

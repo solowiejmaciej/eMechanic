@@ -1,6 +1,7 @@
 namespace eMechanic.Domain.UserRepairPreferences;
 
 using Common.DDD;
+using DomainEvents;
 using Enums;
 using Shared.References.User;
 
@@ -47,7 +48,9 @@ public class UserRepairPreferences : AggregateRoot, IUserReferenced
             return;
         }
 
+        var oldValue = PartsPreference;
         PartsPreference = newPreference;
+        RaiseDomainEvent(new UserRepairPartsPreferenceUpdatedDomainEvent(UserId, oldValue, newPreference));
     }
 
     public void UpdateTimelinePreference(ETimelinePreference newPreference)
@@ -62,6 +65,8 @@ public class UserRepairPreferences : AggregateRoot, IUserReferenced
             return;
         }
 
+        var oldValue = TimelinePreference;
         TimelinePreference = newPreference;
+        RaiseDomainEvent(new UserRepairTimelinePreferenceUpdatedDomainEvent(UserId, oldValue, newPreference));
     }
 }

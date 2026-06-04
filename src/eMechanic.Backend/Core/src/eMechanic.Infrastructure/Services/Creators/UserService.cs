@@ -37,6 +37,7 @@ internal sealed class UserService : IUserService
         string password,
         string firstName,
         string lastName,
+        string? phoneNumber = null,
         string? providerName = null,
         string? providerKey = null,
         CancellationToken cancellationToken = default)
@@ -72,7 +73,7 @@ internal sealed class UserService : IUserService
                     }
                 }
 
-                var domainUser = User.Create(email, firstName, lastName, identity.Id);
+                var domainUser = User.Create(email, firstName, lastName, identity.Id, phoneNumber);
 
                 await _userRepository.AddAsync(domainUser, cancellationToken);
                 await _userRepository.SaveChangesAsync(cancellationToken);
@@ -112,6 +113,7 @@ internal sealed class UserService : IUserService
         string email,
         string firstName,
         string lastName,
+        string? phoneNumber,
         CancellationToken cancellationToken)
     {
         try
@@ -150,7 +152,7 @@ internal sealed class UserService : IUserService
                     }
                 }
 
-                domainUser.Update(email, firstName, lastName);
+                domainUser.Update(email, firstName, lastName, phoneNumber);
 
                 await _userRepository.UpdateAsync(domainUser, cancellationToken);
                 await _userRepository.SaveChangesAsync(cancellationToken);

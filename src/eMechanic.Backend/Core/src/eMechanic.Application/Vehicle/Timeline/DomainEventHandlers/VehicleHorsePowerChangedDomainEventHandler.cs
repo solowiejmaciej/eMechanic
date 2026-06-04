@@ -4,7 +4,7 @@ using Domain.Vehicle.Vehicle.DomainEvents;
 using eMechanic.Application.Abstractions.DomainEvents;
 using eMechanic.Application.Timeline;
 using eMechanic.Domain.Vehicle;
-using Vehicle.Repostories;
+using eMechanic.Application.Vehicle.Vehicle.Repositories;
 
 public class VehicleHorsePowerChangedDomainEventHandler : BaseTimelineEventHandler, IDomainEventHandler<VehicleHorsePowerChangedDomainEvent>
 {

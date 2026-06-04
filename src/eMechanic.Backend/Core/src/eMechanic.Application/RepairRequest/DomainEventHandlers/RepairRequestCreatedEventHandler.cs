@@ -8,7 +8,7 @@ using eMechanic.Application.Abstractions.Outbox;
 using eMechanic.Application.Users.Repositories;
 using eMechanic.Domain.RepairRequest.DomainEvents;
 using eMechanic.Events.Events.RepairRequest;
-using Vehicle.Vehicle.Repostories;
+using eMechanic.Application.Vehicle.Vehicle.Repositories;
 
 public class RepairRequestCreatedEventHandler : IDomainEventHandler<RepairRequestCreatedDomainEvent>
 {
@@ -41,8 +41,8 @@ public class RepairRequestCreatedEventHandler : IDomainEventHandler<RepairReques
         var integrationEvent = new RepairRequestCreatedEvent(
             repairRequest.Id,
             user.Id,
-            user.Email,
-            "123-456-7890", // Placeholder for phone number
+            user.Email.Value,
+            user.PhoneNumber?.Value ?? string.Empty,
             user.FirstName,
             vehicle.Id,
             vehicle.Vin.Value,

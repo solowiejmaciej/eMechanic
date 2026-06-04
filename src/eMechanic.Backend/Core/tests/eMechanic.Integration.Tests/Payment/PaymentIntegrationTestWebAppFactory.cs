@@ -20,7 +20,7 @@ public sealed class PaymentIntegrationTestWebAppFactory
 {
     private readonly PostgreSqlContainer _dbContainer;
 
-    public MockPaymentWebhookProcessor MockWebhookProcessor { get; } = new();
+    public MockPaymentProcessor MockProcessor { get; } = new();
 
     public PaymentIntegrationTestWebAppFactory()
     {
@@ -55,18 +55,15 @@ public sealed class PaymentIntegrationTestWebAppFactory
             services.RemoveAll<IdentityAppDbContext>();
             services.RemoveAll<IModelFacade>();
             services.RemoveAll<IFileStorageService>();
-            services.RemoveAll<IPaymentWebhookProcessor>();
-            services.RemoveAll<IPaymentService>();
+            services.RemoveAll<IPaymentProcessor>();
 
             var mockFacade = Substitute.For<IModelFacade>();
             mockFacade.GetResponseAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
                 .Returns(Task.FromResult("AI Generated Summary Test Content"));
             services.AddScoped(_ => mockFacade);
 
-            var mockPaymentService = Substitute.For<IPaymentService>();
-            services.AddScoped(_ => mockPaymentService);
 
-            services.AddSingleton<IPaymentWebhookProcessor>(MockWebhookProcessor);
+            services.AddSingleton<IPaymentProcessor>(MockProcessor);
 
             var connectionString = _dbContainer.GetConnectionString();
 
@@ -99,4 +96,3 @@ public sealed class PaymentIntegrationTestWebAppFactory
         await base.DisposeAsync();
     }
 }
-

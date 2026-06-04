@@ -1,5 +1,6 @@
 namespace eMechanic.Application.RepairRequest.DomainEventHandlers;
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using eMechanic.Application.Abstractions.DomainEvents;
@@ -8,7 +9,7 @@ using eMechanic.Application.Repair.Repositories;
 using eMechanic.Application.Users.Repositories;
 using eMechanic.Domain.RepairRequest.DomainEvents;
 using eMechanic.Events.Events.RepairRequest;
-using Vehicle.Vehicle.Repostories;
+using eMechanic.Application.Vehicle.Vehicle.Repositories;
 
 public class RepairRequestAcceptedEventHandler : IDomainEventHandler<RepairRequestAcceptedDomainEvent>
 {
@@ -46,7 +47,7 @@ public class RepairRequestAcceptedEventHandler : IDomainEventHandler<RepairReque
 
         if (createRepairResult.HasError())
         {
-            return;
+            throw new InvalidOperationException($"Failed to create repair for accepted repair request '{repairRequest.Id}': {createRepairResult.Error!.Message}");
         }
 
         await _repairRepository.AddAsync(createRepairResult.Value!, cancellationToken);
@@ -62,8 +63,8 @@ public class RepairRequestAcceptedEventHandler : IDomainEventHandler<RepairReque
         var integrationEvent = new RepairRequestAcceptedEvent(
             repairRequest.Id,
             user.Id,
-            user.Email,
-            "123-456-7890",
+            user.Email.Value,
+            user.PhoneNumber?.Value ?? string.Empty,
             user.FirstName,
             vehicle.Id,
             vehicle.Vin.Value,

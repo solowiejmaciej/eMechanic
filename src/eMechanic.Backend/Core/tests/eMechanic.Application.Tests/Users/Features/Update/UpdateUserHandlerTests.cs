@@ -42,6 +42,7 @@ public class UpdateUserHandlerTests
             command.Email,
             command.FirstName,
             command.LastName,
+            command.PhoneNumber,
             Arg.Any<CancellationToken>())
         .Returns(Result.Success);
 
@@ -56,6 +57,7 @@ public class UpdateUserHandlerTests
             command.Email,
             command.FirstName,
             command.LastName,
+            command.PhoneNumber,
             Arg.Any<CancellationToken>());
     }
 
@@ -71,6 +73,7 @@ public class UpdateUserHandlerTests
             command.Email,
             command.FirstName,
             command.LastName,
+            command.PhoneNumber,
             Arg.Any<CancellationToken>())
         .Returns(serviceError);
 

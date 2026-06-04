@@ -40,7 +40,9 @@ public class CreateWorkshopCommandValidator : AbstractValidator<CreateWorkshopCo
             .NotEmpty().WithMessage("Display name cannot be empty.");
 
         RuleFor(x => x.PhoneNumber)
-            .NotEmpty().WithMessage("Phone number cannot be empty.");
+            .NotEmpty().WithMessage("Phone number cannot be empty.")
+            .Matches("^\\+?[\\d\\s\\-\\(\\)]{7,20}$")
+            .WithMessage("Phone number format is invalid.");
 
         RuleFor(x => x.Address)
             .NotEmpty().WithMessage("Address cannot be empty.");

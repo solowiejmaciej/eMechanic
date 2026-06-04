@@ -271,6 +271,6 @@ public class WorkshopServiceTests
     }
 
     private UpdateWorkshopCommand CreateValidUpdateCommand(string newEmail) => new(
-        newEmail, "new_contact@w.pl", "New Name", "NewDisplay", "999",
+        newEmail, "new_contact@w.pl", "New Name", "NewDisplay", "572370440",
         "New Address", "New City", "99-999", "New Country");
 }

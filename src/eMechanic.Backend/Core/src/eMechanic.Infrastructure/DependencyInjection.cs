@@ -9,11 +9,12 @@ using Application.UserRepairPreferences.Repositories;
 using Application.Users.Repositories;
 using Application.Users.Services;
 using Application.Vehicle.Document.Repositories;
-using Application.Vehicle.Vehicle.Repostories;
+using Application.Vehicle.Vehicle.Repositories;
 using Application.Workshop.Document.Repositories;
 using Application.Workshop.Workshop.Repositories;
 using Application.Workshop.Workshop.Services;
 using eMechanic.Application.Payments.Abstractions;
+using eMechanic.Application.Payments.Repositories;
 using eMechanic.Application.Repair.Repositories;
 using eMechanic.Application.RepairRequest.Repositories;
 using DAL;
@@ -89,6 +90,7 @@ public static class DependencyInjection
         services.AddScoped<IWorkshopDocumentRepository, WorkshopDocumentRepository>();
         services.AddScoped<IRepairRequestRepository, RepairRequestRepository>();
         services.AddScoped<IRepairRepository, RepairRepository>();
+        services.AddScoped<IPaymentOrderRepository, PaymentOrderRepository>();
     }
 
     private static void AddServices(this IServiceCollection services)
@@ -109,8 +111,8 @@ public static class DependencyInjection
         services.AddScoped<IOutboxWriter, OutboxWriter>();
         services.AddScoped<IGoogleAuthService, GoogleAuthService>();
         services.AddScoped<IGoogleTokenValidator, GoogleTokenValidator>();
-        services.AddScoped<IPaymentService, StripePaymentService>();
-        services.AddScoped<IPaymentWebhookProcessor, StripePaymentWebhookProcessor>();
+        services.AddScoped<IStripePaymentService, StripePaymentService>();
+        services.AddScoped<IPaymentProcessor, StripePaymentProcessor>();
         services.RegisterLlmServices();
     }
 

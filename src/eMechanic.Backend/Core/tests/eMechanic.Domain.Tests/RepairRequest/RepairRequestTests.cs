@@ -186,7 +186,7 @@ public class RepairRequestTests
         // Assert
         result.HasError().Should().BeFalse();
         request.Status.Should().Be(ERepairRequestStatus.Rejected);
-        request.RejectionReason.Should().Be(reason);
+        request.RejectionReason!.Value.Should().Be(reason);
         request.GetDomainEvents().Should().ContainSingle(e => e is RepairRequestRejectedDomainEvent);
     }
 

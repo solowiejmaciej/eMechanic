@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text.Json;
 using Common.DDD;
 using Domain.Repair;
+using Domain.Payment;
 using Domain.RepairRequest;
 using Domain.User;
 using Domain.UserRepairPreferences;
@@ -27,6 +28,7 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<OutboxMessage> OutboxMessages { get; set; }
+    public DbSet<PaymentOrder> PaymentOrders { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Workshop> Workshops { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }

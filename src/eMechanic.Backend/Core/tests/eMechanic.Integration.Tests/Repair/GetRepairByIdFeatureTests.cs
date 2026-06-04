@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 using API.Constans;
 using API.Features.Repair;
 using Application.Repair.Features.Get.ById;
+using Domain.Repair.Enums;
 using FluentAssertions;
 using Helpers;
 using TestContainers;
@@ -28,7 +29,7 @@ public class GetRepairByIdFeatureTests : IClassFixture<IntegrationTestWebAppFact
         // Arrange
         var scenario = await RepairScenarioHelper.CreateScheduledRepairAsync(_client, _factory);
         _client.SetBearerToken(scenario.WorkshopToken);
-        var getUrl = $"{BASE_API_URL}{RepairPrefix.GET_BY_ID.Replace("{id}", scenario.RepairId.ToString())}";
+        var getUrl = $"{BASE_API_URL}{RepairPrefix.GET_BY_ID_FOR_WORKSHOP.Replace("{id}", scenario.RepairId.ToString())}";
 
         // Act
         var response = await _client.GetAsync(getUrl);
@@ -41,10 +42,31 @@ public class GetRepairByIdFeatureTests : IClassFixture<IntegrationTestWebAppFact
         content.Id.Should().Be(scenario.RepairId);
         content.RepairRequestId.Should().Be(scenario.RepairRequestId);
         content.VehicleId.Should().Be(scenario.VehicleId);
-        content.Status.Should().Be("Scheduled");
+        content.Status.Should().Be(ERepairStatus.Scheduled);
         content.EstimatedCost.Amount.Should().Be(2000m);
         content.EstimatedCost.Currency.Should().Be("PLN");
         content.FinalCost.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetRepairById_Should_ReturnRepairDetailsJson_WhenRequesterIsVehicleOwner()
+    {
+        // Arrange
+        var scenario = await RepairScenarioHelper.CreateScheduledRepairAsync(_client, _factory);
+        _client.SetBearerToken(scenario.UserToken);
+        var getUrl = $"{BASE_API_URL}{RepairPrefix.GET_BY_ID_FOR_USER.Replace("{id}", scenario.RepairId.ToString())}";
+
+        // Act
+        var response = await _client.GetAsync(getUrl);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var content = await response.Content.ReadFromJsonAsync<RepairResponse>();
+        content.Should().NotBeNull();
+        content.Id.Should().Be(scenario.RepairId);
+        content.VehicleId.Should().Be(scenario.VehicleId);
+        content.Status.Should().Be(ERepairStatus.Scheduled);
     }
 }
 

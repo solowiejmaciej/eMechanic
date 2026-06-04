@@ -2,7 +2,7 @@ namespace eMechanic.Application.Tests.Vehicle.Features.Get.Timeline;
 
 using System.Text.Json;
 using Application.Vehicle.Timeline.Features.Get;
-using Application.Vehicle.Vehicle.Repostories;
+using Application.Vehicle.Vehicle.Repositories;
 using Application.Vehicle.Vehicle.Services;
 using Common.Result;
 using Domain.Tests.Builders;

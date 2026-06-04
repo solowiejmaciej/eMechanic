@@ -6,7 +6,8 @@ public sealed record CreateUserRequest(
     string FirstName,
     string LastName,
     string Email,
-    string Password)
+    string Password,
+    string? PhoneNumber = null)
 {
-    public CreateUserCommand MapToCommand() => new(FirstName, LastName, Email, Password);
+    public CreateUserCommand MapToCommand() => new(FirstName, LastName, Email, Password, PhoneNumber);
 }

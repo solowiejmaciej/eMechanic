@@ -36,7 +36,11 @@ public class SummarizeRepairRequestCommandHandler : IResultCommandHandler<Summar
 
         var summaryReport = await _repairRequestSummaryService.GenerateSummaryReport(repairRequestResult, cancellationToken);
 
-        repairRequestResult.SetSummaryReport(summaryReport);
+        var setSummaryResult = repairRequestResult.SetSummaryReport(summaryReport);
+        if (setSummaryResult.HasError())
+        {
+            return setSummaryResult.Error!;
+        }
 
         await _repairRequestRepository.SaveChangesAsync(cancellationToken);
         return summaryReport;

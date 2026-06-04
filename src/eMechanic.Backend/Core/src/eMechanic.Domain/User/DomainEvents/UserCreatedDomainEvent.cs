@@ -7,5 +7,6 @@ using Events.Events.User;
 
 public record UserCreatedDomainEvent(User User) : IDomainEvent, IOutboxMessage
 {
-    public IEvent MapToEvent() => new UserCreatedEvent(User.Email, User.FirstName, User.LastName, User.Id);
+    public IEvent MapToEvent() => new UserCreatedEvent(
+        User.Email.Value, User.FirstName, User.LastName, User.Id, User.PhoneNumber?.Value);
 }

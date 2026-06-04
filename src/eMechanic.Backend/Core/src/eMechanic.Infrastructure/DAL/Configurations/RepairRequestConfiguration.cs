@@ -48,7 +48,17 @@ internal sealed class RepairRequestConfiguration : IEntityTypeConfiguration<Repa
             .IsRequired();
 
         builder.Property(rr => rr.RejectionReason)
+            .HasConversion(
+                v => v != null ? v.Value : null,
+                v => !string.IsNullOrEmpty(v) ? RejectionReason.Create(v).Value! : null)
             .HasMaxLength(500)
+            .IsRequired(false);
+
+        builder.Property(rr => rr.SummaryReport)
+            .HasConversion(
+                v => v != null ? v.Value : null,
+                v => !string.IsNullOrEmpty(v) ? SummaryReport.Create(v).Value! : null)
+            .HasMaxLength(4000)
             .IsRequired(false);
 
         builder.Property(rr => rr.CreatedAt).IsRequired();

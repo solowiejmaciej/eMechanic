@@ -33,6 +33,7 @@ public class CreateUserHandlerTests
             command.LastName,
             Arg.Any<string?>(),
             Arg.Any<string?>(),
+            Arg.Any<string?>(),
             Arg.Any<CancellationToken>())
         .Returns((newUserId, newIdentityId));
 
@@ -56,6 +57,7 @@ public class CreateUserHandlerTests
             command.Password,
             command.FirstName,
             command.LastName,
+            Arg.Any<string?>(),
             Arg.Any<string?>(),
             Arg.Any<string?>(),
             Arg.Any<CancellationToken>())

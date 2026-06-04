@@ -95,6 +95,7 @@ public class GoogleAuthServiceTests
             Arg.Any<string>(),
             payload.GivenName,
             payload.FamilyName,
+            Arg.Any<string?>(),
             "Google",
             payload.Subject,
             Arg.Any<CancellationToken>()

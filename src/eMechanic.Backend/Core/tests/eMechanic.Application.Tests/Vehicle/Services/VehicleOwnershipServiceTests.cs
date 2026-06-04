@@ -1,7 +1,7 @@
 namespace eMechanic.Application.Tests.Vehicle.Services;
 
 using Application.Abstractions.Identity.Contexts;
-using Application.Vehicle.Vehicle.Repostories;
+using Application.Vehicle.Vehicle.Repositories;
 using Application.Vehicle.Vehicle.Services;
 using Common.Result;
 using Domain.Tests.Builders;

@@ -22,6 +22,54 @@ namespace eMechanic.Infrastructure.Migrations.Core
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("eMechanic.Domain.Payment.PaymentOrder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CheckoutUrl")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PayableType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<Guid>("PayerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProviderSessionId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<Guid>("ReferenceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProviderSessionId")
+                        .IsUnique();
+
+                    b.HasIndex("ReferenceId", "PayableType", "Status");
+
+                    b.ToTable("PaymentOrders", (string)null);
+                });
+
             modelBuilder.Entity("eMechanic.Domain.Repair.Repair", b =>
                 {
                     b.Property<Guid>("Id")
@@ -88,7 +136,8 @@ namespace eMechanic.Infrastructure.Migrations.Core
                         .HasColumnType("character varying(50)");
 
                     b.Property<string>("SummaryReport")
-                        .HasColumnType("text");
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -139,6 +188,10 @@ namespace eMechanic.Infrastructure.Migrations.Core
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -462,6 +515,35 @@ namespace eMechanic.Infrastructure.Migrations.Core
                         .HasFilter("\"ProcessedAt\" IS NULL");
 
                     b.ToTable("OutboxMessages", (string)null);
+                });
+
+            modelBuilder.Entity("eMechanic.Domain.Payment.PaymentOrder", b =>
+                {
+                    b.OwnsOne("eMechanic.Domain.Shared.ValueObjects.Money", "Amount", b1 =>
+                        {
+                            b1.Property<Guid>("PaymentOrderId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("AmountValue");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("character varying(3)")
+                                .HasColumnName("AmountCurrency");
+
+                            b1.HasKey("PaymentOrderId");
+
+                            b1.ToTable("PaymentOrders");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PaymentOrderId");
+                        });
+
+                    b.Navigation("Amount")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("eMechanic.Domain.Repair.Repair", b =>
