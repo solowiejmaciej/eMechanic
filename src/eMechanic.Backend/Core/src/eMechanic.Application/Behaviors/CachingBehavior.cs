@@ -66,7 +66,7 @@ public sealed class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRe
 
         if (cachedValue is not null)
         {
-            _logger.LogDebug("Cache HIT for key: {CacheKey}", cacheKey);
+            _logger.LogInformation("Cache HIT for key: {CacheKey}", cacheKey);
             try
             {
                 var cachedResult = JsonSerializer.Deserialize<TResponse>(cachedValue);

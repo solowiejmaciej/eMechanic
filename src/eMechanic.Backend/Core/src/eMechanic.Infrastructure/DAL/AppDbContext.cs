@@ -38,6 +38,7 @@ public class AppDbContext : DbContext
     public DbSet<WorkshopDocument> WorkshopDocuments { get; set; }
     public DbSet<RepairRequest> RepairRequests { get; set; }
     public DbSet<Repair> Repairs { get; set; }
+    public DbSet<Domain.Workshop.Reviews.Review> WorkshopReviews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

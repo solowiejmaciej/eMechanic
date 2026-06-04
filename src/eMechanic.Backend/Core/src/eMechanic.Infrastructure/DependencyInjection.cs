@@ -11,6 +11,7 @@ using Application.Users.Services;
 using Application.Vehicle.Document.Repositories;
 using Application.Vehicle.Vehicle.Repositories;
 using Application.Workshop.Document.Repositories;
+using Application.Workshop.Reviews.Repositories;
 using Application.Workshop.Workshop.Repositories;
 using Application.Workshop.Workshop.Services;
 using eMechanic.Application.Payments.Abstractions;
@@ -91,6 +92,7 @@ public static class DependencyInjection
         services.AddScoped<IRepairRequestRepository, RepairRequestRepository>();
         services.AddScoped<IRepairRepository, RepairRepository>();
         services.AddScoped<IPaymentOrderRepository, PaymentOrderRepository>();
+        services.AddScoped<IWorkshopReviewRepository, WorkshopReviewRepository>();
     }
 
     private static void AddServices(this IServiceCollection services)
