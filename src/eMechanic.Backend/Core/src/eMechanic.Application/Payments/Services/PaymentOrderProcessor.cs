@@ -47,6 +47,11 @@ public sealed class PaymentOrderProcessor : IPaymentOrderProcessor
 
             if (existingSessionResult.HasError())
             {
+                var markFailedResult = existingOrder.MarkFailed();
+                if (!markFailedResult.HasError())
+                {
+                    await _paymentOrderRepository.SaveChangesAsync(cancellationToken);
+                }
                 return existingSessionResult.Error!;
             }
 
@@ -68,6 +73,9 @@ public sealed class PaymentOrderProcessor : IPaymentOrderProcessor
             payableItem.Amount,
             payableItem.PayerId);
 
+        await _paymentOrderRepository.AddAsync(paymentOrder, cancellationToken);
+        await _paymentOrderRepository.SaveChangesAsync(cancellationToken);
+
         var sessionResult = await _paymentProcessor.CreateCheckoutSessionAsync(
             paymentOrder,
             successUrl,
@@ -76,6 +84,11 @@ public sealed class PaymentOrderProcessor : IPaymentOrderProcessor
 
         if (sessionResult.HasError())
         {
+            var markFailedResult = paymentOrder.MarkFailed();
+            if (!markFailedResult.HasError())
+            {
+                await _paymentOrderRepository.SaveChangesAsync(cancellationToken);
+            }
             return sessionResult.Error!;
         }
 
@@ -84,10 +97,14 @@ public sealed class PaymentOrderProcessor : IPaymentOrderProcessor
 
         if (startCheckoutResult.HasError())
         {
+            var markFailedResult = paymentOrder.MarkFailed();
+            if (!markFailedResult.HasError())
+            {
+                await _paymentOrderRepository.SaveChangesAsync(cancellationToken);
+            }
             return startCheckoutResult.Error!;
         }
 
-        await _paymentOrderRepository.AddAsync(paymentOrder, cancellationToken);
         await _paymentOrderRepository.SaveChangesAsync(cancellationToken);
 
         return session;

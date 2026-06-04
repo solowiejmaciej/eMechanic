@@ -74,6 +74,73 @@ public class PaymentOrderProcessorTests
     }
 
     [Fact]
+    public async Task CreateOrGetPendingAsync_Should_PersistAndMarkFailed_WhenProviderReturnsErrorForNewOrder()
+    {
+        var payableItem = new PayableItem(Guid.NewGuid(), EPayableType.Repair, Money.Create(100m, "PLN").Value!, Guid.NewGuid());
+        var providerError = new Error(EErrorCode.InternalServerError, "stripe unavailable");
+
+        _paymentOrderRepository
+            .GetActiveByReferenceAsync(payableItem.ReferenceId, EPayableType.Repair, Arg.Any<CancellationToken>())
+            .Returns((PaymentOrder?)null);
+
+        PaymentOrder? addedOrder = null;
+        _paymentOrderRepository
+            .AddAsync(Arg.Do<PaymentOrder>(order => addedOrder = order), Arg.Any<CancellationToken>())
+            .Returns(Guid.NewGuid());
+
+        _paymentProcessor
+            .CreateCheckoutSessionAsync(Arg.Any<PaymentOrder>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(providerError);
+
+        var result = await _processor.CreateOrGetPendingAsync(
+            payableItem,
+            "https://ok",
+            "https://cancel",
+            CancellationToken.None);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Should().Be(providerError);
+        addedOrder.Should().NotBeNull();
+        addedOrder!.Status.Should().Be(EPaymentOrderStatus.Failed);
+
+        await _paymentOrderRepository.Received(1).AddAsync(Arg.Any<PaymentOrder>(), Arg.Any<CancellationToken>());
+        await _paymentOrderRepository.Received(2).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task CreateOrGetPendingAsync_Should_MarkExistingOrderAsFailed_WhenProviderReturnsError()
+    {
+        var payableItem = new PayableItem(Guid.NewGuid(), EPayableType.Repair, Money.Create(100m, "PLN").Value!, Guid.NewGuid());
+        var existingOrder = PaymentOrder.Create(
+            payableItem.ReferenceId,
+            EPayableType.Repair,
+            payableItem.Amount,
+            payableItem.PayerId);
+        var providerError = new Error(EErrorCode.InternalServerError, "stripe unavailable");
+
+        _paymentOrderRepository
+            .GetActiveByReferenceAsync(payableItem.ReferenceId, EPayableType.Repair, Arg.Any<CancellationToken>())
+            .Returns(existingOrder);
+
+        _paymentProcessor
+            .CreateCheckoutSessionAsync(existingOrder, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(providerError);
+
+        var result = await _processor.CreateOrGetPendingAsync(
+            payableItem,
+            "https://ok",
+            "https://cancel",
+            CancellationToken.None);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Should().Be(providerError);
+        existingOrder.Status.Should().Be(EPaymentOrderStatus.Failed);
+
+        await _paymentOrderRepository.DidNotReceive().AddAsync(Arg.Any<PaymentOrder>(), Arg.Any<CancellationToken>());
+        await _paymentOrderRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task CompleteAsync_Should_BeIdempotent_WhenAlreadyPaid()
     {
         var referenceId = Guid.NewGuid();
