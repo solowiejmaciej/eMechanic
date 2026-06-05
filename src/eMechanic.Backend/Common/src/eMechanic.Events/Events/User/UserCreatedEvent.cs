@@ -8,7 +8,7 @@ public class UserCreatedEvent : EventBase
     public string LastName { get; private set; }
     public string? PhoneNumber { get; private set; }
 
-    public UserCreatedEvent(string email, string firstName, string lastName, Guid userId, string? phoneNumber = null)
+    public UserCreatedEvent(string email, string firstName, string lastName, Guid userId, string? phoneNumber)
     {
         UserId = userId;
         Email = email;
