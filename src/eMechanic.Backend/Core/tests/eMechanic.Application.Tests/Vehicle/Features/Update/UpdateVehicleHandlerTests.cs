@@ -1,7 +1,7 @@
 namespace eMechanic.Application.Tests.Vehicle.Features.Update;
 
 using Application.Vehicle.Vehicle.Features.Update;
-using Application.Vehicle.Vehicle.Repostories;
+using Application.Vehicle.Vehicle.Repositories;
 using Application.Vehicle.Vehicle.Services;
 using Domain.Vehicle.Vehicle;
 using Domain.Vehicle.Vehicle.Enums;

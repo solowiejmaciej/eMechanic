@@ -1,4 +1,4 @@
-namespace eMechanic.Application.Vehicle.Vehicle.Repostories;
+namespace eMechanic.Application.Vehicle.Vehicle.Repositories;
 
 using Domain.Vehicle.Vehicle;
 using eMechanic.Application.Abstractions.Repositories;

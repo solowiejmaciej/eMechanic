@@ -1,6 +1,7 @@
 namespace eMechanic.Application.Payments.Features.Initialize;
 
 using Common;
+using Domain.Payment.Enums;
 using eMechanic.Common.CQRS;
 using FluentValidation;
 

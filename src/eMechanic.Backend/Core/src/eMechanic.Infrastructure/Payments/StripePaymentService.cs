@@ -1,13 +1,13 @@
 namespace eMechanic.Infrastructure.Payments;
 
-using eMechanic.Application.Payments.Abstractions;
 using eMechanic.Application.Payments.Common;
 using eMechanic.Common.Result;
+using eMechanic.Domain.Payment;
 using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
 
-internal sealed class StripePaymentService : IPaymentService
+internal sealed class StripePaymentService : IStripePaymentService
 {
     private readonly IOptions<StripeOptions> _options;
 
@@ -17,7 +17,7 @@ internal sealed class StripePaymentService : IPaymentService
     }
 
     public async Task<Result<PaymentSessionDto, Error>> CreateCheckoutSessionAsync(
-        PayableItem item,
+        PaymentOrder paymentOrder,
         string successUrl,
         string cancelUrl,
         CancellationToken cancellationToken)
@@ -43,11 +43,11 @@ internal sealed class StripePaymentService : IPaymentService
                     {
                         PriceData = new SessionLineItemPriceDataOptions
                         {
-                            UnitAmount = (long)(item.Amount.Amount * 100),
-                            Currency = item.Amount.Currency.ToLowerInvariant(),
+                            UnitAmount = (long)(paymentOrder.Amount.Amount * 100),
+                            Currency = paymentOrder.Amount.Currency.ToLowerInvariant(),
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
-                                Name = $"{item.Type} Payment",
+                                Name = $"{paymentOrder.PayableType} Payment",
                             },
                         },
                         Quantity = 1,
@@ -57,9 +57,9 @@ internal sealed class StripePaymentService : IPaymentService
                 CancelUrl = cancelUrl,
                 Metadata = new Dictionary<string, string>
                 {
-                    ["reference_id"] = item.ReferenceId.ToString(),
-                    ["payable_type"] = item.Type.ToString(),
-                    ["payer_id"] = item.PayerId.ToString(),
+                    ["reference_id"] = paymentOrder.ReferenceId.ToString(),
+                    ["payable_type"] = paymentOrder.PayableType.ToString(),
+                    ["payer_id"] = paymentOrder.PayerId.ToString(),
                 },
             };
 

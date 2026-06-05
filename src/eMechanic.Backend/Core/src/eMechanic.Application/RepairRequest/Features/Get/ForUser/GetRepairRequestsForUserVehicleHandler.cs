@@ -38,9 +38,9 @@ public sealed class GetRepairRequestsForUserVehicleHandler : IResultQueryHandler
             rr.EstimatedCost?.Amount,
             rr.EstimatedCost?.Currency,
             rr.Status,
-            rr.RejectionReason,
+            rr.RejectionReason?.Value,
             rr.CreatedAt,
-            rr.SummaryReport
+            rr.SummaryReport?.Value
         ));
 
         return result;

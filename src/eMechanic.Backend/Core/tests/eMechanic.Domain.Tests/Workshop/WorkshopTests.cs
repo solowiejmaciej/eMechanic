@@ -31,7 +31,7 @@ public class WorkshopTests
 
         // Assert
         Assert.NotNull(workshop);
-        Assert.Equal(email, workshop.Email);
+        Assert.Equal(email, workshop.Email.Value);
         Assert.Equal(name, workshop.Name);
         Assert.Equal(displayName, workshop.DisplayName);
         Assert.Equal(identityId, workshop.IdentityId);
@@ -199,11 +199,11 @@ public class WorkshopTests
         );
 
         // Assert
-        workshop.Email.Should().Be(newEmail);
-        workshop.ContactEmail.Should().Be(newContact);
+        workshop.Email.Value.Should().Be(newEmail);
+        workshop.ContactEmail.Value.Should().Be(newContact);
         workshop.Name.Should().Be(newName);
         workshop.DisplayName.Should().Be(newDisplay);
-        workshop.PhoneNumber.Should().Be(newPhone);
+        workshop.PhoneNumber.Value.Should().Be(newPhone);
         workshop.Address.Should().Be(newAddress);
         workshop.City.Should().Be(newCity);
         workshop.PostalCode.Should().Be(newPostal);
@@ -214,15 +214,15 @@ public class WorkshopTests
     }
 
     [Theory]
-    [InlineData("", "kontakt", "Nazwa", "Display", "123", "Adres", "Miasto", "Kod", "Kraj", "Email cannot be empty.")]
-    [InlineData("login", "", "Nazwa", "Display", "123", "Adres", "Miasto", "Kod", "Kraj", "Contact email cannot be empty.")]
-    [InlineData("login", "kontakt", "", "Display", "123", "Adres", "Miasto", "Kod", "Kraj", "Name cannot be empty.")]
-    [InlineData("login", "kontakt", "Nazwa", "", "123", "Adres", "Miasto", "Kod", "Kraj", "Display name cannot be empty.")]
-    [InlineData("login", "kontakt", "Nazwa", "Display", "", "Adres", "Miasto", "Kod", "Kraj", "Phone number cannot be empty.")]
-    [InlineData("login", "kontakt", "Nazwa", "Display", "123", "", "Miasto", "Kod", "Kraj", "Address cannot be empty.")]
-    [InlineData("login", "kontakt", "Nazwa", "Display", "123", "Adres", "", "Kod", "Kraj", "City cannot be empty.")]
-    [InlineData("login", "kontakt", "Nazwa", "Display", "123", "Adres", "Miasto", "", "Kraj", "Postal code cannot be empty.")]
-    [InlineData("login", "kontakt", "Nazwa", "Display", "123", "Adres", "Miasto", "Kod", "", "Country cannot be empty.")]
+    [InlineData("", "kontakt@warsztat.pl", "Nazwa", "Display", "123456789", "Adres", "Miasto", "Kod", "Kraj", "Email cannot be empty.")]
+    [InlineData("login@warsztat.pl", "", "Nazwa", "Display", "123456789", "Adres", "Miasto", "Kod", "Kraj", "Email cannot be empty.")]
+    [InlineData("login@warsztat.pl", "kontakt@warsztat.pl", "", "Display", "123456789", "Adres", "Miasto", "Kod", "Kraj", "Name cannot be empty.")]
+    [InlineData("login@warsztat.pl", "kontakt@warsztat.pl", "Nazwa", "", "123456789", "Adres", "Miasto", "Kod", "Kraj", "Display name cannot be empty.")]
+    [InlineData("login@warsztat.pl", "kontakt@warsztat.pl", "Nazwa", "Display", "", "Adres", "Miasto", "Kod", "Kraj", "Phone number cannot be empty.")]
+    [InlineData("login@warsztat.pl", "kontakt@warsztat.pl", "Nazwa", "Display", "123456789", "", "Miasto", "Kod", "Kraj", "Address cannot be empty.")]
+    [InlineData("login@warsztat.pl", "kontakt@warsztat.pl", "Nazwa", "Display", "123456789", "Adres", "", "Kod", "Kraj", "City cannot be empty.")]
+    [InlineData("login@warsztat.pl", "kontakt@warsztat.pl", "Nazwa", "Display", "123456789", "Adres", "Miasto", "", "Kraj", "Postal code cannot be empty.")]
+    [InlineData("login@warsztat.pl", "kontakt@warsztat.pl", "Nazwa", "Display", "123456789", "Adres", "Miasto", "Kod", "", "Country cannot be empty.")]
     public void Update_Should_ThrowArgumentException_WhenAnyFieldIsInvalid(
         string email, string contact, string name, string display, string phone,
         string address, string city, string postal, string country, string expectedMessage)

@@ -4,6 +4,10 @@ using System.Reflection;
 using Behaviors;
 using Caching;
 using Common.Cache;
+using eMechanic.Application.Payments.Abstractions;
+using eMechanic.Application.Payments.Services;
+using eMechanic.Application.Payments.Strategies;
+using eMechanic.Application.Repair.PaymentStrategies;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using RepairRequest.Services;
@@ -54,5 +58,10 @@ public static class DependencyInjection
     {
         services.AddScoped<IVehicleOwnershipService, VehicleOwnershipService>();
         services.AddScoped<IRepairRequestSummaryService, RepairRequestSummaryService>();
+        services.AddScoped<IPaymentOrderProcessor, PaymentOrderProcessor>();
+
+        // Payment strategies — add new types here to support additional payable items
+        services.AddScoped<IPaymentInitializationStrategy, RepairPaymentInitializationStrategy>();
+        services.AddScoped<IPaymentConfirmationStrategy, RepairPaymentConfirmationStrategy>();
     }
 }

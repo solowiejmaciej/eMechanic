@@ -3,7 +3,7 @@ namespace eMechanic.Application.Vehicle.Vehicle.Features.Get.All;
 using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
-using Repostories;
+using Repositories;
 
 public class GetVehiclesHandler : IResultQueryHandler<GetVehiclesQuery, PaginationResult<VehicleResponse>>
 {

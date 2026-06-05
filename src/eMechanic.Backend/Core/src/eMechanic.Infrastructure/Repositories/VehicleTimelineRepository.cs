@@ -1,6 +1,6 @@
 namespace eMechanic.Infrastructure.Repositories;
 
-using Application.Vehicle.Vehicle.Repostories;
+using Application.Vehicle.Vehicle.Repositories;
 using Base;
 using Common.Result;
 using DAL;

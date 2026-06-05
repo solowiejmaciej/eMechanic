@@ -2,7 +2,7 @@ namespace eMechanic.Application.Vehicle.Timeline.Features.Get;
 
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
-using Vehicle.Repostories;
+using eMechanic.Application.Vehicle.Vehicle.Repositories;
 using Vehicle.Services;
 
 public class GetVehicleTimelineByVehicleIdHandler : IResultQueryHandler<GetVehicleTimelineByVehicleIdQuery,

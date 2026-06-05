@@ -1,7 +1,7 @@
 namespace eMechanic.Application.Tests.Vehicle.DomainEventHandlers.Timeline;
 
 using Application.Vehicle.Timeline.DomainEventHandlers;
-using Application.Vehicle.Vehicle.Repostories;
+using Application.Vehicle.Vehicle.Repositories;
 using Domain.Vehicle.Timeline;
 using Domain.Vehicle.Vehicle.DomainEvents;
 using eMechanic.Domain.Tests.Builders;

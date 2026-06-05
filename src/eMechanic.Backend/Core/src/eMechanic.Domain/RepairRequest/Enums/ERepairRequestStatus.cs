@@ -6,7 +6,5 @@ public enum ERepairRequestStatus
     Pending = 1,
     Estimated = 2,
     Accepted = 3,
-    Rejected = 4,
-    Cancelled = 5,
-    Completed = 6
+    Rejected = 4
 }

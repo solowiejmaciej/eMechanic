@@ -33,7 +33,8 @@ public sealed class GetCurrentUserHandler : IResultQueryHandler<GetCurrentUserQu
             user.Id,
             user.FirstName,
             user.LastName,
-            user.Email,
+            user.Email.Value,
+            user.PhoneNumber?.Value,
             user.CreatedAt);
 
         return response;

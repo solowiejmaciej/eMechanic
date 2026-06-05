@@ -4,6 +4,7 @@ using Application.Payments.Common;
 using Application.Payments.Features.Initialize;
 using Common.Result;
 using Common.Web;
+using Domain.Payment.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Security;
@@ -45,4 +46,3 @@ public sealed record InitializePaymentRequest(
     EPayableType Type,
     string SuccessUrl,
     string CancelUrl);
-

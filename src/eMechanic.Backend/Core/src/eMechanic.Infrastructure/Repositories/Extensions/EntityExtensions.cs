@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Common.Attributes;
 using Common.DDD;
+using Microsoft.EntityFrameworkCore;
 
 public static class EntityExtensions
 {
@@ -56,31 +57,8 @@ public static class EntityExtensions
 
         foreach (var property in searchableProperties)
         {
-            Expression propertyAccess = Expression.Property(parameter, property);
-            Expression? searchClause = null;
-
-            if (property.PropertyType == typeof(string))
-            {
-                var notNullCheck = Expression.NotEqual(propertyAccess, Expression.Constant(null, typeof(string)));
-                var toLowerCall = Expression.Call(propertyAccess, toLowerMethod!);
-                var containsCall = Expression.Call(toLowerCall, containsMethod!, searchConstant);
-                searchClause = Expression.AndAlso(notNullCheck, containsCall);
-            }
-            else
-            {
-                var valueProperty = property.PropertyType.GetProperty("Value");
-                if (valueProperty?.PropertyType == typeof(string))
-                {
-                    var propertyNotNull = Expression.NotEqual(propertyAccess, Expression.Constant(null, property.PropertyType));
-                    var valuePropertyAccess = Expression.Property(propertyAccess, valueProperty);
-                    var valueNotNull = Expression.NotEqual(valuePropertyAccess, Expression.Constant(null, typeof(string)));
-                    var toLowerCall = Expression.Call(valuePropertyAccess, toLowerMethod!);
-                    var containsCall = Expression.Call(toLowerCall, containsMethod!, searchConstant);
-
-                    var valueChecks = Expression.AndAlso(valueNotNull, containsCall);
-                    searchClause = Expression.AndAlso(propertyNotNull, valueChecks);
-                }
-            }
+            var propertyAccess = Expression.Property(parameter, property);
+            var searchClause = BuildSearchClause(parameter, propertyAccess, property, searchConstant, containsMethod!, toLowerMethod!);
 
             if (searchClause != null)
             {
@@ -98,5 +76,58 @@ public static class EntityExtensions
         var lambda = Expression.Lambda<Func<T, bool>>(combinedExpression, parameter);
         return source.Where(lambda);
     }
-}
 
+    private static BinaryExpression? BuildSearchClause(
+        ParameterExpression entityParameter,
+        Expression propertyAccess,
+        PropertyInfo property,
+        Expression searchConstant,
+        MethodInfo containsMethod,
+        MethodInfo toLowerMethod)
+    {
+        if (property.PropertyType == typeof(string))
+        {
+            return BuildStringContainsClause(propertyAccess, searchConstant, containsMethod, toLowerMethod);
+        }
+
+        var valueProperty = property.PropertyType.GetProperty("Value");
+        if (valueProperty?.PropertyType == typeof(string))
+        {
+            var propertyNotNull = Expression.NotEqual(propertyAccess, Expression.Constant(null, property.PropertyType));
+            var valuePropertyAccess = Expression.Property(propertyAccess, valueProperty);
+            var containsClause = BuildStringContainsClause(valuePropertyAccess, searchConstant, containsMethod, toLowerMethod);
+            return Expression.AndAlso(propertyNotNull, containsClause);
+        }
+
+        // Fallback for scalar value objects persisted with HasConversion(... -> string).
+        return BuildEfPropertyStringClause(entityParameter, property.Name, searchConstant, containsMethod, toLowerMethod);
+    }
+
+    private static BinaryExpression BuildStringContainsClause(
+        Expression valueExpression,
+        Expression searchConstant,
+        MethodInfo containsMethod,
+        MethodInfo toLowerMethod)
+    {
+        var valueNotNull = Expression.NotEqual(valueExpression, Expression.Constant(null, typeof(string)));
+        var toLowerCall = Expression.Call(valueExpression, toLowerMethod);
+        var containsCall = Expression.Call(toLowerCall, containsMethod, searchConstant);
+
+        return Expression.AndAlso(valueNotNull, containsCall);
+    }
+
+    private static BinaryExpression BuildEfPropertyStringClause(
+        ParameterExpression entityParameter,
+        string propertyName,
+        Expression searchConstant,
+        MethodInfo containsMethod,
+        MethodInfo toLowerMethod)
+    {
+        var efPropertyMethod = typeof(EF)
+            .GetMethod(nameof(EF.Property), BindingFlags.Public | BindingFlags.Static)!
+            .MakeGenericMethod(typeof(string));
+
+        var valueExpression = Expression.Call(efPropertyMethod, entityParameter, Expression.Constant(propertyName));
+        return BuildStringContainsClause(valueExpression, searchConstant, containsMethod, toLowerMethod);
+    }
+}

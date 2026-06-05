@@ -5,7 +5,7 @@ using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
 using eMechanic.Domain.Vehicle;
-using Repostories;
+using Repositories;
 
 public sealed class CreateVehicleHandler : IResultCommandHandler<CreateVehicleCommand, Guid>
 {

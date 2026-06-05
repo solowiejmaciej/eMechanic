@@ -46,7 +46,7 @@ public class SummarizeRepairRequestCommandHandlerTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(summary);
-        repairRequest.SummaryReport.Should().Be(summary);
+        repairRequest.SummaryReport!.Value.Should().Be(summary);
         await _repairRequestRepository.Received(1).SaveChangesAsync(CancellationToken.None);
     }
 

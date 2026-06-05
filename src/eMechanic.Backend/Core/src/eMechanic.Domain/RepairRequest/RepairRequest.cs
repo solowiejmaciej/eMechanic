@@ -28,10 +28,10 @@ public class RepairRequest : AggregateRoot, IVehicleReference, IWorkshopReferenc
     public ERepairRequestStatus Status { get; private set; }
 
     [Searchable]
-    public string? RejectionReason { get; private set; }
+    public RejectionReason? RejectionReason { get; private set; }
 
     [Searchable]
-    public string? SummaryReport { get; private set; }
+    public SummaryReport? SummaryReport { get; private set; }
 
     private RepairRequest() { }
 
@@ -114,17 +114,28 @@ public class RepairRequest : AggregateRoot, IVehicleReference, IWorkshopReferenc
             return new Error(EErrorCode.ValidationError, "Only requests with provided estimation can be rejected.");
         }
 
-        if (string.IsNullOrWhiteSpace(reason))
+        var reasonResult = RejectionReason.Create(reason);
+        if (reasonResult.HasError())
         {
-             return new Error(EErrorCode.ValidationError, "Rejection reason is required.");
+            return reasonResult.Error!;
         }
 
         Status = ERepairRequestStatus.Rejected;
-        RejectionReason = reason;
+        RejectionReason = reasonResult.Value;
         RaiseDomainEvent(new RepairRequestRejectedDomainEvent(this));
 
         return Result.Success;
     }
 
-    public void SetSummaryReport(string summaryReport) => SummaryReport = summaryReport;
+    public Result<Success, Error> SetSummaryReport(string summaryReport)
+    {
+        var summaryResult = SummaryReport.Create(summaryReport);
+        if (summaryResult.HasError())
+        {
+            return summaryResult.Error!;
+        }
+
+        SummaryReport = summaryResult.Value;
+        return Result.Success;
+    }
 }

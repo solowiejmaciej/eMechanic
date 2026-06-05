@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Domain.Vehicle.Timeline;
 using Microsoft.Extensions.Logging;
-using Vehicle.Vehicle.Repostories;
+using eMechanic.Application.Vehicle.Vehicle.Repositories;
 
 public abstract class BaseTimelineEventHandler
 {

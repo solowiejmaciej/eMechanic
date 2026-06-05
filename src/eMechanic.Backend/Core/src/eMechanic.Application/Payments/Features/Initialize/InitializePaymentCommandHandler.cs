@@ -2,78 +2,46 @@ namespace eMechanic.Application.Payments.Features.Initialize;
 
 using Common;
 using eMechanic.Application.Payments.Abstractions;
-using eMechanic.Application.Repair.Repositories;
-using eMechanic.Application.Vehicle.Vehicle.Services;
+using eMechanic.Application.Payments.Strategies;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
-using eMechanic.Domain.Repair.Enums;
 
 public sealed class InitializePaymentCommandHandler
     : IResultCommandHandler<InitializePaymentCommand, PaymentSessionDto>
 {
-    private readonly IRepairRepository _repairRepository;
-    private readonly IVehicleOwnershipService _vehicleOwnershipService;
-    private readonly IPaymentService _paymentService;
+    private readonly IEnumerable<IPaymentInitializationStrategy> _strategies;
+    private readonly IPaymentOrderProcessor _paymentOrderProcessor;
 
     public InitializePaymentCommandHandler(
-        IRepairRepository repairRepository,
-        IVehicleOwnershipService vehicleOwnershipService,
-        IPaymentService paymentService)
+        IEnumerable<IPaymentInitializationStrategy> strategies,
+        IPaymentOrderProcessor paymentOrderProcessor)
     {
-        _repairRepository = repairRepository;
-        _vehicleOwnershipService = vehicleOwnershipService;
-        _paymentService = paymentService;
+        _strategies = strategies;
+        _paymentOrderProcessor = paymentOrderProcessor;
     }
 
     public async Task<Result<PaymentSessionDto, Error>> Handle(
         InitializePaymentCommand request,
         CancellationToken cancellationToken)
     {
-        if (request.Type != EPayableType.Repair)
+        var strategy = _strategies.FirstOrDefault(s => s.SupportedType == request.Type);
+
+        if (strategy is null)
         {
             return new Error(EErrorCode.ValidationError, $"Unsupported payable type: '{request.Type}'.");
         }
 
-        var repair = await _repairRepository.GetByIdAsync(request.ReferenceId, cancellationToken);
+        var payableItemResult = await strategy.BuildPayableItemAsync(request.ReferenceId, cancellationToken);
 
-        if (repair is null)
+        if (payableItemResult.HasError())
         {
-            return new Error(EErrorCode.NotFoundError, $"Repair with ID {request.ReferenceId} not found.");
+            return payableItemResult.Error!;
         }
 
-        if (repair.Status != ERepairStatus.Completed)
-        {
-            return new Error(
-                EErrorCode.ValidationError,
-                $"Repair must be in '{ERepairStatus.Completed}' status to initialize payment. Current status: '{repair.Status}'.");
-        }
-
-        if (repair.FinalCost is null)
-        {
-            return new Error(EErrorCode.ValidationError, "Repair does not have a final cost set.");
-        }
-
-        var ownershipResult = await _vehicleOwnershipService.GetAndVerifyOwnershipAsync(
-            repair.VehicleId, cancellationToken);
-
-        if (ownershipResult.HasError())
-        {
-            return ownershipResult.Error!;
-        }
-
-        var vehicle = ownershipResult.Value!;
-
-        var payableItem = new PayableItem(
-            repair.Id,
-            EPayableType.Repair,
-            repair.FinalCost,
-            vehicle.UserId);
-
-        return await _paymentService.CreateCheckoutSessionAsync(
-            payableItem,
+        return await _paymentOrderProcessor.CreateOrGetPendingAsync(
+            payableItemResult.Value!,
             request.SuccessUrl,
             request.CancelUrl,
             cancellationToken);
     }
 }
-

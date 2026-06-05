@@ -2,8 +2,10 @@ namespace eMechanic.Infrastructure.Repositories;
 
 using Application.Repair.Repositories;
 using Base;
+using Common.Result;
 using DAL;
 using Microsoft.EntityFrameworkCore;
+using Repositories.Extensions;
 using Services;
 using RepairAggregate = eMechanic.Domain.Repair.Repair;
 
@@ -21,20 +23,54 @@ internal sealed class RepairRepository : Repository<RepairAggregate>, IRepairRep
     {
         var query = GetQuery()
             .AsNoTracking()
-            .Where(repair => repair.Id == repairId && repair.WorkshopId == workshopId);
+            .FilterByWorkshopId(workshopId)
+            .FilterById(repairId);
 
         return query.SingleOrDefaultAsync(cancellationToken);
     }
 
-    public Task<RepairAggregate?> GetForUserByIdAsNoTrackingAsync(Guid userId, Guid repairId, CancellationToken cancellationToken)
+    public Task<RepairAggregate?> GetForUserByIdAsNoTrackingAsync(Guid userId, Guid requestRepairId,
+        CancellationToken cancellationToken)
     {
-        var query =
-            from repair in GetQuery().AsNoTracking()
-            join vehicle in _context.Vehicles.AsNoTracking() on repair.VehicleId equals vehicle.Id
-            where repair.Id == repairId && vehicle.UserId == userId
-            select repair;
+        var query = GetForUserAsNoTrackingQuery(userId)
+            .Where(repair => repair.Id == requestRepairId);
 
         return query.SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<PaginationResult<RepairAggregate>> GetForUserPaginatedAsync(
+        Guid userId,
+        PaginationParameters paginationParameters,
+        CancellationToken cancellationToken)
+    {
+        var query = GetForUserAsNoTrackingQuery(userId)
+            .OrderByDescending(x => x.CreatedAt);
+
+        return GetPaginatedAsync(query, paginationParameters, cancellationToken);
+    }
+
+    public Task<PaginationResult<RepairAggregate>> GetForWorkshopPaginatedAsync(
+        Guid workshopId,
+        PaginationParameters paginationParameters,
+        CancellationToken cancellationToken)
+    {
+        var query = GetQuery()
+            .AsNoTracking()
+            .FilterByWorkshopId(workshopId);
+
+        query = query.OrderByDescending(x => x.CreatedAt);
+
+        return GetPaginatedAsync(query, paginationParameters, cancellationToken);
+    }
+
+    private IQueryable<RepairAggregate> GetForUserAsNoTrackingQuery(Guid userId)
+    {
+        return GetQuery()
+            .AsNoTracking()
+            .Join(
+                _context.Vehicles.AsNoTracking().Where(vehicle => vehicle.UserId == userId),
+                repair => repair.VehicleId,
+                vehicle => vehicle.Id,
+                (repair, _) => repair);
     }
 }
-
