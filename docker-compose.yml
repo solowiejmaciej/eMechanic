@@ -1,0 +1,109 @@
+name: emechanic
+
+services:
+
+  # ─── Infrastruktura ───────────────────────────────────────────────────────────
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: eMechanic
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d eMechanic"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── Aplikacje ────────────────────────────────────────────────────────────────
+
+  api:
+    build:
+      context: ./src/eMechanic.Backend
+      dockerfile: Core/src/eMechanic.API/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "5178:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__eMechanic: "Host=postgres;Port=5432;Database=eMechanic;Username=postgres;Password=${POSTGRES_PASSWORD}"
+      ConnectionStrings__AzureServiceBus: ${AZURE_SERVICE_BUS_CONNECTION_STRING}
+      ConnectionStrings__Storage: ${AZURE_STORAGE_CONNECTION_STRING}
+      ConnectionStrings__emechanic-cache: "redis:6379"
+      Authentication__JwtBearer__Key: ${JWT_KEY}
+      Authentication__JwtBearer__Issuer: eMechanicAPI
+      Authentication__JwtBearer__Audience: eMechanicAPI
+      Authentication__JwtBearer__ExpiryInMinutes: 60
+      Authentication__JwtBearer__RefreshTokenExpiryInDays: 1
+      Authentication__Google__ClientId: ${GOOGLE_CLIENT_ID}
+      LLMProviders__Google__ApiKey: ${GOOGLE_API_KEY}
+      LLMProviders__Google__Model: gemini-2.5-flash-lite
+      Stripe__SecretKey: ${STRIPE_SECRET_KEY}
+      Stripe__WebhookSecret: ${STRIPE_WEBHOOK_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+
+  notification-service:
+    build:
+      context: ./src/eMechanic.Backend
+      dockerfile: Services/src/eMechanic.NotificationService.API/Dockerfile
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__AzureServiceBus: ${AZURE_SERVICE_BUS_CONNECTION_STRING}
+
+  outbox-publisher:
+    build:
+      context: ./src/eMechanic.Backend
+      dockerfile: Services/src/eMechanic.OutboxPublisher/Dockerfile
+    platform: linux/amd64
+    restart: unless-stopped
+    environment:
+      ConnectionStrings__eMechanic: "Host=postgres;Port=5432;Database=eMechanic;Username=postgres;Password=${POSTGRES_PASSWORD}"
+      ConnectionStrings__AzureServiceBus: ${AZURE_SERVICE_BUS_CONNECTION_STRING}
+      AzureWebJobsStorage: ${AZURE_STORAGE_CONNECTION_STRING}
+      FUNCTIONS_WORKER_RUNTIME: dotnet-isolated
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./src/eMechanic.Frontend
+    restart: unless-stopped
+    ports:
+      - "4173:4173"
+    environment:
+      VITE_API_URL: http://localhost:5178
+      VITE_PORT: "4173"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  postgres-data:

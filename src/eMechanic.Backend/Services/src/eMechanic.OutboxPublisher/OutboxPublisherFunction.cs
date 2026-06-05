@@ -10,6 +10,23 @@ using Npgsql;
 
 public class OutboxPublisherFunction
 {
+    private const int BATCH_SIZE = 20;
+
+    private const string QUERY_SQL = """
+        SELECT "Id", "Payload", "EventType"
+        FROM "OutboxMessages"
+        WHERE "ProcessedAt" IS NULL
+        ORDER BY "CreatedAt"
+        LIMIT @BatchSize
+        FOR UPDATE SKIP LOCKED
+        """;
+
+    private const string UPDATE_SQL = """
+        UPDATE "OutboxMessages"
+        SET "ProcessedAt" = @ProcessedAt
+        WHERE "Id" = ANY(@Ids)
+        """;
+
     private readonly ILogger<OutboxPublisherFunction> _logger;
     private readonly NpgsqlDataSource _dataSource;
     private readonly IEventPublisher _eventPublisher;
@@ -30,68 +47,74 @@ public class OutboxPublisherFunction
     [Function(nameof(OutboxPublisherFunction))]
     public async Task Run([TimerTrigger("* * * * *")] TimerInfo timerInfo, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Function invoked");
+        _logger.LogInformation("Outbox publisher invoked");
 
         await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
-        const string querySql = $"""
-                                 SELECT "Id", "Payload", "EventType"
-                                 FROM "OutboxMessages"
-                                 WHERE "ProcessedAt" IS NULL
-                                 ORDER BY "CreatedAt"
-                                 LIMIT 20
-                                 FOR UPDATE SKIP LOCKED
-                                 """;
 
         List<OutboxMessageDto> messages;
         try
         {
-            messages = (await connection.QueryAsync<OutboxMessageDto>(querySql, transaction: transaction)).ToList();
+            messages = (await connection.QueryAsync<OutboxMessageDto>(QUERY_SQL, new { BatchSize = BATCH_SIZE }, transaction: transaction)).ToList();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to query OutboxMessages.");
+            _logger.LogError(ex, "Failed to query OutboxMessages");
             await transaction.RollbackAsync(cancellationToken);
             return;
         }
 
         if (messages.Count == 0)
         {
-            _logger.LogInformation("No new messages to publish");
+            _logger.LogDebug("No pending messages in outbox");
+            await transaction.RollbackAsync(cancellationToken);
             return;
         }
 
+        _logger.LogInformation("Processing {Count} outbox message(s)", messages.Count);
+
+        var processedIds = new List<Guid>(messages.Count);
+        var failedCount = 0;
+
         foreach (var message in messages)
         {
-            var result = _eventFactory.Create(message.EventType, message.Payload);
-            if (result is null)
+            try
             {
-                _logger.LogWarning("Event factory result for type {MessageEventType} was null.", message.EventType);
-                continue;
-            }
+                var result = _eventFactory.Create(message.EventType, message.Payload);
 
-            if (result.Event is null || result.Type is null)
+                if (result?.Event is null || result.Type is null)
+                {
+                    _logger.LogWarning(
+                        "Skipping message {Id}: could not create event of type {EventType}",
+                        message.Id, message.EventType);
+                    failedCount++;
+                    continue;
+                }
+
+                await _eventPublisher.PublishAsync(result.Event, result.Type, cancellationToken);
+                processedIds.Add(message.Id);
+            }
+            catch (Exception ex)
             {
-                _logger.LogWarning("Event of type {MessageEventType} was null.", message.EventType);
-                continue;
+                _logger.LogError(ex,
+                    "Failed to publish message {Id} of type {EventType}",
+                    message.Id, message.EventType);
+                failedCount++;
             }
+        }
 
-            var @event = result.Event;
-            var type = result.Type;
-
-            _logger.LogInformation("Publishing message of type {MessageEventType} with payload {MessagePayload}", @event.GetType().Name, message.Payload);
-
-            await _eventPublisher.PublishAsync(@event, type, cancellationToken);
-
-            const string updateSql = """
-                              UPDATE "OutboxMessages"
-                              SET "ProcessedAt" = @ProcessedAt
-                              WHERE "Id" = @Id
-                              """;
-
-            await connection.ExecuteAsync(updateSql, new { ProcessedAt = DateTime.UtcNow, Id = message.Id }, transaction: transaction);
+        if (processedIds.Count > 0)
+        {
+            await connection.ExecuteAsync(
+                UPDATE_SQL,
+                new { ProcessedAt = DateTime.UtcNow, Ids = processedIds.ToArray() },
+                transaction: transaction);
         }
 
         await transaction.CommitAsync(cancellationToken);
+
+        _logger.LogInformation(
+            "Outbox run complete — published: {Published}, skipped/failed: {Failed}",
+            processedIds.Count, failedCount);
     }
 }
