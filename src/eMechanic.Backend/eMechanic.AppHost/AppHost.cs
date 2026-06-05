@@ -39,6 +39,7 @@ var stripeWebhookSecret = builder.AddParameter("stripe-webhook-secret", secret: 
 
 var apiProject = builder
     .AddProject<Projects.eMechanic_API>("eMechanic-Core")
+    .WithEndpoint("http", e => e.Port = 5178)
     .WithReference(postgresDb)
     .WithReference(redisCache)
     .WithReference(azureStorage)
@@ -64,5 +65,13 @@ if (!useExternalPostgres)
 builder
     .AddProject<Projects.eMechanic_NotificationService_API>("eMechanic-NotificationService")
     .WithReference(serviceBus);
+
+builder
+    .AddDockerfile("eMechanic-Frontend", "../../eMechanic.Frontend")
+    .WithReference(apiProject)
+    .WithEnvironment("VITE_API_URL", "http://localhost:5178")
+    .WithHttpEndpoint(port: 4173, targetPort: 4173)
+    .WithExternalHttpEndpoints()
+    .WaitFor(apiProject);
 
 await builder.Build().RunAsync();

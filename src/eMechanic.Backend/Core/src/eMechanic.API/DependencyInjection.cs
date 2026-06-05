@@ -154,7 +154,7 @@ public static class DependencyInjection
             options.AddPolicy("AllowAll",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:5173", "http://localhost:5178", "https://e-mechanic.net", "http://e-mechanic.net")
+                    builder.WithOrigins("http://localhost:4173", "http://localhost:5173", "http://localhost:5178", "https://e-mechanic.net", "http://e-mechanic.net")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
