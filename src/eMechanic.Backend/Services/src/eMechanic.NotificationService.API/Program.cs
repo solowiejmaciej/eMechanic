@@ -34,12 +34,10 @@ public sealed class Program
         });
 
         var app = builder.Build();
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapOpenApi();
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+        
+        app.MapOpenApi();
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
         app.MapDefaultEndpoints();
 
