@@ -49,7 +49,8 @@ public class RepairRequestCreatedEventHandler : IDomainEventHandler<RepairReques
             vehicle.Model.Value,
             vehicle.LicensePlate.Value,
             vehicle.ProductionYear.Value,
-            vehicle.Manufacturer.Value
+            vehicle.Manufacturer.Value,
+            repairRequest.WorkshopId
         );
 
         await _outboxWriter.WriteAsync(integrationEvent, cancellationToken);
