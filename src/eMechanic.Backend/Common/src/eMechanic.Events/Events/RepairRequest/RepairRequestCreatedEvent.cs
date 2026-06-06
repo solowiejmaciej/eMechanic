@@ -13,6 +13,7 @@ public class RepairRequestCreatedEvent : EventBase
     public string VehicleLicensePlate { get; private set; }
     public string VehicleProductionYear { get; private set; }
     public string VehicleManufacturer { get; private set; }
+    public Guid WorkshopId { get; private set; }
 
     public RepairRequestCreatedEvent(
         Guid repairRequestId,
@@ -25,7 +26,8 @@ public class RepairRequestCreatedEvent : EventBase
         string vehicleModel,
         string vehicleLicensePlate,
         string vehicleProductionYear,
-        string vehicleManufacturer)
+        string vehicleManufacturer,
+        Guid workshopId)
     {
         RepairRequestId = repairRequestId;
         UserId = userId;
@@ -38,5 +40,6 @@ public class RepairRequestCreatedEvent : EventBase
         VehicleLicensePlate = vehicleLicensePlate;
         VehicleProductionYear = vehicleProductionYear;
         VehicleManufacturer = vehicleManufacturer;
+        WorkshopId = workshopId;
     }
 }

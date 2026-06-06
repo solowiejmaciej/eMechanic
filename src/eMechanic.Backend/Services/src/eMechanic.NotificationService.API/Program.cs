@@ -1,6 +1,7 @@
 namespace eMechanic.NotificationService;
 
 using System.Reflection;
+using Common.Web;
 using eMechanic.NotificationService.DAL;
 using eMechanic.NotificationService.Constans;
 using Microsoft.EntityFrameworkCore;
