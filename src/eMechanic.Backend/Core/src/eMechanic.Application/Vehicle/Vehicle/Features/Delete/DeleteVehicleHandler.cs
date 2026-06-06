@@ -3,7 +3,7 @@ namespace eMechanic.Application.Vehicle.Vehicle.Features.Delete;
 using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
-using Repostories;
+using Repositories;
 
 public sealed class DeleteVehicleHandler : IResultCommandHandler<DeleteVehicleCommand, Success>
 {

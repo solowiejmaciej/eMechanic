@@ -7,7 +7,8 @@ using FluentValidation;
 public sealed record UpdateUserCommand(
     string FirstName,
     string LastName,
-    string Email) : IResultCommand<Success>;
+    string Email,
+    string? PhoneNumber = null) : IResultCommand<Success>;
 
 public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
 {
@@ -31,5 +32,12 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
             .WithMessage("A valid email is required")
             .MaximumLength(255)
             .WithMessage("Email cannot exceed 255 characters");
+
+        When(x => !string.IsNullOrWhiteSpace(x.PhoneNumber), () =>
+        {
+            RuleFor(x => x.PhoneNumber!)
+                .MaximumLength(20)
+                .WithMessage("Phone number cannot exceed 20 characters");
+        });
     }
 }

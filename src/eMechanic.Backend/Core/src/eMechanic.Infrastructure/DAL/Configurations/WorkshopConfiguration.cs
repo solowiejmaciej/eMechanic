@@ -1,6 +1,7 @@
 namespace eMechanic.Infrastructure.DAL.Configurations;
 
 using eMechanic.Domain.Workshop;
+using eMechanic.Domain.Shared.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,14 +22,17 @@ internal sealed class WorkshopConfiguration : IEntityTypeConfiguration<Workshop>
             .HasMaxLength(100);
 
         builder.Property(w => w.Email)
+            .HasConversion(e => e.Value, v => Email.Create(v).Value!)
             .IsRequired()
             .HasMaxLength(255);
 
         builder.Property(w => w.ContactEmail)
+            .HasConversion(e => e.Value, v => Email.Create(v).Value!)
             .IsRequired()
             .HasMaxLength(255);
 
         builder.Property(w => w.PhoneNumber)
+            .HasConversion(p => p.Value, v => PhoneNumber.Create(v).Value!)
             .IsRequired()
             .HasMaxLength(20);
 
@@ -52,7 +56,6 @@ internal sealed class WorkshopConfiguration : IEntityTypeConfiguration<Workshop>
             .IsRequired();
 
         builder.HasIndex(w => w.Email).IsUnique();
-
         builder.HasIndex(w => w.IdentityId).IsUnique();
     }
 }

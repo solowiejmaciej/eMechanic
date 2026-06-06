@@ -3,7 +3,7 @@ namespace eMechanic.Application.Vehicle.Vehicle.Features.Update;
 
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
-using Repostories;
+using Repositories;
 using Services;
 
 public sealed class UpdateVehicleHandler : IResultCommandHandler<UpdateVehicleCommand, Success>

@@ -4,7 +4,7 @@ namespace eMechanic.API.Features.RepairRequest;
 public static class RepairRequestPrefix
 {
     public const string TAG = "RepairRequests";
-    public const string PREFIX = "/repairs";
+    public const string PREFIX = "/repair-requests";
     public const string CREATE = PREFIX;
     public const string PROVIDE_ESTIMATION = $"{PREFIX}/{{id}}/estimation";
     public const string ACCEPT_ESTIMATION = $"{PREFIX}/{{id}}/accept";

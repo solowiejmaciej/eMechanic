@@ -27,6 +27,7 @@ public class UpdateUserHandler : IResultCommandHandler<UpdateUserCommand, Succes
             request.Email,
             request.FirstName,
             request.LastName,
+            request.PhoneNumber,
             cancellationToken);
     }
 }

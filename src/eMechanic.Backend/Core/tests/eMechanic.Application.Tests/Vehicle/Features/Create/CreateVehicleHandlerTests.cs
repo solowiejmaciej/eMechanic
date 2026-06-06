@@ -2,7 +2,7 @@ namespace eMechanic.Application.Tests.Vehicle.Features.Create;
 
 using Application.Tests.Builders;
 using Application.Vehicle.Vehicle.Features.Create;
-using Application.Vehicle.Vehicle.Repostories;
+using Application.Vehicle.Vehicle.Repositories;
 using Domain.Vehicle.Vehicle;
 using eMechanic.Application.Abstractions.Identity.Contexts;
 using eMechanic.Common.Result;

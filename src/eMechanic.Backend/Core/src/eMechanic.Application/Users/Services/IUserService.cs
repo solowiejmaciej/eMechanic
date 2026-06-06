@@ -9,6 +9,7 @@ public interface IUserService
         string password,
         string firstName,
         string lastName,
+        string? phoneNumber = null,
         string? providerName = null,
         string? providerKey = null,
         CancellationToken cancellationToken = default);
@@ -18,5 +19,6 @@ public interface IUserService
         string email,
         string firstName,
         string lastName,
+        string? phoneNumber,
         CancellationToken cancellationToken);
 }

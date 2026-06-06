@@ -3,7 +3,7 @@ namespace eMechanic.Application.Vehicle.Timeline.DomainEventHandlers;
 using eMechanic.Application.Abstractions.DomainEvents;
 using eMechanic.Application.Timeline;
 using eMechanic.Domain.Vehicle.Documents.DomainEvents;
-using Vehicle.Repostories;
+using eMechanic.Application.Vehicle.Vehicle.Repositories;
 
 internal sealed class VehicleDocumentDeletedTimelineHandler
     : BaseTimelineEventHandler, IDomainEventHandler<VehicleDocumentDeletedDomainEvent>

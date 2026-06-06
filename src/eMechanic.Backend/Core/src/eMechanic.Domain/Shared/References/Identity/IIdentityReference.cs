@@ -1,7 +1,9 @@
 namespace eMechanic.Domain.Shared.References.Identity;
 
+using Shared.ValueObjects;
+
 public interface IIdentityReference
 {
     Guid IdentityId { get; }
-    string Email { get; }
+    Email Email { get; }
 }

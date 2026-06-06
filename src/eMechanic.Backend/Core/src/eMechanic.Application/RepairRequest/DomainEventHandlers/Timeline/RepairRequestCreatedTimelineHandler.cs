@@ -3,7 +3,7 @@ namespace eMechanic.Application.RepairRequest.DomainEventHandlers.Timeline;
 
 using eMechanic.Application.Abstractions.DomainEvents;
 using eMechanic.Application.Timeline;
-using eMechanic.Application.Vehicle.Vehicle.Repostories;
+using eMechanic.Application.Vehicle.Vehicle.Repositories;
 using eMechanic.Domain.RepairRequest.DomainEvents;
 
 public class RepairRequestCreatedTimelineHandler : BaseTimelineEventHandler,

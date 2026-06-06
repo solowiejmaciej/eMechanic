@@ -1,0 +1,301 @@
+### ================================================================
+### eMechanic – Pełny scenariusz naprawy
+### ================================================================
+### Kolejność wykonania:
+###   1. RegisterUser       → userId
+###   2. LoginUser          → @userToken, @userId
+###   3. RegisterWorkshop   → workshopId
+###   4. LoginWorkshop      → @workshopToken, @workshopId
+###   5. CreateVehicle      → @vehicleId
+###   6. CreateRepairRequest → @repairRequestId
+###   7. ProvideEstimation  (jako warsztat)
+###   8. AcceptEstimation   (jako user)
+###   9. StartRepair        (jako warsztat) → @repairId (pobrany z repair-requests)
+###  10. CompleteRepair     (jako warsztat)
+###  11. InitializePayment  (jako user)     → @checkoutUrl
+###  12. UpsertReview       (jako user)
+###  13. GetWorkshopReviews (publiczne)
+### ================================================================
+
+@eMechanic.API_HostAddress = http://localhost:5178
+@api_version               = v1
+@base_url                  = {{eMechanic.API_HostAddress}}/api/{{api_version}}
+
+### ================================================================
+### KROK 1 – Rejestracja użytkownika
+### ================================================================
+
+### 1. RegisterUser
+# @name RegisterUser
+POST {{base_url}}/users
+Content-Type: application/json
+
+{
+  "firstName": "Jan",
+  "lastName":  "Kowalski",
+  "email":     "jan.kowalski.scenario@emechanic.test",
+  "password":  "Scenario123!",
+  "phoneNumber": "+48500100200"
+}
+
+### ================================================================
+### KROK 2 – Logowanie użytkownika (przechwytuje token)
+### ================================================================
+
+### 2. LoginUser
+# @name LoginUser
+POST {{base_url}}/tokens/user
+Content-Type: application/json
+
+{
+  "email":    "jan.kowalski.scenario@emechanic.test",
+  "password": "Scenario123!"
+}
+
+> {%
+    client.global.set("userToken",  response.body.token);
+    client.global.set("userId",     response.body.userId);
+    client.log("✅ User token: " + response.body.token);
+%}
+
+### ================================================================
+### KROK 3 – Rejestracja warsztatu
+### ================================================================
+
+### 3. RegisterWorkshop
+# @name RegisterWorkshop
+POST {{base_url}}/workshops
+Content-Type: application/json
+
+{
+  "email":        "warsztat.scenario@emechanic.test",
+  "password":     "Workshop123!",
+  "contactEmail": "kontakt@warsztat-scenario.pl",
+  "name":         "Scenario Auto Serwis Sp. z o.o.",
+  "displayName":  "Scenario Serwis",
+  "phoneNumber":  "+48221112233",
+  "address":      "ul. Testowa 42",
+  "city":         "Kraków",
+  "postalCode":   "30-001",
+  "country":      "Poland"
+}
+
+### ================================================================
+### KROK 4 – Logowanie warsztatu (przechwytuje token)
+### ================================================================
+
+### 4. LoginWorkshop
+# @name LoginWorkshop
+POST {{base_url}}/tokens/workshop
+Content-Type: application/json
+
+{
+  "email":    "warsztat.scenario@emechanic.test",
+  "password": "Workshop123!"
+}
+
+> {%
+    client.global.set("workshopToken", response.body.token);
+    client.global.set("workshopId",    response.body.workshopId);
+    client.log("✅ Workshop token: " + response.body.token);
+%}
+
+### ================================================================
+### KROK 5 – Dodanie samochodu (jako zalogowany użytkownik)
+### ================================================================
+
+### 5. CreateVehicle
+# @name CreateVehicle
+POST {{base_url}}/vehicles
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "vin":            "JH4KA7650MC004132",
+  "manufacturer":   "Toyota",
+  "model":          "Corolla",
+  "productionYear": "2018",
+  "engineCapacity": 1.6,
+  "mileageValue":   85000,
+  "mileageUnit":    1,
+  "licensePlate":   "KR12345",
+  "horsePower":     132,
+  "fuelType":       1,
+  "bodyType":       1,
+  "vehicleType":    1
+}
+
+> {%
+    client.global.set("vehicleId", response.body.vehicleId);
+    client.log("✅ Vehicle ID: " + response.body.vehicleId);
+%}
+
+### ================================================================
+### KROK 6 – Zgłoszenie prośby o naprawę (jako user, do warsztatu)
+### ================================================================
+
+### 6. CreateRepairRequest
+# @name CreateRepairRequest
+POST {{base_url}}/repair-requests
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "vehicleId":   "{{vehicleId}}",
+  "workshopId":  "{{workshopId}}",
+  "description": "Silnik stuka przy zimnym starcie, temperatura oleju skacze. Proszę o diagnostykę."
+}
+
+> {%
+    client.global.set("repairRequestId", response.body.repairRequestId);
+    client.log("✅ RepairRequest ID: " + response.body.repairRequestId);
+%}
+
+### ================================================================
+### KROK 7 – Warsztat wycenia naprawę
+### ================================================================
+
+### 7. ProvideEstimation
+# @name ProvideEstimation
+PUT {{base_url}}/repair-requests/{{repairRequestId}}/estimation
+Authorization: Bearer {{workshopToken}}
+Content-Type: application/json
+
+{
+  "diagnosis": "Wykryto zużycie łańcucha rozrządu oraz uszczelki pod głowicą. Konieczna wymiana obu elementów.",
+  "cost":      2400.00,
+  "currency":  "PLN"
+}
+
+### ================================================================
+### KROK 8 – Użytkownik akceptuje wycenę
+### ================================================================
+
+### 8. AcceptEstimation
+# @name AcceptEstimation
+PUT {{base_url}}/repair-requests/{{repairRequestId}}/accept
+Authorization: Bearer {{userToken}}
+
+### ================================================================
+### (Opcjonalne) Pobierz listę napraw warsztatu – znajdź repairId
+### ================================================================
+
+### GetRepairsForWorkshop – znajdź ID naprawy
+# @name GetRepairsForWorkshop
+GET {{base_url}}/repairs/workshop?PageNumber=1&PageSize=10
+Authorization: Bearer {{workshopToken}}
+Accept: application/json
+
+> {%
+    var items = response.body.items;
+    if (items && items.length > 0) {
+        client.global.set("repairId", items[0].id);
+        client.log("✅ Repair ID: " + items[0].id);
+    }
+%}
+
+### ================================================================
+### KROK 9 – Warsztat rozpoczyna naprawę
+### ================================================================
+
+### 9. StartRepair
+# @name StartRepair
+PUT {{base_url}}/repairs/{{repairId}}/start
+Authorization: Bearer {{workshopToken}}
+
+### ================================================================
+### KROK 10 – Warsztat kompletuje naprawę (z końcowym kosztem)
+### ================================================================
+
+### 10. CompleteRepair
+# @name CompleteRepair
+PUT {{base_url}}/repairs/{{repairId}}/complete
+Authorization: Bearer {{workshopToken}}
+Content-Type: application/json
+
+{
+  "amount":   2550.00,
+  "currency": "PLN"
+}
+
+### ================================================================
+### KROK 11 – Użytkownik inicjuje płatność
+### ================================================================
+
+### 11. InitializePayment
+# @name InitializePayment
+POST {{base_url}}/payments/initialize
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "referenceId": "{{repairId}}",
+  "type":        1,
+  "successUrl":  "https://emechanic.app/payment/success",
+  "cancelUrl":   "https://emechanic.app/payment/cancel"
+}
+
+> {%
+    client.global.set("checkoutUrl",       response.body.checkoutUrl);
+    client.global.set("paymentSessionId",  response.body.sessionId);
+    client.log("✅ Checkout URL: " + response.body.checkoutUrl);
+%}
+
+### ================================================================
+### KROK 12 – Użytkownik wystawia opinię warsztatowi
+### ================================================================
+
+### 12. UpsertWorkshopReview
+# @name UpsertWorkshopReview
+PUT {{base_url}}/workshops/{{workshopId}}/reviews
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "rating":  5,
+  "comment": "Świetna robota, polecam! Naprawa wykonana szybko i zgodnie z wyceną."
+}
+
+> {%
+    client.global.set("reviewId", response.body);
+    client.log("✅ Review ID: " + response.body);
+%}
+
+### ================================================================
+### KROK 13 – Pobranie opinii warsztatu (publiczne, bez tokenu)
+### ================================================================
+
+### 13. GetWorkshopReviews
+# @name GetWorkshopReviews
+GET {{base_url}}/workshops/{{workshopId}}/reviews?PageNumber=1&PageSize=10
+Accept: application/json
+
+### 13b. GetWorkshopReviewStats
+# @name GetWorkshopReviewStats
+GET {{base_url}}/workshops/{{workshopId}}/reviews/stats
+Accept: application/json
+
+### ================================================================
+### BONUS – Pomocnicze żądania
+### ================================================================
+
+### GetCurrentUser
+GET {{base_url}}/users/me
+Authorization: Bearer {{userToken}}
+Accept: application/json
+
+### GetVehicleById
+GET {{base_url}}/vehicles/{{vehicleId}}
+Authorization: Bearer {{userToken}}
+Accept: application/json
+
+### GetRepairRequestForVehicle
+GET {{base_url}}/repair-requests/vehicle/{{vehicleId}}?PageNumber=1&PageSize=10
+Authorization: Bearer {{userToken}}
+Accept: application/json
+
+### GetRepairDetailsForUser
+GET {{base_url}}/repairs/user/{{repairId}}
+Authorization: Bearer {{userToken}}
+Accept: application/json
+

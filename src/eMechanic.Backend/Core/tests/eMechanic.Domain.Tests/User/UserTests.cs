@@ -26,7 +26,7 @@ public class UserTests
 
         // Assert
         Assert.NotNull(user);
-        Assert.Equal(email, user.Email);
+        Assert.Equal(email, user.Email.Value);
         Assert.Equal(firstName, user.FirstName);
         Assert.NotEqual(Guid.Empty, user.Id);
     }
@@ -79,7 +79,7 @@ public class UserTests
         user.Update(newEmail, newFirstName, newLastName);
 
         // Assert
-        user.Email.Should().Be(newEmail);
+        user.Email.Value.Should().Be(newEmail);
         user.FirstName.Should().Be(newFirstName);
         user.LastName.Should().Be(newLastName);
 
@@ -100,7 +100,7 @@ public class UserTests
         user.ClearDomainEvents();
 
         // Act
-        user.Update(oldEmail, oldFirstName, oldLastName);
+        user.Update(oldEmail.Value, oldFirstName, oldLastName);
 
         // Assert
         user.GetDomainEvents().Should().HaveCount(1);

@@ -157,7 +157,7 @@ public class UserServiceTests
 
         await _transactionalExecutor.Received(1).ExecuteAsync(Arg.Any<Func<Task>>(), Arg.Any<CancellationToken>());
         await _userManager.Received(1).CreateAsync(Arg.Is<Identity>(i => i.Email == TEST_EMAIL), TEST_PASSWORD);
-        await _userRepository.Received(1).AddAsync(Arg.Is<User>(u => u.Email == TEST_EMAIL && u.FirstName == TEST_FIRST_NAME), Arg.Any<CancellationToken>());
+        await _userRepository.Received(1).AddAsync(Arg.Is<User>(u => u.Email.Value == TEST_EMAIL && u.FirstName == TEST_FIRST_NAME), Arg.Any<CancellationToken>());
         await _userRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
@@ -178,6 +178,7 @@ public class UserServiceTests
             TEST_EMAIL,
             newFirstName,
             newLastName,
+            null,
             CancellationToken.None);
 
         // Assert
@@ -191,7 +192,7 @@ public class UserServiceTests
         await _userRepository.Received(1).UpdateAsync(Arg.Is<User>(u =>
             u.FirstName == newFirstName &&
             u.LastName == newLastName &&
-            u.Email == TEST_EMAIL
+            u.Email.Value == TEST_EMAIL
         ), Arg.Any<CancellationToken>());
 
         await _userRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
@@ -218,6 +219,7 @@ public class UserServiceTests
             newEmail,
             newFirstName,
             newLastName,
+            null,
             CancellationToken.None);
 
         // Assert
@@ -228,7 +230,7 @@ public class UserServiceTests
         await _userManager.Received(1).SetEmailAsync(_fakeIdentity, newEmail);
         await _userManager.Received(1).SetUserNameAsync(_fakeIdentity, newEmail);
 
-        await _userRepository.Received(1).UpdateAsync(Arg.Is<User>(u => u.Email == newEmail), Arg.Any<CancellationToken>());
+        await _userRepository.Received(1).UpdateAsync(Arg.Is<User>(u => u.Email.Value == newEmail), Arg.Any<CancellationToken>());
         await _userRepository.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
@@ -244,6 +246,7 @@ public class UserServiceTests
             "new@email.com",
             "New",
             "User",
+            null,
             CancellationToken.None);
 
         // Assert
@@ -273,6 +276,7 @@ public class UserServiceTests
             newEmail,
             "New",
             "User",
+            null,
             CancellationToken.None);
 
         // Assert
@@ -304,6 +308,7 @@ public class UserServiceTests
             newEmail,
             "New",
             "User",
+            null,
             CancellationToken.None);
 
         // Assert
@@ -330,6 +335,7 @@ public class UserServiceTests
             TEST_EMAIL,
             invalidFirstName,
             "NewLastName",
+            null,
             CancellationToken.None);
 
         // Assert
