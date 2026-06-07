@@ -1,10 +1,15 @@
 namespace eMechanic.Application.Vehicle.Vehicle.Features.Update;
 
+using Common.Cache.Attributes;
 using Domain.Vehicle.Vehicle.Enums;
+using eMechanic.Common.Cache;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
 using FluentValidation;
+using Get.All;
+using Get.ById;
 
+[InvalidatesCache(typeof(GetVehiclesQuery), typeof(GetVehicleByIdQuery))]
 public sealed record UpdateVehicleCommand(
     Guid Id,
     string Vin,

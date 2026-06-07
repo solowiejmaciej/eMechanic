@@ -5,13 +5,13 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.CQRS;
 using Common.Result;
 using FluentValidation;
-using MediatR;
 
 public sealed class QueryValidationBehavior<TRequest, TResponse>
-    : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+    : IResultPipelineBehavior<TRequest, TResponse>
+    where TRequest : notnull
     where TResponse : notnull
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
@@ -23,7 +23,7 @@ public sealed class QueryValidationBehavior<TRequest, TResponse>
 
     public async Task<TResponse> Handle(
         TRequest request,
-        RequestHandlerDelegate<TResponse> next,
+        Func<CancellationToken, Task<TResponse>> next,
         CancellationToken cancellationToken)
     {
         var responseType = typeof(TResponse);

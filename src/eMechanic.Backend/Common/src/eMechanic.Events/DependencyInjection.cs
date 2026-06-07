@@ -69,17 +69,26 @@ public static class ServiceCollectionExtensions
 
                 if (consumerTypes != null)
                 {
-                    foreach (var consumerType in consumerTypes)
-                    {
-                        var messageTypeInterface = consumerType.GetInterfaces()
-                            .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IConsumer<>));
-                        var messageType = messageTypeInterface.GetGenericArguments()[0];
+                    var consumersByMessageType = consumerTypes
+                        .Select(consumerType => new
+                        {
+                            ConsumerType = consumerType,
+                            MessageType = consumerType.GetInterfaces()
+                                .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IConsumer<>))
+                                .GetGenericArguments()[0],
+                        })
+                        .GroupBy(x => x.MessageType);
 
-                        var queueName = $"{serviceName}.{messageType.Name}";
+                    foreach (var messageTypeGroup in consumersByMessageType)
+                    {
+                        var queueName = $"{serviceName}.{messageTypeGroup.Key.Name}";
 
                         cfg.ReceiveEndpoint(queueName, e =>
                         {
-                            e.ConfigureConsumer(context, consumerType);
+                            foreach (var consumer in messageTypeGroup)
+                            {
+                                e.ConfigureConsumer(context, consumer.ConsumerType);
+                            }
 
                             e.PrefetchCount = 16;
                             e.UseMessageRetry(r => r.Intervals(100, 500, 1000));

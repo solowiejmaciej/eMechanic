@@ -1,8 +1,8 @@
 import api from './client';
 
-export const login = async (email, password) => {
-  // Matches POST /api/v1/tokens/user
-  const response = await api.post('/api/v1/tokens/user', { email, password });
+export const login = async (email, password, isWorkshop = false) => {
+  const endpoint = isWorkshop ? '/api/v1/tokens/workshop' : '/api/v1/tokens/user';
+  const response = await api.post(endpoint, { email, password });
   return response.data;
 };
 
@@ -28,4 +28,14 @@ export const getCurrentUser = async () => {
 export const logout = async () => {
   // No endpoint in spec, client-side only
   return Promise.resolve();
+};
+
+export const registerUser = async (userData) => {
+  const response = await api.post('/api/v1/users', userData);
+  return response.data;
+};
+
+export const registerWorkshop = async (workshopData) => {
+  const response = await api.post('/api/v1/workshops', workshopData);
+  return response.data;
 };

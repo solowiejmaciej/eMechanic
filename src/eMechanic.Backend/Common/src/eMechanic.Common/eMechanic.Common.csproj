@@ -13,6 +13,8 @@
 
         <PackageReference Include="MediatR" />
         <PackageReference Include="MediatR.Contracts" />
+        <PackageReference Include="FluentValidation" />
+        <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" />
 
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
         <PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration"/>

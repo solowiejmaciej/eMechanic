@@ -1,9 +1,13 @@
 namespace eMechanic.Application.Workshop.Workshop.Features.Update;
 
+using Common.Cache.Attributes;
+using eMechanic.Common.Cache;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
 using FluentValidation;
+using Get.All;
 
+[InvalidatesCache(typeof(GetWorkshopsQuery))]
 public sealed record UpdateWorkshopCommand(
     string Email,
     string ContactEmail,

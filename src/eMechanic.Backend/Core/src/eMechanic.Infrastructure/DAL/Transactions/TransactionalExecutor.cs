@@ -39,6 +39,11 @@ internal sealed class TransactionalExecutor : ITransactionalExecutor
                 await transaction.RollbackAsync(cancellationToken);
                 throw;
             }
+            finally
+            {
+                // Detach shared transaction so later IdentityDbContext operations run without a stale user transaction.
+                await _identityDbContext.Database.UseTransactionAsync((System.Data.Common.DbTransaction?)null, cancellationToken);
+            }
         });
     }
 }

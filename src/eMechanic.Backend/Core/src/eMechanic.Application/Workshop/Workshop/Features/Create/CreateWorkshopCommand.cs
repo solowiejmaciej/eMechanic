@@ -1,8 +1,12 @@
 namespace eMechanic.Application.Workshop.Workshop.Features.Create;
 
+using Common.Cache.Attributes;
+using eMechanic.Common.Cache;
 using eMechanic.Common.CQRS;
 using FluentValidation;
+using Get.All;
 
+[InvalidatesCache(typeof(GetWorkshopsQuery))]
 public sealed record CreateWorkshopCommand(
     string Email,
     string Password,

@@ -1,9 +1,14 @@
 namespace eMechanic.Application.Vehicle.Vehicle.Features.Create;
 
+using Common.Cache.Attributes;
 using Domain.Vehicle.Vehicle.Enums;
+using eMechanic.Common.Cache;
 using eMechanic.Common.CQRS;
 using FluentValidation;
+using Get.All;
+using Get.ById;
 
+[InvalidatesCache(typeof(GetVehiclesQuery), typeof(GetVehicleByIdQuery))]
 public sealed record CreateVehicleCommand(
     string Vin,
     string Manufacturer,

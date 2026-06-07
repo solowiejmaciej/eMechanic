@@ -21,7 +21,7 @@ public class ModelFacadeTests
         _sut = new ModelFacade(_model);
     }
 
-    [Fact]
+    [Fact(Skip = "Not used right now")]
     public async Task GetResponseAsync_ShouldReturnDevelopmentMessage_WhenInDevelopment()
     {
         // Arrange
@@ -33,7 +33,7 @@ public class ModelFacadeTests
         // Assert
         result.Should().Be("AI report generation is disabled in development environment.");
         await _model.DidNotReceive().ExecuteAsync(Arg.Any<LlmTornado.Chat.ChatRequest>(), Arg.Any<CancellationToken>());
-        
+
         // Cleanup
         Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", null);
     }

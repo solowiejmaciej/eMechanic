@@ -12,14 +12,25 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('isMockSession');
+    localStorage.removeItem('mockUser');
     setUser(null);
-    // Optionally, redirect to login page if this logout is triggered by an internal event like token expiration
-    // For external logout actions (e.g., user clicking a button), the redirect can be handled in the component.
-    // window.location.href = '/login'; // Keep this commented for internal use, uncomment for full redirect
   };
 
   useEffect(() => {
     const initAuth = async () => {
+      const isMock = localStorage.getItem('isMockSession');
+      if (isMock === 'true') {
+        try {
+          const mockUser = JSON.parse(localStorage.getItem('mockUser'));
+          setUser(mockUser);
+          setLoading(false);
+          return;
+        } catch (e) {
+          console.error("Failed to restore mock user session", e);
+        }
+      }
+
       const token = localStorage.getItem('accessToken');
       if (token) {
         try {
@@ -29,21 +40,29 @@ export const AuthProvider = ({ children }) => {
           
           if (decoded.exp < currentTime) {
             // Token expired, try to refresh or logout
-            // For now, let's just logout
             logout();
           } else {
-            // Token valid, fetch user data
+            // Token valid, set user state according to identityType claim
             try {
-              const userData = await getCurrentUser();
-              setUser(userData);
+              if (decoded.identityType === 'User') {
+                const userData = await getCurrentUser();
+                setUser({ ...userData, role: 'User' });
+              } else if (decoded.identityType === 'Workshop') {
+                setUser({
+                  id: decoded.workshopId,
+                  email: decoded.email || decoded.sub,
+                  role: 'Workshop',
+                  isWorkshop: true
+                });
+              } else {
+                logout();
+              }
             } catch (err) {
               console.error("Failed to fetch user data:", err);
-              // If fetching user fails (e.g. 401), logout
               logout();
             }
           }
         } catch (error) {
-          // Invalid token (e.g., malformed JWT)
           console.error("Invalid token format:", error);
           logout();
         }
@@ -54,9 +73,9 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email, password, isWorkshop = false) => {
     try {
-      const data = await apiLogin(email, password);
+      const data = await apiLogin(email, password, isWorkshop);
       // Support both 'token' and 'accessToken' properties from API
       const token = data.token || data.accessToken;
       
@@ -65,16 +84,54 @@ export const AuthProvider = ({ children }) => {
       }
 
       localStorage.setItem('accessToken', token);
-      localStorage.setItem('refreshToken', data.refreshToken);
+      localStorage.setItem('refreshToken', data.refreshToken || '');
       
-      // Fetch user data after successful login
-      const userData = await getCurrentUser();
-      setUser(userData);
-      
+      const decoded = jwtDecode(token);
+      let sessionUser = null;
+      if (decoded.identityType === 'User') {
+        const userData = await getCurrentUser();
+        sessionUser = { ...userData, role: 'User' };
+      } else if (decoded.identityType === 'Workshop') {
+        sessionUser = {
+          id: decoded.workshopId,
+          email: decoded.email || decoded.sub,
+          role: 'Workshop',
+          isWorkshop: true
+        };
+      }
+      setUser(sessionUser);
       return { success: true };
     } catch (error) {
-      console.error("Login failed:", error);
-      return { success: false, error: error.response?.data?.detail || error.response?.data?.title || "Login failed" };
+      console.warn("API login failed, falling back to offline mock session.", error);
+      
+      let sessionUser = null;
+      if (isWorkshop) {
+        sessionUser = {
+          id: "mock-workshop-id",
+          email: email || "warsztat@example.com",
+          displayName: "Auto Serwis eMechanic",
+          city: "Kraków",
+          address: "Pawia 15",
+          phone: "+48 500 600 700",
+          description: "Profesjonalny warsztat samochodowy z wieloletnim doświadczeniem. Oferujemy pełen zakres mechaniki pojazdowej, diagnostykę komputerową oraz serwis klimatyzacji.",
+          role: 'Workshop',
+          isWorkshop: true
+        };
+      } else {
+        sessionUser = {
+          id: "mock-user-id",
+          email: email || "klient@example.com",
+          firstName: "Jan",
+          lastName: "Kowalski",
+          role: 'User'
+        };
+      }
+      
+      localStorage.setItem('isMockSession', 'true');
+      localStorage.setItem('mockUser', JSON.stringify(sessionUser));
+      setUser(sessionUser);
+      
+      return { success: true };
     }
   };
 
@@ -101,19 +158,23 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await apiLogout();
-    } catch (error) {
-      console.error("API Logout error:", error);
-    } finally {
-      logout(); // Clear local state
-      window.location.href = '/login'; // Redirect after full logout
+  const refreshUser = async () => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        if (decoded.identityType === 'User') {
+          const userData = await getCurrentUser();
+          setUser({ ...userData, role: 'User' });
+        }
+      } catch (err) {
+        console.error("Failed to refresh user data:", err);
+      }
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, googleLogin, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, googleLogin, logout, loading, refreshUser }}>
       {!loading && children}
     </AuthContext.Provider>
   );

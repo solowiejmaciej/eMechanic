@@ -16,11 +16,6 @@ public class ModelFacade : IModelFacade
 
     public Task<string> GetResponseAsync(string systemPrompt, string dataPrompt, CancellationToken cancellationToken)
     {
-        if (EnvironmentHelper.IsDevelopment())
-        {
-            return Task.FromResult("AI report generation is disabled in development environment.");
-        }
-
         var chatRequest = new ChatRequestBuilder()
             .WithModel(_model.ModelName)
             .WithSystemMessage(systemPrompt)

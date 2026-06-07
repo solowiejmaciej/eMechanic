@@ -1,10 +1,14 @@
 namespace eMechanic.Application.Workshop.Document.Features.Create;
 
+using Common.Cache.Attributes;
+using eMechanic.Common.Cache;
 using eMechanic.Common.CQRS;
 using eMechanic.Domain.Workshop.Documents.Enums;
 using FluentValidation;
+using Get;
 using Microsoft.AspNetCore.Http;
 
+[InvalidatesCache(typeof(GetWorkshopDocumentsQuery))]
 public sealed record AddWorkshopDocumentCommand(
     IFormFile File,
     EWorkshopDocumentType DocumentType) : IResultCommand<Uri>;

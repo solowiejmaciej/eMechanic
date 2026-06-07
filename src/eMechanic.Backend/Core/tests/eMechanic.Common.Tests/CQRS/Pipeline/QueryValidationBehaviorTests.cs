@@ -1,10 +1,9 @@
-namespace eMechanic.Application.Tests.Behaviors;
+namespace eMechanic.Common.Tests.CQRS.Pipeline;
 
-using eMechanic.Application.Behaviors;
 using eMechanic.Common.CQRS;
+using eMechanic.Common.CQRS.Pipeline;
 using eMechanic.Common.Result;
 using FluentValidation;
-using MediatR;
 using NSubstitute;
 
 public sealed record TestQuery(string Email) : IResultQuery<Guid>;
@@ -20,35 +19,28 @@ public class TestQueryValidator : AbstractValidator<TestQuery>
 public class QueryValidationBehaviorTests
 {
     private readonly IValidator<TestQuery> _validator;
-    private readonly RequestHandlerDelegate<Result<Guid, Error>> _nextDelegate;
+    private readonly Func<CancellationToken, Task<Result<Guid, Error>>> _nextDelegate;
     private readonly QueryValidationBehavior<TestQuery, Result<Guid, Error>> _behavior;
 
     public QueryValidationBehaviorTests()
     {
         _validator = new TestQueryValidator();
+        _nextDelegate = Substitute.For<Func<CancellationToken, Task<Result<Guid, Error>>>>();
 
-        _nextDelegate = Substitute.For<RequestHandlerDelegate<Result<Guid, Error>>>();
-
-        _behavior = new QueryValidationBehavior<TestQuery, Result<Guid, Error>>(
-            new[] { _validator }
-        );
+        _behavior = new QueryValidationBehavior<TestQuery, Result<Guid, Error>>([_validator]);
     }
 
     [Fact]
     public async Task Handle_Should_CallNext_WhenValidationIsSuccessful()
     {
-        // Arrange
-        var query = new TestQuery("poprawny@email.pl");
+        var query = new TestQuery("valid@email.com");
         var successResult = Guid.NewGuid();
 
-        _nextDelegate.Invoke().Returns(successResult);
+        _nextDelegate.Invoke(Arg.Any<CancellationToken>()).Returns(successResult);
 
-        // Act
         var result = await _behavior.Handle(query, _nextDelegate, CancellationToken.None);
 
-        // Assert
-        await _nextDelegate.Received(1).Invoke();
-
+        await _nextDelegate.Received(1).Invoke(Arg.Any<CancellationToken>());
         Assert.False(result.HasError());
         Assert.Equal(successResult, result.Value);
     }
@@ -56,16 +48,13 @@ public class QueryValidationBehaviorTests
     [Fact]
     public async Task Handle_Should_ReturnValidationError_WhenValidationFails()
     {
-        // Arrange
-        var query = new TestQuery("this-is-not-a-valid-email");
+        var query = new TestQuery("invalid-email");
 
-        // Act
         var result = await _behavior.Handle(query, _nextDelegate, CancellationToken.None);
 
-        // Assert
-        await _nextDelegate.DidNotReceive().Invoke();
-
+        await _nextDelegate.DidNotReceive().Invoke(Arg.Any<CancellationToken>());
         Assert.True(result.HasError());
         Assert.Equal(EErrorCode.ValidationError, result.Error!.Code);
     }
 }
+

@@ -14,6 +14,8 @@ using Application.Workshop.Document.Repositories;
 using Application.Workshop.Reviews.Repositories;
 using Application.Workshop.Workshop.Repositories;
 using Application.Workshop.Workshop.Services;
+using Common.Cache.Abstractions;
+using eMechanic.Common.Cache;
 using eMechanic.Application.Payments.Abstractions;
 using eMechanic.Application.Payments.Repositories;
 using eMechanic.Application.Repair.Repositories;
@@ -104,6 +106,7 @@ public static class DependencyInjection
         services.AddScoped<ITokenGenerator, TokenGenerator>();
         services.AddScoped<IAuthenticator, Authenticator>();
         services.AddHttpContextAccessor();
+        services.AddScoped<ICacheScopeContextAccessor, CacheScopeContextAccessor>();
         services.AddScoped<IUserContext, UserContext>();
         services.AddScoped<IWorkshopContext, WorkshopContext>();
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();

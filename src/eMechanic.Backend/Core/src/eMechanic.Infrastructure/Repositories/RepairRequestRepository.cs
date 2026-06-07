@@ -27,7 +27,8 @@ internal sealed class RepairRequestRepository : Repository<RepairRequest>, IRepa
     public Task<PaginationResult<RepairRequest>> GetForWorkshopAsync(Guid workshopId, PaginationParameters paginationParameters, CancellationToken cancellationToken)
     {
         var query = GetQuery()
-            .FilterByWorkshopId(workshopId);
+            .FilterByWorkshopId(workshopId)
+            .OrderBy(x => x.Status);
 
         return GetPaginatedAsync(query, paginationParameters, cancellationToken);
     }

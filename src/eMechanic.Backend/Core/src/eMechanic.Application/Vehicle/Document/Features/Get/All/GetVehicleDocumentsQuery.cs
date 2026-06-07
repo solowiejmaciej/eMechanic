@@ -1,9 +1,13 @@
 namespace eMechanic.Application.Vehicle.Document.Features.Get.All;
 
+using Common.Cache.Attributes;
+using Common.Cache.Configuration;
+using eMechanic.Common.Cache;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
 using FluentValidation;
 
+[Cache(CacheDefaults.DEFAULT_DURATION_SECONDS, ECacheScope.User)]
 public sealed record GetVehicleDocumentsQuery(
     Guid VehicleId,
     PaginationParameters PaginationParameters) : IResultQuery<PaginationResult<VehicleDocumentResponse>>;
