@@ -1,10 +1,14 @@
 namespace eMechanic.Application.UserRepairPreferences.Features.Update;
 
+using Common.Cache.Attributes;
+using eMechanic.Common.Cache;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
 using eMechanic.Domain.UserRepairPreferences.Enums;
 using FluentValidation;
+using Get;
 
+[InvalidatesCache(typeof(GetCurrentUserRepairPreferencesQuery))]
 public sealed record UpdateUserRepairPreferencesCommand(
     EPartsPreference PartsPreference,
     ETimelinePreference TimelinePreference) : IResultCommand<Success>;

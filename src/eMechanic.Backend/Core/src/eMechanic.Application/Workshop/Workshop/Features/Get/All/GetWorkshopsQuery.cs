@@ -1,11 +1,13 @@
 namespace eMechanic.Application.Workshop.Workshop.Features.Get.All;
 
 using Common.Cache;
+using Common.Cache.Attributes;
+using Common.Cache.Configuration;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
 using FluentValidation;
 
-[Cache(300, ECacheScope.Public)]
+[Cache(CacheDefaults.DEFAULT_DURATION_SECONDS, ECacheScope.Public)]
 public sealed record GetWorkshopsQuery(PaginationParameters PaginationParameters) : IResultQuery<PaginationResult<WorkshopResponse>>;
 
 public class GetWorkshopsQueryValidator : AbstractValidator<GetWorkshopsQuery>

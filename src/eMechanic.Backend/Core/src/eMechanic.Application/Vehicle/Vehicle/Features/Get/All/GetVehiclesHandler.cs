@@ -40,7 +40,10 @@ public class GetVehiclesHandler : IResultQueryHandler<GetVehiclesQuery, Paginati
             x.FuelType,
             x.BodyType,
             x.VehicleType,
-            x.CreatedAt));
+            x.CreatedAt,
+            null,
+            null,
+            null));
 
         return result;
     }

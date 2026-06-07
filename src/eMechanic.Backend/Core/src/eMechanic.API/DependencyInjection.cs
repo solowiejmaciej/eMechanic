@@ -2,6 +2,7 @@ namespace eMechanic.API;
 
 using System.Text;
 using Application.Identity;
+using Common.Cache.DependencyInjection;
 using Common.Helpers;
 using Common.Result;
 using Common.Web;
@@ -21,19 +22,7 @@ public static class DependencyInjection
 {
     private const string GIT_HUB_ICON_BASE64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiB2aWV3Qm94PSIwIDAgMTYgMTYiPjxwYXRoIGQ9Ik04IDBDMy41OCAwIDAgMy41OCAwIDhjMCAzLjU0IDIuMjkgNi41MyA1LjQ3IDcuNTkuNC4wNy41NS0uMTcuNTUtLjM4IDAtLjE5LS4wMS0uODItLjAxLTEuNDktMi4wMS4zNy0yLjUzLS40OS0yLjY5LS45NC0uMDktLjIzLS40OC0uOTQtLjgyLTEuMTMtLjI4LS4xNS0uNjgtLjUyLS4wMS0uNTMuNjMtLjAxIDEuMDguNTggMS4yMy44Mi43MiAxLjIxIDEuODcuODcgMi4zMy42Ni4wNy0uNTIuMjgtLjg3LjUxLTEuMDctMS43OC0uMi0zLjY0LS44OS0zLjY0LTMuOTUgMC0uODcuMzEtMS41OS44Mi0yLjE1LS4wOC0uMi0uMzYtMS4wMi4wOC0yLjEyIDAgMCAuNjctLjIxIDIuMi44Mi42NC0uMTggMS4zMi0uMjcgMi0uMjcuNjggMCAxLjM2LjA5IDIgLjI3IDEuNTMtMS4wNCAyLjItLjgyIDIuMi0uODIuNDQgMS4xLjE2IDEuOTIuMDggMi4xMi41MS41Ni44MiAxLjI3LjgyIDIuMTUgMCAzLjA3LTEuODcgMy43NS0zLjY1IDMuOTUuMjkuMjUuNTQuNzMuNTQgMS40OCAwIDEuMDctLjAxIDEuOTMtLjAxIDIuMiAwIC4yMS4xNS40Ni41NS4zOEExOC4wMTIgOC4wMTIgMCAwIDAgMTYgOGMwLTQuNDItMy41OC04LTgtOHoiLz48L3N2Zz4=";
 
-    public static void AddApi(this WebApplicationBuilder builder)
-    {
-        var redisConnectionString = builder.Configuration.GetConnectionString("emechanic-cache");
-
-        if (!string.IsNullOrWhiteSpace(redisConnectionString))
-        {
-            builder.AddRedisDistributedCache("emechanic-cache");
-        }
-        else
-        {
-            builder.Services.AddDistributedMemoryCache();
-        }
-    }
+    public static void AddApi(this WebApplicationBuilder builder) => builder.AddCache("emechanic-cache");
 
     public static void AddSwagger(this IServiceCollection services, string title, string version)
     {
@@ -128,6 +117,11 @@ public static class DependencyInjection
 
             options.AddPolicy(AuthorizationPolicies.MUST_BE_WORKSHOP, policy =>
                 policy.RequireClaim(ClaimConstants.IDENTITY_TYPE, nameof(EIdentityType.Workshop)));
+
+            options.AddPolicy(AuthorizationPolicies.MUST_BE_USER_OR_WORKSHOP, policy =>
+                policy.RequireAssertion(context =>
+                    context.User.HasClaim(ClaimConstants.IDENTITY_TYPE, nameof(EIdentityType.User)) ||
+                    context.User.HasClaim(ClaimConstants.IDENTITY_TYPE, nameof(EIdentityType.Workshop))));
         });
 
         services.AddAuthentication(options =>

@@ -1,9 +1,13 @@
 namespace eMechanic.Application.Users.Features.Update;
 
+using Common.Cache.Attributes;
+using eMechanic.Common.Cache;
 using eMechanic.Common.CQRS;
 using eMechanic.Common.Result;
 using FluentValidation;
+using Get.Current;
 
+[InvalidatesCache(typeof(GetCurrentUserQuery))]
 public sealed record UpdateUserCommand(
     string FirstName,
     string LastName,

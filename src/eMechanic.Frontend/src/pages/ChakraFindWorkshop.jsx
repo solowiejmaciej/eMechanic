@@ -1,12 +1,11 @@
-import { Box, Button, Heading, InputGroup, SimpleGrid, Text, Flex, Icon, HStack, Input } from "@chakra-ui/react"
+import { Box, Button, Heading, InputGroup, SimpleGrid, Text, Flex, Icon, HStack, Input, Skeleton, Badge, Separator, Image, VStack } from "@chakra-ui/react"
 import ChakraNavbar from "@/components/layout/ChakraNavbar"
 import ChakraHero from "../features/landing/ChakraHero"
 import ChakraFeature from "../features/landing/ChakraFeature"
 import ChakraFooter from "../components/layout/ChakraFooter"
-import { Search, MapPin, Star } from 'lucide-react';
+import { Search, MapPin, Star, Phone, Mail, Wrench } from 'lucide-react';
 import { useState, useEffect } from 'react'
 import { getWorkshops, getWorkshopDocuments } from '../api/workshops';
-import CustomLoader from '../components/ui/CustomLoader';
 
 const WorkshopCard = ({ workshop }) => {
   const [image, setImage] = useState(null);
@@ -15,11 +14,10 @@ const WorkshopCard = ({ workshop }) => {
     const fetchImage = async () => {
       try {
         const docs = await getWorkshopDocuments(workshop.id, { pageNumber: 1, pageSize: 50 });
-        // Priority: Logo (1) -> Gallery (2)
-        const logo = docs.items.find(d => d.type === 1);
-        const gallery = docs.items.find(d => d.type === 2);
-        if (logo) setImage(logo.publicUrl);
-        else if (gallery) setImage(gallery.publicUrl);
+        const logo = docs?.items?.find(d => d.type === 1 || d.type === "Logo" || d.type === "logo");
+        const gallery = docs?.items?.find(d => d.type === 2 || d.type === "GalleryImage" || d.type === "galleryImage");
+        if (logo?.publicUrl) setImage(logo.publicUrl);
+        else if (gallery?.publicUrl) setImage(gallery.publicUrl);
       } catch (e) {
         console.error("Failed to fetch documents for workshop", workshop.id, e);
       }
@@ -27,14 +25,124 @@ const WorkshopCard = ({ workshop }) => {
     fetchImage();
   }, [workshop.id]);
 
-  
-  return(
-    <Box p={6} bg="white" _dark={{ bg: "gray.800", borderColor: "gray.700" }} rounded="xl" borderWidth="1px" w="full" shadow="sm">
-      <Heading size="md" _dark={{ color: "white" }}>{workshop.name || "Workshop Name"}</Heading>
-      <Text mt={2} color="gray.500"></Text>
+  return (
+    <Box 
+      p={6} 
+      bg="white" 
+      _dark={{ bg: "rgb(25, 36, 54)", borderColor: "whiteAlpha.100" }} 
+      rounded="2xl" 
+      borderWidth="1px" 
+      borderColor="gray.200"
+      w="full" 
+      shadow="md"
+      display="flex"
+      flexDirection="column"
+      gap={4}
+      transition="all 0.2s"
+      _hover={{ transform: "translateY(-4px)", shadow: "lg" }}
+    >
+      <Flex gap={4} align="center">
+        {image ? (
+          <Image 
+            src={image} 
+            alt={workshop.displayName} 
+            boxSize="60px" 
+            objectFit="cover" 
+            rounded="xl" 
+            fallback={<Flex boxSize="60px" bg="orange.100" _dark={{ bg: "orange.900/30" }} align="center" justify="center" rounded="xl"><Icon as={Wrench} color="orange.500" boxSize={6} /></Flex>}
+          />
+        ) : (
+          <Flex boxSize="60px" bg="orange.50" _dark={{ bg: "orange.900/20" }} align="center" justify="center" rounded="xl">
+            <Icon as={Wrench} color="orange.500" boxSize={6} />
+          </Flex>
+        )}
+        <VStack align="flex-start" gap={1}>
+          <Heading size="md" fontWeight="bold" _dark={{ color: "white" }}>
+            {workshop.displayName || "Nazwa warsztatu"}
+          </Heading>
+          <HStack gap={1}>
+            <Icon as={MapPin} color="gray.400" boxSize={3.5} />
+            <Text fontSize="xs" color="gray.500" _dark={{ color: "gray.400" }}>
+              {workshop.city || "Brak miasta"}
+            </Text>
+          </HStack>
+        </VStack>
+      </Flex>
+
+      <Separator borderColor="gray.100" _dark={{ borderColor: "whiteAlpha.100" }} />
+
+      <VStack align="stretch" gap={2} fontSize="sm">
+        <HStack gap={2}>
+          <Icon as={MapPin} color="brand.500" boxSize={4} />
+          <Text color="gray.600" _dark={{ color: "gray.300" }} noOfLines={1}>
+            {workshop.address ? `${workshop.address}, ${workshop.postalCode} ${workshop.city}` : "Brak adresu"}
+          </Text>
+        </HStack>
+
+        {workshop.phoneNumber && (
+          <HStack gap={2}>
+            <Icon as={Phone} color="brand.500" boxSize={4} />
+            <Text color="gray.600" _dark={{ color: "gray.300" }}>
+              {workshop.phoneNumber}
+            </Text>
+          </HStack>
+        )}
+
+        {workshop.contactEmail && (
+          <HStack gap={2}>
+            <Icon as={Mail} color="brand.500" boxSize={4} />
+            <Text color="gray.600" _dark={{ color: "gray.300" }} noOfLines={1}>
+              {workshop.contactEmail}
+            </Text>
+          </HStack>
+        )}
+      </VStack>
+
+      <Flex justify="space-between" align="center" mt={2}>
+        <Badge colorPalette="orange" variant="subtle" rounded="md" px={2} py={0.5}>
+          Warsztat
+        </Badge>
+        <Button size="sm" colorPalette="brand" variant="outline" rounded="lg">
+          Szczegóły
+        </Button>
+      </Flex>
     </Box>
-  )
+  );
 }
+
+const WorkshopCardSkeleton = () => (
+  <Box 
+    p={6} 
+    bg="white" 
+    _dark={{ bg: "rgb(25, 36, 54)", borderColor: "whiteAlpha.100" }} 
+    rounded="2xl" 
+    borderWidth="1px" 
+    borderColor="gray.200"
+    w="full" 
+    shadow="md"
+    display="flex"
+    flexDirection="column"
+    gap={4}
+  >
+    <Flex gap={4} align="center">
+      <Skeleton boxSize="60px" rounded="xl" />
+      <VStack align="flex-start" gap={2} flex={1}>
+        <Skeleton h="20px" w="70%" />
+        <Skeleton h="14px" w="40%" />
+      </VStack>
+    </Flex>
+    <Separator borderColor="gray.100" _dark={{ borderColor: "whiteAlpha.100" }} />
+    <VStack align="stretch" gap={2}>
+      <Skeleton h="16px" w="90%" />
+      <Skeleton h="16px" w="60%" />
+      <Skeleton h="16px" w="80%" />
+    </VStack>
+    <Flex justify="space-between" align="center" mt={2}>
+      <Skeleton h="24px" w="80px" rounded="md" />
+      <Skeleton h="32px" w="100px" rounded="lg" />
+    </Flex>
+  </Box>
+);
 
 const ChakraFindWorshop = () => {
   const [workshops, setWorkshops] = useState([]);
@@ -68,7 +176,7 @@ const ChakraFindWorshop = () => {
 
   useEffect(() => {
     fetchWorkshops();
-  }, [pageNumber]); // Fetch when page changes
+  }, [pageNumber]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -123,7 +231,13 @@ const ChakraFindWorshop = () => {
           w="full"
         >
          {loading ? ( 
-              <CustomLoader />
+              <Flex direction="column" gap={6} w="full">
+                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6} w="full">
+                  {[...Array(6)].map((_, i) => (
+                    <WorkshopCardSkeleton key={i} />
+                  ))}
+                </SimpleGrid>
+              </Flex>
           ) : workshops.length > 0 ? (
               <Flex direction="column" gap={6} w="full">
                   
@@ -133,13 +247,13 @@ const ChakraFindWorshop = () => {
                       </Text>
                       
                       <HStack gap={2}>
-                          <Button variant="outline" disabled={pageNumber === 1} onClick={() => handlePageChange(pageNumber - 1)}>
+                          <Button variant="outline" colorPalette="brand" disabled={pageNumber === 1} onClick={() => handlePageChange(pageNumber - 1)}>
                             Previous
                           </Button>
                           <Text fontWeight="bold" px={4} _dark={{ color: "white" }}>
                             {pageNumber} / {totalPages}
                           </Text>
-                          <Button variant="outline" disabled={pageNumber === totalPages} onClick={() => handlePageChange(pageNumber + 1)}>
+                          <Button variant="outline" colorPalette="brand" disabled={pageNumber === totalPages} onClick={() => handlePageChange(pageNumber + 1)}>
                             Next
                           </Button>
                       </HStack>

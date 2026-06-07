@@ -1,10 +1,15 @@
 
 namespace eMechanic.Application.RepairRequest.Features.ProvideEstimation;
 
+using Common.Cache;
+using Common.Cache.Attributes;
 using Common.CQRS;
 using Common.Result;
 using FluentValidation;
+using Get.ForUser;
+using Get.ForWorkshop;
 
+[InvalidatesCache(typeof(GetRepairRequestsForUserVehicleQuery), typeof(GetRepairRequestsForWorkshopQuery))]
 public sealed record ProvideRepairEstimationCommand(Guid RepairRequestId, string Diagnosis, decimal Cost, string Currency) : IResultCommand<Success>;
 
 public class ProvideRepairEstimationValidator : AbstractValidator<ProvideRepairEstimationCommand>

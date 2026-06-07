@@ -17,4 +17,7 @@ public sealed record VehicleResponse(
     EFuelType FuelType,
     EBodyType BodyType,
     EVehicleType VehicleType,
-    DateTime CreatedAt);
+    DateTime CreatedAt,
+    string? ClientFirstName,
+    string? ClientLastName,
+    string? ClientEmail);

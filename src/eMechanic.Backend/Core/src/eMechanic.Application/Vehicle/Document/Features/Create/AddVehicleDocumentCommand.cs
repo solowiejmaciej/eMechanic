@@ -1,10 +1,14 @@
 namespace eMechanic.Application.Vehicle.Document.Features.Create;
 
+using Common.Cache.Attributes;
 using Domain.Vehicle.Documents.Enums;
+using eMechanic.Common.Cache;
 using eMechanic.Common.CQRS;
 using FluentValidation;
+using Get.All;
 using Microsoft.AspNetCore.Http;
 
+[InvalidatesCache(typeof(GetVehicleDocumentsQuery))]
 public sealed record AddVehicleDocumentCommand(
     Guid VehicleId,
     IFormFile File,

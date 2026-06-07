@@ -32,6 +32,6 @@ public sealed class GetVehicleByIdFeature : IFeature
             .Produces(StatusCodes.Status500InternalServerError)
             .Produces(StatusCodes.Status401Unauthorized)
             .WithSummary("Gets a vehicle by its unique identifier.")
-            .RequireAuthorization(AuthorizationPolicies.MUST_BE_USER);
+            .RequireAuthorization(AuthorizationPolicies.MUST_BE_USER_OR_WORKSHOP);
     }
 }
