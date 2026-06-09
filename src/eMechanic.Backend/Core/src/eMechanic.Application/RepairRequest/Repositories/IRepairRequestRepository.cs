@@ -14,4 +14,6 @@ public interface IRepairRequestRepository : IRepository<RepairRequest>
         PaginationParameters paginationParameters, CancellationToken cancellationToken);
 
     Task<RepairRequest?> GetForUserByIdAsync(Guid userId, Guid id, CancellationToken cancellationToken);
+
+    Task<bool> HasRelationWithUserAsync(Guid workshopId, Guid userId, CancellationToken cancellationToken);
 }

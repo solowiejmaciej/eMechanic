@@ -41,4 +41,7 @@ internal sealed class RepairRequestRepository : Repository<RepairRequest>, IRepa
 
         return await query.FirstOrDefaultAsync(cancellationToken);
     }
+
+    //TODO this may not be the best place
+    public async Task<bool> HasRelationWithUserAsync(Guid workshopId, Guid userId, CancellationToken cancellationToken) => await DbSet.AnyAsync(x => x.WorkshopId == workshopId && x.UserId == userId, cancellationToken);
 }

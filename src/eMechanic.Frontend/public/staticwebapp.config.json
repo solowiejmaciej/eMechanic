@@ -9,7 +9,7 @@
     }
   },
   "globalHeaders": {
-    "content-security-policy": "default-src https: 'unsafe-eval' 'unsafe-inline'; object-src 'none'"
+    "content-security-policy": "default-src https: 'unsafe-eval' 'unsafe-inline'; img-src https: data: blob:; object-src 'none'"
   },
   "mimeTypes": {
     ".json": "application/json"

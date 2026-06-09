@@ -1,5 +1,6 @@
 namespace eMechanic.Infrastructure.Tests.Extensions;
 
+using eMechanic.Domain.Repair.Enums;
 using eMechanic.Common.Attributes;
 using FluentAssertions;
 using Repositories.Extensions;
@@ -32,6 +33,22 @@ public class EntityExtensionsTests
 
         [Searchable]
         public TestValueObject? SearchableVo { get; set; }
+    }
+
+    private sealed class EnumEntity
+    {
+        [Searchable]
+        public ERepairStatus Status { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+    }
+
+    private readonly record struct TestRating(byte Value);
+
+    private sealed class RatingEntity
+    {
+        [Searchable]
+        public TestRating Rating { get; set; }
     }
 
     [Fact]
@@ -126,5 +143,61 @@ public class EntityExtensionsTests
 
         // Assert
         result.Should().ContainSingle();
+    }
+
+    [Fact]
+    public void ApplySearch_ShouldFilterByEnumStatus_WhenSearchPhraseMatchesEnumName()
+    {
+        var data = new List<EnumEntity>
+        {
+            new() { Status = ERepairStatus.Scheduled },
+            new() { Status = ERepairStatus.Paid }
+        }.AsQueryable();
+
+        var result = data.ApplySearch("paid").ToList();
+
+        result.Should().ContainSingle(x => x.Status == ERepairStatus.Paid);
+    }
+
+    [Fact]
+    public void ApplySearch_ShouldReturnAll_WhenEnumSearchPhraseIsInvalid()
+    {
+        var data = new List<EnumEntity>
+        {
+            new() { Status = ERepairStatus.Scheduled },
+            new() { Status = ERepairStatus.Paid }
+        }.AsQueryable();
+
+        var result = data.ApplySearch("not-a-status").ToList();
+
+        result.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public void ApplySearch_ShouldFilterByNumericValueObject_WhenSearchPhraseIsNumeric()
+    {
+        var data = new List<RatingEntity>
+        {
+            new() { Rating = new TestRating(3) },
+            new() { Rating = new TestRating(5) }
+        }.AsQueryable();
+
+        var result = data.ApplySearch("5").ToList();
+
+        result.Should().ContainSingle(x => x.Rating.Value == 5);
+    }
+
+    [Fact]
+    public void ApplySearch_ShouldReturnAll_WhenNumericValueObjectSearchPhraseIsInvalid()
+    {
+        var data = new List<RatingEntity>
+        {
+            new() { Rating = new TestRating(3) },
+            new() { Rating = new TestRating(5) }
+        }.AsQueryable();
+
+        var result = data.ApplySearch("five").ToList();
+
+        result.Should().HaveCount(2);
     }
 }

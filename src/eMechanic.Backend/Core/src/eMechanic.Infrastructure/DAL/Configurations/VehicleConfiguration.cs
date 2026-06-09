@@ -4,7 +4,6 @@ namespace eMechanic.Infrastructure.DAL.Configurations;
 using Domain.Vehicle;
 using Domain.Vehicle.Vehicle;
 using Domain.Vehicle.Vehicle.ValueObjects;
-// Upewnij się, że są usingi dla Value Objects
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,25 +18,37 @@ internal sealed class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
         builder.Property(v => v.UserId)
             .IsRequired();
 
-        builder.Property(v => v.Vin)
-            .HasConversion(vin => vin.Value, value => Vin.Create(value).Value!)
-            .HasMaxLength(17)
-            .IsRequired();
+        builder.OwnsOne(v => v.Vin, b =>
+        {
+            b.Property(vi => vi.Value)
+                .HasColumnName("Vin")
+                .HasMaxLength(17)
+                .IsRequired();
+        });
 
-        builder.Property(v => v.Manufacturer)
-            .HasConversion(m => m.Value, value => Manufacturer.Create(value).Value!)
-            .HasMaxLength(100)
-            .IsRequired();
+        builder.OwnsOne(v => v.Manufacturer, b =>
+        {
+            b.Property(m => m.Value)
+                .HasColumnName("Manufacturer")
+                .HasMaxLength(100)
+                .IsRequired();
+        });
 
-        builder.Property(v => v.Model)
-            .HasConversion(m => m.Value, value => Model.Create(value).Value!)
-            .HasMaxLength(100)
-            .IsRequired();
+        builder.OwnsOne(v => v.Model, b =>
+        {
+            b.Property(m => m.Value)
+                .HasColumnName("Model")
+                .HasMaxLength(100)
+                .IsRequired();
+        });
 
-        builder.Property(v => v.ProductionYear)
-            .HasConversion(py => py.Value, value => ProductionYear.Create(value).Value!)
-            .HasMaxLength(4)
-            .IsRequired();
+        builder.OwnsOne(v => v.ProductionYear, b =>
+        {
+            b.Property(py => py.Value)
+                .HasColumnName("ProductionYear")
+                .HasMaxLength(4)
+                .IsRequired();
+        });
 
         builder.Property(v => v.EngineCapacity)
             .HasConversion(ec => ec!.Value,
@@ -61,11 +72,13 @@ internal sealed class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
             .HasConversion(py => py.Value, value => HorsePower.Create(value).Value!)
             .IsRequired();
 
-        builder.Property(v => v.LicensePlate)
-            .HasConversion(lp => lp!.Value,
-                value => LicensePlate.Create(value).Value!)
-            .HasMaxLength(15)
-            .IsRequired();
+        builder.OwnsOne(v => v.LicensePlate, b =>
+        {
+            b.Property(lp => lp.Value)
+                .HasColumnName("LicensePlate")
+                .HasMaxLength(15)
+                .IsRequired();
+        });
 
         builder.Property(v => v.FuelType)
             .HasConversion<string>()

@@ -151,9 +151,12 @@ public static class DependencyInjection
                     builder
                         .SetIsOriginAllowed(origin =>
                         {
-                            var host = new Uri(origin).Host;
+                            var uri = new Uri(origin);
+                            var host = uri.Host;
                             return host is "localhost" or "127.0.0.1"
-                                   || origin is "https://e-mechanic.net" or "http://e-mechanic.net";
+                                   || host == "e-mechanic.net"
+                                   || host.EndsWith(".e-mechanic.net", StringComparison.OrdinalIgnoreCase)
+                                   || host.EndsWith(".azurestaticapps.net", StringComparison.OrdinalIgnoreCase);
                         })
                         .AllowAnyMethod()
                         .AllowAnyHeader()

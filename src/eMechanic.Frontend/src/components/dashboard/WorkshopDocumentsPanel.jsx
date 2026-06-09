@@ -35,6 +35,7 @@ export const WorkshopDocumentsPanel = ({
   loading,
   onUploadDocument,
   onDeleteDocument,
+  onDownloadDocument,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [docName, setDocName] = useState("");
@@ -98,6 +99,7 @@ export const WorkshopDocumentsPanel = ({
   };
 
   const formatBytes = (bytes) => {
+    if (!bytes || isNaN(bytes)) return "";
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB"];
@@ -173,17 +175,17 @@ export const WorkshopDocumentsPanel = ({
                   </Badge>
                 </Flex>
 
-                <VStack align="flex-start" gap={1}>
-                  <Text fontWeight="bold" fontSize="md" noOfLines={1} title={doc.displayName || doc.originalFileName} _dark={{ color: "white" }}>
-                    {doc.displayName || doc.originalFileName}
+                 <VStack align="flex-start" gap={1}>
+                  <Text fontWeight="bold" fontSize="md" noOfLines={1} title={doc.displayName || doc.fileName} _dark={{ color: "white" }}>
+                    {doc.displayName || doc.fileName}
                   </Text>
-                  <Text fontSize="xs" color="gray.400" noOfLines={1} title={doc.originalFileName}>
-                    {doc.originalFileName}
+                  <Text fontSize="xs" color="gray.400" noOfLines={1} title={doc.fileName}>
+                    {doc.fileName}
                   </Text>
                   <HStack fontSize="11px" color="gray.500" gap={2}>
-                    <Text>{formatBytes(doc.fileSize)}</Text>
-                    <Text>•</Text>
-                    <Text>{new Date(doc.createdAt).toLocaleDateString()}</Text>
+                    {doc.fileSize && <Text>{formatBytes(doc.fileSize)}</Text>}
+                    {doc.fileSize && <Text>•</Text>}
+                    <Text>{doc.createdAt ? new Date(doc.createdAt).toLocaleDateString() : ""}</Text>
                   </HStack>
                 </VStack>
 
@@ -195,16 +197,10 @@ export const WorkshopDocumentsPanel = ({
                     variant="ghost"
                     colorPalette="orange"
                     gap={1.5}
-                    onClick={() => {
-                      toaster.create({
-                        title: "Pobieranie dokumentu",
-                        description: `Rozpoczęto pobieranie pliku: ${doc.originalFileName}`,
-                        type: "info",
-                      });
-                    }}
+                    onClick={() => onDownloadDocument(doc.id, doc.fileName)}
                   >
                     <Icon as={Download} boxSize={3.5} />
-                    Pobierz
+                    Podgląd / Pobierz
                   </Button>
                   <Button
                     size="xs"

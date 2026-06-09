@@ -102,6 +102,15 @@ export const AuthProvider = ({ children }) => {
       setUser(sessionUser);
       return { success: true };
     } catch (error) {
+      const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+      if (!isLocalhost) {
+        console.error("API login failed on production:", error);
+        return {
+          success: false,
+          error: error.response?.data?.detail || error.response?.data?.title || error.message || "Błąd logowania na serwerze."
+        };
+      }
+
       console.warn("API login failed, falling back to offline mock session.", error);
       
       let sessionUser = null;

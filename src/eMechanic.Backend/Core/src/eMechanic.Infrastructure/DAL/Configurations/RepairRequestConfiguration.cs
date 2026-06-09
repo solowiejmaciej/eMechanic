@@ -1,7 +1,6 @@
 namespace eMechanic.Infrastructure.DAL.Configurations;
 
 using Domain.RepairRequest;
-using Domain.RepairRequest.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,19 +16,22 @@ internal sealed class RepairRequestConfiguration : IEntityTypeConfiguration<Repa
         builder.Property(rr => rr.WorkshopId).IsRequired();
         builder.Property(rr => rr.VehicleId).IsRequired();
 
-        builder.Property(rr => rr.Description)
-            .HasConversion(
-                d => d.Value,
-                v => RepairDescription.Create(v).Value!)
-            .HasMaxLength(2000)
-            .IsRequired();
+        builder.OwnsOne(rr => rr.Description, b =>
+        {
+            b.Property(d => d.Value)
+                .HasColumnName("Description")
+                .HasMaxLength(2000)
+                .IsRequired();
+        });
 
-        builder.Property(rr => rr.Diagnosis)
-            .HasConversion(
-                d => d != null ? d.Value : null,
-                v => !string.IsNullOrEmpty(v) ? RepairDiagnosis.Create(v).Value! : null)
-            .HasMaxLength(4000)
-            .IsRequired(false);
+        builder.OwnsOne(rr => rr.Diagnosis, b =>
+        {
+            b.Property(d => d.Value)
+                .HasColumnName("Diagnosis")
+                .HasMaxLength(4000)
+                .IsRequired(false);
+        });
+        builder.Navigation(rr => rr.Diagnosis).IsRequired(false);
 
         builder.OwnsOne(rr => rr.EstimatedCost, moneyBuilder =>
         {
@@ -47,19 +49,23 @@ internal sealed class RepairRequestConfiguration : IEntityTypeConfiguration<Repa
             .HasMaxLength(50)
             .IsRequired();
 
-        builder.Property(rr => rr.RejectionReason)
-            .HasConversion(
-                v => v != null ? v.Value : null,
-                v => !string.IsNullOrEmpty(v) ? RejectionReason.Create(v).Value! : null)
-            .HasMaxLength(500)
-            .IsRequired(false);
+        builder.OwnsOne(rr => rr.RejectionReason, b =>
+        {
+            b.Property(r => r.Value)
+                .HasColumnName("RejectionReason")
+                .HasMaxLength(500)
+                .IsRequired(false);
+        });
+        builder.Navigation(rr => rr.RejectionReason).IsRequired(false);
 
-        builder.Property(rr => rr.SummaryReport)
-            .HasConversion(
-                v => v != null ? v.Value : null,
-                v => !string.IsNullOrEmpty(v) ? SummaryReport.Create(v).Value! : null)
-            .HasMaxLength(4000)
-            .IsRequired(false);
+        builder.OwnsOne(rr => rr.SummaryReport, b =>
+        {
+            b.Property(s => s.Value)
+                .HasColumnName("SummaryReport")
+                .HasMaxLength(4000)
+                .IsRequired(false);
+        });
+        builder.Navigation(rr => rr.SummaryReport).IsRequired(false);
 
         builder.Property(rr => rr.CreatedAt).IsRequired();
         builder.Property(rr => rr.UpdatedAt);

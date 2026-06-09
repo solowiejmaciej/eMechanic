@@ -26,15 +26,21 @@ internal sealed class WorkshopConfiguration : IEntityTypeConfiguration<Workshop>
             .IsRequired()
             .HasMaxLength(255);
 
-        builder.Property(w => w.ContactEmail)
-            .HasConversion(e => e.Value, v => Email.Create(v).Value!)
-            .IsRequired()
-            .HasMaxLength(255);
+        builder.OwnsOne(w => w.ContactEmail, b =>
+        {
+            b.Property(e => e.Value)
+                .HasColumnName("ContactEmail")
+                .HasMaxLength(255)
+                .IsRequired();
+        });
 
-        builder.Property(w => w.PhoneNumber)
-            .HasConversion(p => p.Value, v => PhoneNumber.Create(v).Value!)
-            .IsRequired()
-            .HasMaxLength(20);
+        builder.OwnsOne(w => w.PhoneNumber, b =>
+        {
+            b.Property(p => p.Value)
+                .HasColumnName("PhoneNumber")
+                .HasMaxLength(20)
+                .IsRequired();
+        });
 
         builder.Property(w => w.Address)
             .IsRequired()

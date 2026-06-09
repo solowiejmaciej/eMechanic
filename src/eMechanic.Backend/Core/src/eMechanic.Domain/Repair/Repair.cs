@@ -1,5 +1,6 @@
 namespace eMechanic.Domain.Repair;
 
+using Common.Attributes;
 using Common.DDD;
 using Common.Result;
 using DomainEvents;
@@ -13,6 +14,8 @@ public class Repair : AggregateRoot
     public Guid WorkshopId { get; private set; }
     public Money EstimatedCost { get; private set; } = null!;
     public Money? FinalCost { get; private set; }
+
+    [Searchable]
     public ERepairStatus Status { get; private set; }
 
     private Repair()

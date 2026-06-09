@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Flex,
@@ -8,17 +8,25 @@ import {
   VStack,
   Text,
   Icon,
-  Separator,
-  Center,
   Progress,
-  Skeleton,
+  Center,
 } from "@chakra-ui/react";
-import { Star, MessageCircle, AlertCircle, User, Calendar } from "lucide-react";
+import { Star, MessageCircle, User, Calendar } from "lucide-react";
+import DashboardListLayout from "./DashboardListLayout";
 
 export const WorkshopReviewsPanel = ({
   reviews,
   stats,
   loading,
+  pageNumber = 1,
+  totalPages = 1,
+  pageSize = 5,
+  onPageChange,
+  onPageSizeChange,
+  searchPhrase = "",
+  onSearchChange,
+  ratingFilter = "All",
+  onRatingFilterChange,
 }) => {
   // Safe stats values with fallbacks
   const avgRating = stats?.averageRating ?? stats?.rating ?? 4.8;
@@ -38,23 +46,60 @@ export const WorkshopReviewsPanel = ({
     return (count / totalReviews) * 100;
   };
 
-  return (
-    <VStack align="stretch" gap={6}>
-      <Box>
-        <Heading size="2xl" fontWeight="black" tracking="tight" _dark={{ color: "white" }}>
-          Opinie i Oceny Klientów
-        </Heading>
-        <Text color="gray.500" _dark={{ color: "gray.400" }} fontSize="md" mt={1}>
-          Sprawdź co myślą o Tobie klienci, analizuj oceny i buduj reputację swojego warsztatu.
-        </Text>
-      </Box>
+  const filters = [
+    {
+      id: "rating",
+      label: "Ocena",
+      value: ratingFilter,
+      onChange: onRatingFilterChange,
+      options: [
+        { value: "All", label: "Wszystkie", icon: MessageCircle, color: "orange.500" },
+        { value: "5", label: "5 gwiazdek", icon: Star, color: "orange.400" },
+        { value: "4", label: "4 gwiazdki", icon: Star, color: "orange.400" },
+        { value: "3", label: "3 gwiazdki", icon: Star, color: "orange.400" },
+        { value: "2", label: "2 gwiazdki", icon: Star, color: "orange.400" },
+        { value: "1", label: "1 gwiazdka", icon: Star, color: "orange.400" },
+      ]
+    }
+  ];
 
-      {loading ? (
-        <SimpleGrid columns={{ base: 1, md: 3 }} gap={6}>
-          <Skeleton h="180px" rounded="2xl" />
-          <Skeleton h="180px" rounded="2xl" colSpan={{ md: 2 }} />
-        </SimpleGrid>
-      ) : (
+  return (
+    <DashboardListLayout
+      title="Opinie i Oceny Klientów"
+      subtitle="Sprawdź co myślą o Tobie klienci, analizuj oceny i buduj reputację swojego warsztatu."
+      currentPage={pageNumber}
+      totalPages={totalPages}
+      pageSize={pageSize}
+      onPageChange={onPageChange}
+      onPageSizeChange={onPageSizeChange}
+      searchPhrase={searchPhrase}
+      onSearchChange={onSearchChange}
+      filters={filters}
+      loading={loading}
+      empty={reviews.length === 0}
+      emptyState={
+        <Center
+          py={16}
+          borderWidth="1.5px"
+          borderStyle="dashed"
+          borderColor="gray.300"
+          rounded="2xl"
+          _dark={{ borderColor: "whiteAlpha.100" }}
+        >
+          <VStack gap={3}>
+            <Icon as={MessageCircle} boxSize={16} color="gray.300" />
+            <Text fontSize="lg" fontWeight="bold" color="gray.500">
+              Brak opinii
+            </Text>
+            <Text fontSize="sm" color="gray.400" textAlign="center" maxW="sm" px={4}>
+              Nie znaleziono żadnych opinii spełniających wybrane kryteria wyszukiwania.
+            </Text>
+          </VStack>
+        </Center>
+      }
+    >
+      <VStack align="stretch" gap={6}>
+        {/* Summary and distribution grid */}
         <SimpleGrid columns={{ base: 1, lg: 3 }} gap={6}>
           {/* Summary Card */}
           <Box
@@ -135,14 +180,12 @@ export const WorkshopReviewsPanel = ({
             </VStack>
           </Box>
         </SimpleGrid>
-      )}
 
-      {/* Review List */}
-      <Heading size="lg" fontWeight="bold" mt={4} _dark={{ color: "white" }}>
-        Najnowsze opinie
-      </Heading>
+        <Heading size="lg" fontWeight="bold" mt={4} _dark={{ color: "white" }}>
+          Opinie klientów
+        </Heading>
 
-      {reviews.length > 0 ? (
+        {/* Reviews List */}
         <VStack gap={4} align="stretch">
           {reviews.map((rev) => (
             <Box
@@ -211,27 +254,8 @@ export const WorkshopReviewsPanel = ({
             </Box>
           ))}
         </VStack>
-      ) : (
-        <Center
-          py={16}
-          borderWidth="1.5px"
-          borderStyle="dashed"
-          borderColor="gray.300"
-          rounded="2xl"
-          _dark={{ borderColor: "whiteAlpha.100" }}
-        >
-          <VStack gap={3}>
-            <Icon as={MessageCircle} boxSize={16} color="gray.300" />
-            <Text fontSize="lg" fontWeight="bold" color="gray.500">
-              Brak opinii
-            </Text>
-            <Text fontSize="sm" color="gray.400" textAlign="center" maxW="sm" px={4}>
-              Nie otrzymałeś jeszcze żadnych ocen ani opinii od klientów. Będą one pojawiać się tutaj po opłaceniu zakończonych napraw.
-            </Text>
-          </VStack>
-        </Center>
-      )}
-    </VStack>
+      </VStack>
+    </DashboardListLayout>
   );
 };
 

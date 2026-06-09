@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -9,11 +9,9 @@ import {
   VStack,
   Text,
   Icon,
-  Center,
   Badge,
   Input,
   Separator,
-  Skeleton,
   Field,
   Textarea,
   DialogRoot,
@@ -27,22 +25,34 @@ import {
   DialogActionTrigger,
   Portal,
   DialogPositioner,
+  Center,
 } from "@chakra-ui/react";
 import {
   Car,
   Clock,
   Sparkles,
-  FileText,
-  Check,
-  X,
   Wrench,
   User,
+  AlertCircle,
+  XCircle,
+  CheckCircle2,
 } from "lucide-react";
+import DashboardListLayout from "./DashboardListLayout";
 
 export const WorkshopRequestsPanel = ({
   repairRequests,
   loading,
   onProvideEstimation,
+  userPreferences = {},
+  pageNumber = 1,
+  totalPages = 1,
+  pageSize = 5,
+  onPageChange,
+  onPageSizeChange,
+  searchPhrase = "",
+  onSearchChange,
+  statusFilter = "All",
+  onStatusFilterChange,
 }) => {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [diagnosis, setDiagnosis] = useState("");
@@ -85,31 +95,41 @@ export const WorkshopRequestsPanel = ({
       case 1:
         return {
           label: "Nowe",
-          color: "blue",
+          colorPalette: "blue",
+          borderColor: "blue.200",
+          icon: Clock,
           desc: "Zlecenie oczekuje na Twoją diagnozę i wycenę.",
         };
       case 2:
         return {
           label: "Wycenione",
-          color: "orange",
+          colorPalette: "orange",
+          borderColor: "orange.200",
+          icon: Sparkles,
           desc: "Wycena została wysłana do klienta. Oczekiwanie na akceptację.",
         };
       case 3:
         return {
           label: "Zaakceptowane",
-          color: "green",
+          colorPalette: "green",
+          borderColor: "green.200",
+          icon: CheckCircle2,
           desc: "Klient zaakceptował wycenę. Zlecenie stało się aktywną naprawą.",
         };
       case 4:
         return {
           label: "Odrzucone",
-          color: "red",
+          colorPalette: "red",
+          borderColor: "red.200",
+          icon: XCircle,
           desc: "Klient odrzucił tę wycenę.",
         };
       default:
-        return { label: "Nieznany", color: "gray", desc: "" };
+        return { label: "Nieznany", colorPalette: "gray", borderColor: "gray.200", icon: Clock, desc: "" };
     }
   };
+
+  const filteredRequests = repairRequests;
 
   const handleOpenEstimation = (req) => {
     setSelectedRequest(req);
@@ -131,170 +151,209 @@ export const WorkshopRequestsPanel = ({
     }
   };
 
-  return (
-    <VStack align="stretch" gap={6}>
-      <Box>
-        <Heading size="2xl" fontWeight="black" tracking="tight" _dark={{ color: "white" }}>
-          Zlecenia od Klientów
-        </Heading>
-        <Text color="gray.500" _dark={{ color: "gray.400" }} fontSize="md" mt={1}>
-          Zarządzaj zgłoszeniami serwisowymi, przeprowadzaj diagnozę i wysyłaj wyceny kosztów
-        </Text>
-      </Box>
+  const filters = [
+    {
+      id: "status",
+      label: "Status",
+      value: statusFilter,
+      onChange: onStatusFilterChange,
+      options: [
+        { value: "All", label: "Wszystkie", icon: Car, color: "orange.500" },
+        { value: "Pending", label: "Nowe", icon: Clock, color: "blue.500" },
+        { value: "Estimated", label: "Wycenione", icon: Sparkles, color: "orange.500" },
+        { value: "Accepted", label: "Zaakceptowane", icon: CheckCircle2, color: "green.500" },
+        { value: "Rejected", label: "Odrzucone", icon: XCircle, color: "red.500" },
+      ]
+    }
+  ];
 
-      {loading ? (
-        <VStack gap={4} align="stretch">
-          {[...Array(3)].map((_, i) => (
+  return (
+    <DashboardListLayout
+      title="Zlecenia od Klientów"
+      subtitle="Zarządzaj zgłoszeniami serwisowymi, przeprowadzaj diagnozę i wysyłaj wyceny kosztów"
+      filters={filters}
+      totalItemsLabel={`Pokazano: ${filteredRequests.length} (na stronie)`}
+      currentPage={pageNumber}
+      totalPages={totalPages}
+      pageSize={pageSize}
+      onPageChange={onPageChange}
+      onPageSizeChange={onPageSizeChange}
+      searchPhrase={searchPhrase}
+      onSearchChange={onSearchChange}
+      loading={loading}
+      empty={filteredRequests.length === 0}
+      emptyState={
+        <Center py={16} flexDirection="column" borderWidth="1.5px" borderStyle="dashed" borderColor="gray.300" rounded="2xl" _dark={{ borderColor: "whiteAlpha.100" }}>
+          <Icon as={Clock} boxSize={16} color="gray.300" mb={4} />
+          <Text fontSize="lg" fontWeight="bold" color="gray.500">
+            {repairRequests.length > 0 ? "Brak zleceń o tym statusie" : "Brak zleceń"}
+          </Text>
+          <Text fontSize="sm" color="gray.400" textAlign="center" mt={1} px={4}>
+            {repairRequests.length > 0 ? "Nie znaleziono żadnych zleceń pasujących do wybranego filtru." : "Obecnie nie posiadasz żadnych zgłoszonych zleceń napraw od klientów."}
+          </Text>
+        </Center>
+      }
+    >
+      <VStack gap={5} align="stretch">
+        {filteredRequests.map((req) => {
+          const statusNum = getRequestStatusNumber(req.status);
+          const statusInfo = getStatusDetails(statusNum);
+          const canEstimate = statusNum === 1;
+          const isRejected = statusNum === 4;
+          const prefs = userPreferences[req.vehicle?.userId];
+
+          return (
             <Box
-              key={i}
+              key={req.id}
               p={6}
               bg="white"
-              _dark={{ bg: "rgb(25, 36, 54)" }}
+              _dark={{
+                bg: "rgb(25, 36, 54)",
+                borderColor: "whiteAlpha.100",
+              }}
               rounded="2xl"
               borderWidth="1px"
               borderColor="gray.200"
-              shadow="md"
+              boxShadow="0 10px 25px -5px rgba(249, 115, 22, 0.03), 0 8px 10px -6px rgba(249, 115, 22, 0.03)"
+              display="flex"
+              flexDirection="column"
+              gap={4}
+              transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+              _hover={{
+                boxShadow: "0 20px 30px -10px rgba(249, 115, 22, 0.08), 0 10px 15px -3px rgba(249, 115, 22, 0.04)",
+                borderColor: "orange.200",
+              }}
             >
-              <Flex justify="space-between" align="center">
-                <Skeleton h="20px" w="150px" />
-                <Skeleton h="20px" w="100px" />
-              </Flex>
-              <Skeleton h="40px" w="full" mt={4} />
-            </Box>
-          ))}
-        </VStack>
-      ) : repairRequests.length > 0 ? (
-        <VStack gap={5} align="stretch">
-          {repairRequests.map((req) => {
-            const statusNum = getRequestStatusNumber(req.status);
-            const statusInfo = getStatusDetails(statusNum);
-            const canEstimate = statusNum === 1;
-            const isRejected = statusNum === 4;
-
-            return (
-              <Box
-                key={req.id}
-                p={6}
-                bg="white"
-                _dark={{
-                  bg: "rgb(25, 36, 54)",
-                  borderColor: "whiteAlpha.100",
-                }}
-                rounded="2xl"
-                borderWidth="1px"
-                borderColor="gray.200"
-                boxShadow="0 10px 25px -5px rgba(249, 115, 22, 0.03), 0 8px 10px -6px rgba(249, 115, 22, 0.03)"
-                display="flex"
-                flexDirection="column"
-                gap={4}
-                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-                _hover={{
-                  boxShadow: "0 20px 30px -10px rgba(249, 115, 22, 0.08), 0 10px 15px -3px rgba(249, 115, 22, 0.04)",
-                  borderColor: "orange.200",
-                }}
-              >
-                {/* Header info */}
-                <Flex justify="space-between" align="center" wrap="wrap" gap={3}>
-                  <HStack gap={3}>
-                    <Flex
-                      w={10}
-                      h={10}
-                      bg="orange.50"
-                      rounded="xl"
-                      _dark={{ bg: "orange.950/30" }}
-                      align="center"
-                      justify="center"
-                    >
-                      <Icon as={Car} color="orange.500" boxSize={5} />
-                    </Flex>
-                    <VStack align="flex-start" gap={0}>
-                      <Text fontWeight="bold" fontSize="md" _dark={{ color: "white" }}>
-                        {req.vehicle?.manufacturer} {req.vehicle?.model}
-                      </Text>
-                      <Text fontSize="xs" color="gray.400" fontWeight="medium">
-                        Tablice: {req.vehicle?.licensePlate || "—"} | VIN: {req.vehicle?.vin || "—"}
-                      </Text>
-                      <HStack gap={1} fontSize="xs" color="gray.500" mt={0.5}>
-                        <Icon as={User} boxSize={3} />
-                        <Text fontWeight="semibold">
-                          Klient: {req.clientName || req.clientEmail || "Klient"}
-                        </Text>
-                      </HStack>
-                    </VStack>
-                  </HStack>
-
-                  <VStack align="flex-end" gap={1}>
-                    <Badge
-                      colorPalette={statusInfo.color}
-                      variant="solid"
-                      px={3}
-                      py={1}
-                      rounded="full"
-                      shadow="sm"
-                    >
-                      {statusInfo.label}
-                    </Badge>
-                    <Text fontSize="10px" color="gray.400" fontWeight="medium">
-                      Zgłoszono: {new Date(req.createdAt).toLocaleDateString()}
+              <Flex justify="space-between" align="center" wrap="wrap" gap={2}>
+                <HStack gap={3}>
+                  <Flex
+                    w={10}
+                    h={10}
+                    bg="orange.50"
+                    _dark={{ bg: "orange.950/30" }}
+                    rounded="xl"
+                    align="center"
+                    justify="center"
+                  >
+                    <Icon as={Car} color="orange.500" boxSize={5} />
+                  </Flex>
+                  <VStack align="flex-start" gap={0}>
+                    <Heading size="sm" fontWeight="bold" _dark={{ color: "white" }}>
+                      {req.vehicle?.manufacturer && req.vehicle?.model 
+                        ? `${req.vehicle.manufacturer} ${req.vehicle.model}` 
+                        : "Pojazd"}
+                    </Heading>
+                    <Text fontSize="11px" color="gray.400" fontWeight="semibold">
+                      Rejestracja: {req.vehicle?.licensePlate || "—"} | VIN: {req.vehicle?.vin || "—"}
                     </Text>
                   </VStack>
-                </Flex>
+                </HStack>
+                <Badge
+                  colorPalette={statusInfo.colorPalette}
+                  variant="subtle"
+                  px={3}
+                  py={1}
+                  rounded="xl"
+                  borderWidth="1px"
+                  borderColor={statusInfo.borderColor}
+                  display="flex"
+                  alignItems="center"
+                  gap={1.5}
+                  shadow="sm"
+                  fontWeight="bold"
+                >
+                  <Icon as={statusInfo.icon} boxSize={3.5} />
+                  {statusInfo.label}
+                </Badge>
+              </Flex>
 
-                <Separator borderColor="gray.100" _dark={{ borderColor: "whiteAlpha.100" }} />
+              <Separator borderColor="gray.100" _dark={{ borderColor: "whiteAlpha.100" }} />
 
-                {/* Description */}
+              <VStack align="stretch" gap={3}>
                 <Box>
                   <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                    Opis usterki od klienta
+                    Opis zgłoszenia
                   </Text>
-                  <Text mt={1} color="gray.700" _dark={{ color: "gray.200" }} fontSize="sm">
+                  <Text mt={1} color="gray.700" _dark={{ color: "gray.300" }} fontSize="sm">
                     {req.description}
                   </Text>
                 </Box>
 
-                {/* Diagnosis & Estimations */}
-                {(req.diagnosis || req.estimatedCostAmount !== null) && (
-                  <Box
-                    p={4}
-                    bg="gray.50"
-                    _dark={{ bg: "rgb(15, 23, 42)" }}
-                    rounded="xl"
-                    borderWidth="1px"
-                    borderColor="gray.100"
-                    _darkBorder={{ borderColor: "whiteAlpha.100" }}
-                    shadow="inner"
-                  >
-                    <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-                      {req.diagnosis && (
-                        <Box>
-                          <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                            Twoja diagnoza
-                          </Text>
-                          <Text mt={1} color="gray.700" _dark={{ color: "gray.200" }} fontSize="sm">
-                            {req.diagnosis}
-                          </Text>
-                        </Box>
-                      )}
-                      {req.estimatedCostAmount !== null && (
-                        <Box>
-                          <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                            Wyceniony koszt
-                          </Text>
-                          <Text mt={1} fontSize="lg" fontWeight="black" color="orange.500">
-                            {req.estimatedCostAmount.toLocaleString()} {req.estimatedCostCurrency || "PLN"}
-                          </Text>
-                        </Box>
-                      )}
+                {req.vehicle && (
+                  <Box bg="gray.50" _dark={{ bg: "rgb(15, 23, 42)" }} p={3} rounded="xl">
+                    <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase" mb={1.5}>
+                      Dane Klienta & Pojazdu
+                    </Text>
+                    <SimpleGrid columns={{ base: 1, sm: 2 }} gap={2} fontSize="xs">
+                      <HStack gap={1.5}>
+                        <Icon as={User} color="orange.500" boxSize={3.5} />
+                        <Text fontWeight="semibold" color="gray.600" _dark={{ color: "gray.300" }}>
+                          Klient: {req.clientName || "Brak danych"}
+                        </Text>
+                      </HStack>
+                      <HStack gap={1.5}>
+                        <Icon as={Sparkles} color="orange.500" boxSize={3.5} />
+                        <Text color="gray.600" _dark={{ color: "gray.300" }}>
+                          Przebieg: {req.vehicle.mileageValue || "—"} {req.vehicle.mileageUnit === 2 ? "mi" : "km"}
+                        </Text>
+                      </HStack>
                     </SimpleGrid>
                   </Box>
                 )}
 
-                {/* Rejection Details */}
+                {/* Repair preferences */}
+                {prefs && (
+                  <Box bg="orange.50/20" _dark={{ bg: "orange.950/10" }} p={3.5} rounded="xl" borderWidth="1px" borderColor="orange.100/30" _darkBorder={{ borderColor: "orange.900/15" }}>
+                    <Text fontSize="10px" fontWeight="bold" color="orange.600" _dark={{ color: "orange.400" }} textTransform="uppercase" mb={1.5}>
+                      Preferencje naprawy klienta
+                    </Text>
+                    <SimpleGrid columns={{ base: 1, sm: 2 }} gap={2.5} fontSize="xs">
+                      <HStack gap={1.5}>
+                        <Text fontWeight="semibold" color="gray.500">Części:</Text>
+                        <Badge colorPalette="orange" variant="subtle" size="sm" rounded="md">
+                          {prefs.partsPreference === 1 || prefs.partsPreference === "Economy" ? "Ekonomiczne (zamienniki)" :
+                           prefs.partsPreference === 2 || prefs.partsPreference === "Balanced" ? "Zbalansowane (OEM/Zamienniki)" :
+                           prefs.partsPreference === 3 || prefs.partsPreference === "Premium" ? "Premium (tylko OEM)" : "Brak preferencji"}
+                        </Badge>
+                      </HStack>
+                      <HStack gap={1.5}>
+                        <Text fontWeight="semibold" color="gray.500">Czas:</Text>
+                        <Badge colorPalette="orange" variant="subtle" size="sm" rounded="md">
+                          {prefs.timelinePreference === 1 || prefs.timelinePreference === "Standard" ? "Standardowy" :
+                           prefs.timelinePreference === 2 || prefs.timelinePreference === "Urgent" ? "Pilny (Ekspres)" : "Brak preferencji"}
+                        </Badge>
+                      </HStack>
+                    </SimpleGrid>
+                  </Box>
+                )}
+
+                {req.diagnosis && (
+                  <Box>
+                    <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
+                      Diagnoza warsztatu
+                    </Text>
+                    <Text mt={1} color="gray.700" _dark={{ color: "gray.300" }} fontSize="sm" fontWeight="medium">
+                      {req.diagnosis}
+                    </Text>
+                  </Box>
+                )}
+
+                {req.estimatedCostAmount !== null && (
+                  <HStack justify="space-between" bg="orange.50/50" _dark={{ bg: "orange.950/10" }} p={3} rounded="xl">
+                    <Text fontSize="xs" fontWeight="bold" color="orange.700" _dark={{ color: "orange.300" }}>
+                      Szacowany koszt naprawy
+                    </Text>
+                    <Text fontWeight="black" fontSize="lg" color="orange.600" _dark={{ color: "orange.400" }}>
+                      {req.estimatedCostAmount} PLN
+                    </Text>
+                  </HStack>
+                )}
+
                 {isRejected && req.rejectionReason && (
                   <Box
-                    p={4}
-                    bg="red.50"
-                    _dark={{ bg: "red.900/10" }}
+                    p={3.5}
+                    bg="red.50/50"
+                    _dark={{ bg: "red.950/10" }}
                     rounded="xl"
                     borderWidth="1px"
                     borderColor="red.100"
@@ -329,21 +388,11 @@ export const WorkshopRequestsPanel = ({
                     </Flex>
                   </VStack>
                 )}
-              </Box>
-            );
-          })}
-        </VStack>
-      ) : (
-        <Center py={16} flexDirection="column" borderWidth="1.5px" borderStyle="dashed" borderColor="gray.300" rounded="2xl" _dark={{ borderColor: "whiteAlpha.100" }}>
-          <Icon as={Clock} boxSize={16} color="gray.300" mb={4} />
-          <Text fontSize="lg" fontWeight="bold" color="gray.500">
-            Brak zleceń
-          </Text>
-          <Text fontSize="sm" color="gray.400" textAlign="center" mt={1} px={4}>
-            Obecnie nie posiadasz żadnych zgłoszonych zleceń napraw od klientów.
-          </Text>
-        </Center>
-      )}
+              </VStack>
+            </Box>
+          );
+        })}
+      </VStack>
 
       {/* DIALOG: PROVIDE REPAIR ESTIMATION */}
       <DialogRoot open={!!selectedRequest} onOpenChange={(e) => !e.open && setSelectedRequest(null)}>
@@ -397,7 +446,7 @@ export const WorkshopRequestsPanel = ({
           </DialogPositioner>
         </Portal>
       </DialogRoot>
-    </VStack>
+    </DashboardListLayout>
   );
 };
 
