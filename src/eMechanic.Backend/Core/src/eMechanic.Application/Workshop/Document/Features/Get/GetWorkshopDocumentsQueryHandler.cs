@@ -24,7 +24,8 @@ public sealed class GetWorkshopDocumentsQueryHandler : IResultQueryHandler<GetWo
             doc.Id,
             _fileStorage.GetPublicUrl(doc.FullPath),
             doc.FileName,
-            doc.DocumentType)
+            doc.DocumentType,
+            doc.CreatedAt)
         );
 
         return response;

@@ -53,3 +53,14 @@ export const deleteWorkshopDocument = async (documentId) => {
   );
   return response.data;
 };
+
+export const downloadWorkshopDocument = async (workshopId, documentId) => {
+  const response = await api.get(
+    `/api/v1/workshops/${workshopId}/documents/${documentId}/download`,
+    {
+      responseType: "blob",
+    }
+  );
+  return response.data;
+};
+

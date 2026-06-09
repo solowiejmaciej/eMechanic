@@ -12,6 +12,8 @@ public class Review : AggregateRoot, IUserReferenced, IWorkshopReference
 {
     public Guid WorkshopId { get; private set; }
     public Guid UserId { get; private set; }
+
+    [Searchable]
     public ReviewRating Rating { get; private set; }
 
     [Searchable]

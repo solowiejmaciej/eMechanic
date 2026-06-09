@@ -25,6 +25,7 @@ public class RepairRequest : AggregateRoot, IVehicleReference, IWorkshopReferenc
     public RepairDiagnosis? Diagnosis { get; private set; }
     public Money? EstimatedCost { get; private set; }
 
+    [Searchable]
     public ERepairRequestStatus Status { get; private set; }
 
     [Searchable]

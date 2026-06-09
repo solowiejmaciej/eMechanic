@@ -29,10 +29,26 @@ import { useAuth } from "../context/AuthContext";
 import { toaster } from "@/components/ui/toaster";
 
 // Import API functions
-import { getWorkshopRequests, provideEstimation } from "../api/repairRequests";
-import { getWorkshopRepairs, startRepair, completeRepair } from "../api/repairs";
-import { getReviews, getReviewStats, uploadWorkshopDocument, deleteWorkshopDocument, getWorkshopDocuments } from "../api/workshops";
+import {
+  getWorkshopRequests,
+  provideEstimation,
+  getById as getRepairRequestById,
+} from "../api/repairRequests";
+import {
+  getWorkshopRepairs,
+  startRepair,
+  completeRepair,
+} from "../api/repairs";
+import {
+  getReviews,
+  getReviewStats,
+  uploadWorkshopDocument,
+  deleteWorkshopDocument,
+  getWorkshopDocuments,
+  downloadWorkshopDocument,
+} from "../api/workshops";
 import { getById as getVehicleById } from "../api/vehicles";
+import { getRepairPreferencesForWorkshop } from "../api/user";
 
 // Import Panels
 import WorkshopRequestsPanel from "@/components/dashboard/WorkshopRequestsPanel";
@@ -47,38 +63,57 @@ const initialRequests = [
     id: "req-1",
     status: 1, // Nowe
     createdAt: "2026-06-05T10:00:00Z",
-    description: "Stukanie w przednim zawieszeniu przy skręcaniu oraz na nierównościach.",
+    description:
+      "Stukanie w przednim zawieszeniu przy skręcaniu oraz na nierównościach.",
     diagnosis: "",
     estimatedCostAmount: null,
     estimatedCostCurrency: "PLN",
     clientName: "Jan Kowalski",
     clientEmail: "jan.kowalski@gmail.com",
-    vehicle: { manufacturer: "Skoda", model: "Octavia", licensePlate: "KR 12345", vin: "TMBGG7NE8G210492" }
+    vehicle: {
+      manufacturer: "Skoda",
+      model: "Octavia",
+      licensePlate: "KR 12345",
+      vin: "TMBGG7NE8G210492",
+    },
   },
   {
     id: "req-2",
     status: 2, // Wycenione
     createdAt: "2026-06-04T12:30:00Z",
-    description: "Wyciek oleju spod silnika, zapaliła się czerwona kontrolka ciśnienia.",
-    diagnosis: "Uszkodzona uszczelka pokrywy zaworów. Konieczna wymiana uszczelki oraz mycie silnika.",
+    description:
+      "Wyciek oleju spod silnika, zapaliła się czerwona kontrolka ciśnienia.",
+    diagnosis:
+      "Uszkodzona uszczelka pokrywy zaworów. Konieczna wymiana uszczelki oraz mycie silnika.",
     estimatedCostAmount: 1200,
     estimatedCostCurrency: "PLN",
     clientName: "Anna Nowak",
     clientEmail: "anna.nowak@onet.pl",
-    vehicle: { manufacturer: "BMW", model: "Seria 3", licensePlate: "WI 99999", vin: "WBA8E1C5XGF20194" }
+    vehicle: {
+      manufacturer: "BMW",
+      model: "Seria 3",
+      licensePlate: "WI 99999",
+      vin: "WBA8E1C5XGF20194",
+    },
   },
   {
     id: "req-3",
     status: 3, // Zaakceptowane
     createdAt: "2026-06-03T15:45:00Z",
     description: "Klimatyzacja słabo chłodzi, słychać głośny szum z nawiewów.",
-    diagnosis: "Nieszczelność chłodnicy klimatyzacji (skraplacza). Konieczna wymiana chłodnicy oraz napełnienie czynnika.",
+    diagnosis:
+      "Nieszczelność chłodnicy klimatyzacji (skraplacza). Konieczna wymiana chłodnicy oraz napełnienie czynnika.",
     estimatedCostAmount: 850,
     estimatedCostCurrency: "PLN",
     clientName: "Piotr Wiśniewski",
     clientEmail: "piotr.wisniewski@wp.pl",
-    vehicle: { manufacturer: "Ford", model: "Focus", licensePlate: "GD 7777A", vin: "WF0FXXWGCF8D1049" }
-  }
+    vehicle: {
+      manufacturer: "Ford",
+      model: "Focus",
+      licensePlate: "GD 7777A",
+      vin: "WF0FXXWGCF8D1049",
+    },
+  },
 ];
 
 const initialRepairs = [
@@ -92,7 +127,12 @@ const initialRepairs = [
     estimatedCost: { amount: 900, currency: "PLN" },
     clientName: "Krzysztof Zieliński",
     clientEmail: "krzysztof.z@gmail.com",
-    vehicle: { manufacturer: "Volkswagen", model: "Golf", licensePlate: "WA 44455", vin: "WVWZZZ1KZD810294" }
+    vehicle: {
+      manufacturer: "Volkswagen",
+      model: "Golf",
+      licensePlate: "WA 44455",
+      vin: "WVWZZZ1KZD810294",
+    },
   },
   {
     id: "rep-2",
@@ -104,7 +144,12 @@ const initialRepairs = [
     estimatedCost: { amount: 2400, currency: "PLN" },
     clientName: "Małgorzata Wójcik",
     clientEmail: "m.wojcik@poczta.pl",
-    vehicle: { manufacturer: "Audi", model: "A4", licensePlate: "PO 88888", vin: "WAUZZZ8K9CA20492" }
+    vehicle: {
+      manufacturer: "Audi",
+      model: "A4",
+      licensePlate: "PO 88888",
+      vin: "WAUZZZ8K9CA20492",
+    },
   },
   {
     id: "rep-3",
@@ -118,7 +163,12 @@ const initialRepairs = [
     finalCost: { amount: 650, currency: "PLN" },
     clientName: "Robert Lewandowski",
     clientEmail: "rl9@lewy.com",
-    vehicle: { manufacturer: "Opel", model: "Astra", licensePlate: "DW 33322", vin: "W0L0AHL358G29482" }
+    vehicle: {
+      manufacturer: "Opel",
+      model: "Astra",
+      licensePlate: "DW 33322",
+      vin: "W0L0AHL358G29482",
+    },
   },
   {
     id: "rep-4",
@@ -132,8 +182,13 @@ const initialRepairs = [
     finalCost: { amount: 450, currency: "PLN" },
     clientName: "Paweł Szymański",
     clientEmail: "p.szymanski@gmail.com",
-    vehicle: { manufacturer: "Toyota", model: "Corolla", licensePlate: "GD 11223", vin: "JTDKN32E0010492" }
-  }
+    vehicle: {
+      manufacturer: "Toyota",
+      model: "Corolla",
+      licensePlate: "GD 11223",
+      vin: "JTDKN32E0010492",
+    },
+  },
 ];
 
 const initialDocs = [
@@ -154,59 +209,93 @@ const initialDocs = [
     fileSize: 1024 * 512, // 512KB
     createdAt: "2026-03-15T12:00:00Z",
     type: "Certificate",
-  }
+  },
 ];
 
 const initialReviews = [
   {
     id: "rev-1",
     rating: 5,
-    comment: "Świetny kontakt, szybka diagnoza usterki zawieszenia i ekspresowa naprawa. Cena zgodna z wyceną. Polecam!",
+    comment:
+      "Świetny kontakt, szybka diagnoza usterki zawieszenia i ekspresowa naprawa. Cena zgodna z wyceną. Polecam!",
     clientName: "Jan Kowalski",
     createdAt: "2026-06-06T15:20:00Z",
   },
   {
     id: "rev-2",
     rating: 5,
-    comment: "Wymiana rozrządu w Audi wykonana profesjonalnie. Dostałem zdjęcia starego paska i części. Bardzo uczciwy warsztat.",
+    comment:
+      "Wymiana rozrządu w Audi wykonana profesjonalnie. Dostałem zdjęcia starego paska i części. Bardzo uczciwy warsztat.",
     clientName: "Małgorzata Wójcik",
     createdAt: "2026-06-05T18:40:00Z",
   },
   {
     id: "rev-3",
     rating: 4,
-    comment: "Klimatyzacja w końcu działa poprawnie, choć usługa trwała kilka godzin dłużej niż planowano. Mimo to polecam za fachowość.",
+    comment:
+      "Klimatyzacja w końcu działa poprawnie, choć usługa trwała kilka godzin dłużej niż planowano. Mimo to polecam za fachowość.",
     clientName: "Piotr Wiśniewski",
     createdAt: "2026-06-04T12:15:00Z",
-  }
+  },
 ];
 
 const initialStats = {
   averageRating: 4.8,
   totalReviews: 3,
-  distribution: { 5: 2, 4: 1, 3: 0, 2: 0, 1: 0 }
+  distribution: { 5: 2, 4: 1, 3: 0, 2: 0, 1: 0 },
 };
-
 
 // --- FORMAT API ERROR HELPER ---
 const formatErrorMsg = (err, fallback) => {
   if (err.response?.data?.errors) {
-    const errorDetails = Object.values(err.response.data.errors).flat().join(", ");
+    const errorDetails = Object.values(err.response.data.errors)
+      .flat()
+      .join(", ");
     return errorDetails || fallback;
   }
-  return err.response?.data?.detail || err.response?.data?.title || err.message || fallback;
+  return (
+    err.response?.data?.detail ||
+    err.response?.data?.title ||
+    err.message ||
+    fallback
+  );
 };
 
 const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
   const { user } = useAuth();
-  
+
   // States holding data from API
   const [repairRequests, setRepairRequests] = useState([]);
   const [repairs, setRepairs] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [stats, setStats] = useState(initialStats);
-  
+
+  // Requests Pagination/Search State
+  const [requestsPage, setRequestsPage] = useState(1);
+  const [requestsPageSize, setRequestsPageSize] = useState(5);
+  const [requestsSearchPhrase, setRequestsSearchPhrase] = useState("");
+  const [requestsStatus, setRequestsStatus] = useState("All");
+  const [requestsTotalPages, setRequestsTotalPages] = useState(1);
+  const [requestsTotalCount, setRequestsTotalCount] = useState(0);
+
+  // Repairs Pagination/Search State
+  const [repairsPage, setRepairsPage] = useState(1);
+  const [repairsPageSize, setRepairsPageSize] = useState(5);
+  const [repairsSearchPhrase, setRepairsSearchPhrase] = useState("");
+  const [repairsStatus, setRepairsStatus] = useState("All");
+  const [repairsTotalPages, setRepairsTotalPages] = useState(1);
+  const [repairsTotalCount, setRepairsTotalCount] = useState(0);
+
+  // Reviews Pagination/Search State
+  const [reviewsPage, setReviewsPage] = useState(1);
+  const [reviewsPageSize, setReviewsPageSize] = useState(5);
+  const [reviewsSearchPhrase, setReviewsSearchPhrase] = useState("");
+  const [reviewsRating, setReviewsRating] = useState("All");
+  const [reviewsTotalPages, setReviewsTotalPages] = useState(1);
+  const [reviewsTotalCount, setReviewsTotalCount] = useState(0);
+
+  const [userPreferences, setUserPreferences] = useState({});
   const [loading, setLoading] = useState(true);
   const [isOfflineMode, setIsOfflineMode] = useState(false);
 
@@ -220,11 +309,22 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
   const [profileSubmitting, setProfileSubmitting] = useState(false);
 
   // Reusable API Fetch Helpers
-  const fetchRequests = async () => {
+  const fetchRequests = async (
+    page = requestsPage,
+    size = requestsPageSize,
+    search = requestsSearchPhrase,
+    status = requestsStatus,
+  ) => {
     try {
-      const reqData = await getWorkshopRequests({ PageNumber: 1, PageSize: 50 });
+      const searchPhraseParam =
+        search.trim() || (status !== "All" ? status : null);
+      const reqData = await getWorkshopRequests({
+        PageNumber: page,
+        PageSize: size,
+        SearchPhrase: searchPhraseParam,
+      });
       const items = reqData.items || [];
-      
+
       const itemsWithVehicles = await Promise.all(
         items.map(async (item) => {
           try {
@@ -233,114 +333,427 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               return {
                 ...item,
                 vehicle,
-                clientName: vehicle.clientFirstName && vehicle.clientLastName 
-                  ? `${vehicle.clientFirstName} ${vehicle.clientLastName}` 
-                  : (vehicle.clientEmail || "Brak danych klienta"),
-                clientEmail: vehicle.clientEmail || "Brak e-maila"
+                clientName:
+                  vehicle.clientFirstName && vehicle.clientLastName
+                    ? `${vehicle.clientFirstName} ${vehicle.clientLastName}`
+                    : vehicle.clientEmail || "Brak danych klienta",
+                clientEmail: vehicle.clientEmail || "Brak e-maila",
               };
             }
           } catch (vehicleErr) {
-            console.error(`Failed to fetch vehicle for ID ${item.vehicleId}:`, vehicleErr);
+            console.error(
+              `Failed to fetch vehicle for ID ${item.vehicleId}:`,
+              vehicleErr,
+            );
           }
           return {
             ...item,
             vehicle: null,
             clientName: "Brak danych klienta",
-            clientEmail: "Brak e-maila"
+            clientEmail: "Brak e-maila",
           };
-        })
+        }),
       );
 
       setRepairRequests(itemsWithVehicles);
-      return true;
-    } catch (err) {
-      console.error("Failed to fetch requests from API:", err);
-      toaster.create({
-        title: "Błąd pobierania",
-        description: formatErrorMsg(err, "Nie udało się pobrać zleceń z API."),
-        type: "error"
+      setRequestsPage(reqData.pageNumber || page);
+      setRequestsTotalPages(reqData.totalPages || 1);
+      setRequestsTotalCount(reqData.totalCount || items.length);
+
+      // Proactively fetch client preferences for the requests
+      const uniqueUserIds = new Set();
+      itemsWithVehicles.forEach((item) => {
+        if (item.vehicle?.userId) uniqueUserIds.add(item.vehicle.userId);
       });
-      return false;
+      if (uniqueUserIds.size > 0) {
+        const prefsMap = { ...userPreferences };
+        await Promise.all(
+          Array.from(uniqueUserIds).map(async (uid) => {
+            if (!prefsMap[uid]) {
+              try {
+                const prefs = await getRepairPreferencesForWorkshop(uid);
+                prefsMap[uid] = prefs;
+              } catch (err) {
+                console.error(
+                  `Failed to fetch repair preferences for user ${uid}:`,
+                  err,
+                );
+              }
+            }
+          }),
+        );
+        setUserPreferences(prefsMap);
+      }
+
+      return itemsWithVehicles;
+    } catch (err) {
+      console.error(
+        "Failed to fetch requests from API, falling back to mock data:",
+        err,
+      );
+      let filtered = initialRequests;
+      if (search.trim()) {
+        const phrase = search.toLowerCase();
+        filtered = filtered.filter(
+          (x) =>
+            x.description.toLowerCase().includes(phrase) ||
+            (x.diagnosis && x.diagnosis.toLowerCase().includes(phrase)),
+        );
+      } else if (status !== "All") {
+        filtered = filtered.filter((x) => {
+          const s = getRequestStatusNumber(x.status);
+          switch (status) {
+            case "Pending":
+              return s === 1;
+            case "Estimated":
+              return s === 2;
+            case "Accepted":
+              return s === 3;
+            case "Rejected":
+              return s === 4;
+            default:
+              return true;
+          }
+        });
+      }
+      const count = filtered.length;
+      const pages = Math.ceil(count / size) || 1;
+      const paginatedItems = filtered.slice((page - 1) * size, page * size);
+
+      setRepairRequests(paginatedItems);
+      setRequestsPage(page);
+      setRequestsTotalPages(pages);
+      setRequestsTotalCount(count);
+      return paginatedItems;
     }
   };
 
-  const fetchRepairs = async () => {
+  const fetchRepairs = async (
+    page = repairsPage,
+    size = repairsPageSize,
+    search = repairsSearchPhrase,
+    status = repairsStatus,
+  ) => {
     try {
-      const repData = await getWorkshopRepairs({ PageNumber: 1, PageSize: 50 });
+      const searchPhraseParam =
+        search.trim() || (status !== "All" ? status : null);
+      const repData = await getWorkshopRepairs({
+        PageNumber: page,
+        PageSize: size,
+        SearchPhrase: searchPhraseParam,
+      });
       const items = repData.items || [];
-      
+
       const itemsWithVehicles = await Promise.all(
         items.map(async (item) => {
+          let requestData = null;
+          if (item.repairRequestId) {
+            try {
+              requestData = await getRepairRequestById(item.repairRequestId);
+            } catch (reqErr) {
+              console.error(
+                `Failed to fetch repair request for ID ${item.repairRequestId}:`,
+                reqErr,
+              );
+            }
+          }
+
           try {
             if (item.vehicleId) {
+              console.log(requestData);
               const vehicle = await getVehicleById(item.vehicleId);
               return {
                 ...item,
                 vehicle,
-                clientName: vehicle.clientFirstName && vehicle.clientLastName 
-                  ? `${vehicle.clientFirstName} ${vehicle.clientLastName}` 
-                  : (vehicle.clientEmail || "Brak danych klienta"),
-                clientEmail: vehicle.clientEmail || "Brak e-maila"
+                description: requestData?.description || "Brak opisu",
+                diagnosis: requestData?.diagnosis || "Brak diagnozy",
+                clientName:
+                  vehicle.clientFirstName && vehicle.clientLastName
+                    ? `${vehicle.clientFirstName} ${vehicle.clientLastName}`
+                    : vehicle.clientEmail || "Brak danych klienta",
+                clientEmail: vehicle.clientEmail || "Brak e-maila",
               };
             }
           } catch (vehicleErr) {
-            console.error(`Failed to fetch vehicle for ID ${item.vehicleId}:`, vehicleErr);
+            console.error(
+              `Failed to fetch vehicle for ID ${item.vehicleId}:`,
+              vehicleErr,
+            );
           }
           return {
             ...item,
             vehicle: null,
+            description: requestData?.description || "Brak opisu",
+            diagnosis: requestData?.diagnosis || "Brak diagnozy",
             clientName: "Brak danych klienta",
-            clientEmail: "Brak e-maila"
+            clientEmail: "Brak e-maila",
           };
-        })
+        }),
       );
 
       setRepairs(itemsWithVehicles);
-      return true;
-    } catch (err) {
-      console.error("Failed to fetch repairs from API:", err);
-      toaster.create({
-        title: "Błąd pobierania",
-        description: formatErrorMsg(err, "Nie udało się pobrać napraw z API."),
-        type: "error"
+      setRepairsPage(repData.pageNumber || page);
+      setRepairsTotalPages(repData.totalPages || 1);
+      setRepairsTotalCount(repData.totalCount || items.length);
+
+      // Proactively fetch client preferences for the repairs
+      const uniqueUserIds = new Set();
+      itemsWithVehicles.forEach((item) => {
+        if (item.vehicle?.userId) uniqueUserIds.add(item.vehicle.userId);
       });
-      return false;
+      if (uniqueUserIds.size > 0) {
+        const prefsMap = { ...userPreferences };
+        await Promise.all(
+          Array.from(uniqueUserIds).map(async (uid) => {
+            if (!prefsMap[uid]) {
+              try {
+                const prefs = await getRepairPreferencesForWorkshop(uid);
+                prefsMap[uid] = prefs;
+              } catch (err) {
+                console.error(
+                  `Failed to fetch repair preferences for user ${uid}:`,
+                  err,
+                );
+              }
+            }
+          }),
+        );
+        setUserPreferences(prefsMap);
+      }
+
+      return itemsWithVehicles;
+    } catch (err) {
+      console.error(
+        "Failed to fetch repairs from API, falling back to mock data:",
+        err,
+      );
+      let filtered = initialRepairs;
+      if (search.trim()) {
+        const phrase = search.toLowerCase();
+        filtered = filtered.filter(
+          (x) =>
+            x.description.toLowerCase().includes(phrase) ||
+            (x.diagnosis && x.diagnosis.toLowerCase().includes(phrase)),
+        );
+      } else if (status !== "All") {
+        filtered = filtered.filter((x) => {
+          const s = getStatusNumber(x.status);
+          switch (status) {
+            case "Scheduled":
+              return s === 0;
+            case "InProgress":
+              return s === 1;
+            case "Completed":
+              return s === 2;
+            case "Paid":
+              return s === 3;
+            default:
+              return true;
+          }
+        });
+      }
+      const count = filtered.length;
+      const pages = Math.ceil(count / size) || 1;
+      const paginatedItems = filtered.slice((page - 1) * size, page * size);
+
+      setRepairs(paginatedItems);
+      setRepairsPage(page);
+      setRepairsTotalPages(pages);
+      setRepairsTotalCount(count);
+      return paginatedItems;
     }
   };
 
   const fetchDocs = async () => {
     if (!user?.id) return false;
     try {
-      const docsData = await getWorkshopDocuments(user.id, { PageNumber: 1, PageSize: 50 });
+      const docsData = await getWorkshopDocuments(user.id, {
+        PageNumber: 1,
+        PageSize: 50,
+      });
       setDocuments(docsData.items || []);
       return true;
     } catch (err) {
       console.error("Failed to fetch documents from API:", err);
       toaster.create({
         title: "Błąd pobierania",
-        description: formatErrorMsg(err, "Nie udało się pobrać dokumentów z API."),
-        type: "error"
+        description: formatErrorMsg(
+          err,
+          "Nie udało się pobrać dokumentów z API.",
+        ),
+        type: "error",
       });
       return false;
     }
   };
 
-  const fetchReviewsData = async () => {
-    if (!user?.id) return false;
+  const fetchReviewsData = async (
+    page = reviewsPage,
+    size = reviewsPageSize,
+    search = reviewsSearchPhrase,
+    rating = reviewsRating,
+  ) => {
+    if (!user?.id) {
+      let filtered = initialReviews;
+      if (search.trim()) {
+        const phrase = search.toLowerCase();
+        filtered = filtered.filter(
+          (x) => x.comment && x.comment.toLowerCase().includes(phrase),
+        );
+      } else if (rating !== "All") {
+        filtered = filtered.filter((x) => x.rating === parseInt(rating, 10));
+      }
+      const count = filtered.length;
+      const pages = Math.ceil(count / size) || 1;
+      const paginatedItems = filtered.slice((page - 1) * size, page * size);
+      setReviews(paginatedItems);
+      setReviewsPage(page);
+      setReviewsTotalPages(pages);
+      setReviewsTotalCount(count);
+      return true;
+    }
     try {
-      const revs = await getReviews(user.id, { PageNumber: 1, PageSize: 50 });
+      const searchPhraseParam =
+        search.trim() || (rating !== "All" ? rating : null);
+      const revs = await getReviews(user.id, {
+        PageNumber: page,
+        PageSize: size,
+        SearchPhrase: searchPhraseParam,
+      });
       setReviews(revs.items || []);
+      setReviewsPage(revs.pageNumber || page);
+      setReviewsTotalPages(revs.totalPages || 1);
+      setReviewsTotalCount(revs.totalCount || (revs.items || []).length);
+
       const rStats = await getReviewStats(user.id);
       setStats(rStats || initialStats);
       return true;
     } catch (err) {
-      console.error("Failed to fetch reviews from API:", err);
-      toaster.create({
-        title: "Błąd pobierania",
-        description: formatErrorMsg(err, "Nie udało się pobrać opinii z API."),
-        type: "error"
-      });
+      console.error(
+        "Failed to fetch reviews from API, falling back to mock data:",
+        err,
+      );
+      let filtered = initialReviews;
+      if (search.trim()) {
+        const phrase = search.toLowerCase();
+        filtered = filtered.filter(
+          (x) => x.comment && x.comment.toLowerCase().includes(phrase),
+        );
+      } else if (rating !== "All") {
+        filtered = filtered.filter((x) => x.rating === parseInt(rating, 10));
+      }
+      const count = filtered.length;
+      const pages = Math.ceil(count / size) || 1;
+      const paginatedItems = filtered.slice((page - 1) * size, page * size);
+
+      setReviews(paginatedItems);
+      setReviewsPage(page);
+      setReviewsTotalPages(pages);
+      setReviewsTotalCount(count);
+      setStats(initialStats);
       return false;
+    }
+  };
+
+  // --- REQUESTS EVENT HANDLERS ---
+  const handleRequestsPageChange = (page) => {
+    setRequestsPage(page);
+    fetchRequests(page, requestsPageSize, requestsSearchPhrase, requestsStatus);
+  };
+
+  const handleRequestsPageSizeChange = (size) => {
+    setRequestsPageSize(size);
+    setRequestsPage(1);
+    fetchRequests(1, size, requestsSearchPhrase, requestsStatus);
+  };
+
+  const handleRequestsSearchChange = (phrase) => {
+    setRequestsSearchPhrase(phrase);
+    setRequestsPage(1);
+    if (phrase.trim()) {
+      setRequestsStatus("All");
+      fetchRequests(1, requestsPageSize, phrase, "All");
+    } else {
+      fetchRequests(1, requestsPageSize, "", requestsStatus);
+    }
+  };
+
+  const handleRequestsStatusChange = (status) => {
+    setRequestsStatus(status);
+    setRequestsPage(1);
+    if (status !== "All") {
+      setRequestsSearchPhrase("");
+      fetchRequests(1, requestsPageSize, "", status);
+    } else {
+      fetchRequests(1, requestsPageSize, requestsSearchPhrase, "All");
+    }
+  };
+
+  // --- REPAIRS EVENT HANDLERS ---
+  const handleRepairsPageChange = (page) => {
+    setRepairsPage(page);
+    fetchRepairs(page, repairsPageSize, repairsSearchPhrase, repairsStatus);
+  };
+
+  const handleRepairsPageSizeChange = (size) => {
+    setRepairsPageSize(size);
+    setRepairsPage(1);
+    fetchRepairs(1, size, repairsSearchPhrase, repairsStatus);
+  };
+
+  const handleRepairsSearchChange = (phrase) => {
+    setRepairsSearchPhrase(phrase);
+    setRepairsPage(1);
+    if (phrase.trim()) {
+      setRepairsStatus("All");
+      fetchRepairs(1, repairsPageSize, phrase, "All");
+    } else {
+      fetchRepairs(1, repairsPageSize, "", repairsStatus);
+    }
+  };
+
+  const handleRepairsStatusChange = (status) => {
+    setRepairsStatus(status);
+    setRepairsPage(1);
+    if (status !== "All") {
+      setRepairsSearchPhrase("");
+      fetchRepairs(1, repairsPageSize, "", status);
+    } else {
+      fetchRepairs(1, repairsPageSize, repairsSearchPhrase, "All");
+    }
+  };
+
+  // --- REVIEWS EVENT HANDLERS ---
+  const handleReviewsPageChange = (page) => {
+    setReviewsPage(page);
+    fetchReviewsData(page, reviewsPageSize, reviewsSearchPhrase, reviewsRating);
+  };
+
+  const handleReviewsPageSizeChange = (size) => {
+    setReviewsPageSize(size);
+    setReviewsPage(1);
+    fetchReviewsData(1, size, reviewsSearchPhrase, reviewsRating);
+  };
+
+  const handleReviewsSearchChange = (phrase) => {
+    setReviewsSearchPhrase(phrase);
+    setReviewsPage(1);
+    if (phrase.trim()) {
+      setReviewsRating("All");
+      fetchReviewsData(1, reviewsPageSize, phrase, "All");
+    } else {
+      fetchReviewsData(1, reviewsPageSize, "", reviewsRating);
+    }
+  };
+
+  const handleReviewsRatingChange = (rating) => {
+    setReviewsRating(rating);
+    setReviewsPage(1);
+    if (rating !== "All") {
+      setReviewsSearchPhrase("");
+      fetchReviewsData(1, reviewsPageSize, "", rating);
+    } else {
+      fetchReviewsData(1, reviewsPageSize, reviewsSearchPhrase, "All");
     }
   };
 
@@ -348,14 +761,17 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
   useEffect(() => {
     const loadDashboardData = async () => {
       setLoading(true);
-      
-      const reqsOk = await fetchRequests();
-      const repsOk = await fetchRepairs();
-      
+
+      const reqs = await fetchRequests(1, 5, "", "All");
+      const reps = await fetchRepairs(1, 5, "", "All");
+
+      const reqsOk = reqs !== null;
+      const repsOk = reps !== null;
+
       let revsOk = true;
       let docsOk = true;
       if (user?.id) {
-        revsOk = await fetchReviewsData();
+        revsOk = await fetchReviewsData(1, 5, "", "All");
         docsOk = await fetchDocs();
       }
 
@@ -379,7 +795,7 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
     try {
       await provideEstimation(requestId, diagnosis, cost);
       await fetchRequests();
-      
+
       toaster.create({
         title: "Wycena wysłana",
         description: "Wycena została pomyślnie wysłana i zapisana w API.",
@@ -410,7 +826,10 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
       console.error("Failed to start repair on API:", err);
       toaster.create({
         title: "Błąd rozpoczęcia naprawy",
-        description: formatErrorMsg(err, "Nie udało się zmienić statusu naprawy w API."),
+        description: formatErrorMsg(
+          err,
+          "Nie udało się zmienić statusu naprawy w API.",
+        ),
         type: "error",
       });
     }
@@ -431,7 +850,10 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
       console.error("Failed to complete repair on API:", err);
       toaster.create({
         title: "Błąd zakończenia naprawy",
-        description: formatErrorMsg(err, "Nie udało się zapisać ostatecznego kosztu w API."),
+        description: formatErrorMsg(
+          err,
+          "Nie udało się zapisać ostatecznego kosztu w API.",
+        ),
         type: "error",
       });
     }
@@ -445,10 +867,10 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
         formData.append("file", actualFile);
         formData.append("displayName", mockDoc.displayName);
         formData.append("documentType", mockDoc.type);
-        
+
         await uploadWorkshopDocument(formData);
         await fetchDocs();
-        
+
         toaster.create({
           title: "Dodano dokument",
           description: `Dokument "${mockDoc.displayName}" został pomyślnie przesłany na serwer.`,
@@ -458,7 +880,10 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
         console.error("Failed to upload document to API:", err);
         toaster.create({
           title: "Błąd przesyłania dokumentu",
-          description: formatErrorMsg(err, "Nie udało się zapisać dokumentu w API."),
+          description: formatErrorMsg(
+            err,
+            "Nie udało się zapisać dokumentu w API.",
+          ),
           type: "error",
         });
       }
@@ -477,7 +902,7 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
       try {
         await deleteWorkshopDocument(docId);
         await fetchDocs();
-        
+
         toaster.create({
           title: "Usunięto dokument",
           description: "Dokument został usunięty z serwera.",
@@ -487,10 +912,36 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
         console.error("Failed to delete document from API:", err);
         toaster.create({
           title: "Błąd usuwania dokumentu",
-          description: formatErrorMsg(err, "Nie udało się usunąć dokumentu z API."),
+          description: formatErrorMsg(
+            err,
+            "Nie udało się usunąć dokumentu z API.",
+          ),
           type: "error",
         });
       }
+    }
+  };
+
+  // Action: Download/Preview Workshop Document via Blob
+  const handleDownloadWorkshopDocument = async (docId, fileName) => {
+    if (!user?.id) return;
+    try {
+      const blob = await downloadWorkshopDocument(user.id, docId);
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Failed to download workshop document:", err);
+      toaster.create({
+        title: "Błąd pobierania",
+        description: "Nie udało się pobrać pliku dokumentu.",
+        type: "error",
+      });
     }
   };
 
@@ -502,7 +953,8 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
       setProfileSubmitting(false);
       toaster.create({
         title: "Zapisano dane profilowe",
-        description: "Informacje o Twoim warsztacie zostały zaktualizowane pomyślnie.",
+        description:
+          "Informacje o Twoim warsztacie zostały zaktualizowane pomyślnie.",
         type: "success",
       });
     }, 600);
@@ -562,16 +1014,26 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
   };
 
   // --- STATS COMPUTATION FOR THE 3 METRIC CARDS ---
-  const activeRepairsCount = repairs.filter((r) => getStatusNumber(r.status) === 1).length;
+  const activeRepairsCount = repairs.filter(
+    (r) => getStatusNumber(r.status) === 1,
+  ).length;
   const vehiclesInShopCount = repairs.filter((r) => {
     const s = getStatusNumber(r.status);
     return s === 0 || s === 1 || s === 2;
   }).length;
-  const newRequestsCount = repairRequests.filter((r) => getRequestStatusNumber(r.status) === 1).length;
+  const newRequestsCount = repairRequests.filter(
+    (r) => getRequestStatusNumber(r.status) === 1,
+  ).length;
 
   return (
-    <Box minH="100vh" w="full" display="flex" bg="gray.100" _dark={{ bg: "#0F172A" }} pt="80px">
-      
+    <Box
+      minH="100vh"
+      w="full"
+      display="flex"
+      bg="gray.100"
+      _dark={{ bg: "#0F172A" }}
+      pt="80px"
+    >
       {/* --- LEFT SIDEBAR --- */}
       <Box
         w="280px"
@@ -591,10 +1053,21 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
         <VStack align="stretch" gap={8}>
           {/* Dashboard Logo or Header */}
           <Box>
-            <Text fontSize="10px" fontWeight="bold" color="orange.500" tracking="widest" textTransform="uppercase">
+            <Text
+              fontSize="10px"
+              fontWeight="bold"
+              color="orange.500"
+              tracking="widest"
+              textTransform="uppercase"
+            >
               Panel Mechanika
             </Text>
-            <Heading size="md" fontWeight="bold" mt={0.5} _dark={{ color: "white" }}>
+            <Heading
+              size="md"
+              fontWeight="bold"
+              mt={0.5}
+              _dark={{ color: "white" }}
+            >
               {profileDisplayName || "Mój Warsztat"}
             </Heading>
             {isOfflineMode && (
@@ -616,14 +1089,21 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               bg={activeMenu === "requests" ? "orange.50" : "transparent"}
               _dark={{
                 color: activeMenu === "requests" ? "orange.400" : "gray.400",
-                bg: activeMenu === "requests" ? "whiteAlpha.100" : "transparent",
+                bg:
+                  activeMenu === "requests" ? "whiteAlpha.100" : "transparent",
               }}
               gap={3}
             >
               <Icon as={Clock} boxSize={5} />
               Zlecenia
               {newRequestsCount > 0 && (
-                <Badge colorPalette="orange" variant="solid" rounded="full" ml="auto" px={2}>
+                <Badge
+                  colorPalette="orange"
+                  variant="solid"
+                  rounded="full"
+                  ml="auto"
+                  px={2}
+                >
                   {newRequestsCount}
                 </Badge>
               )}
@@ -646,7 +1126,13 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               <Icon as={Wrench} boxSize={5} />
               Aktywne Naprawy
               {activeRepairsCount > 0 && (
-                <Badge colorPalette="blue" variant="solid" rounded="full" ml="auto" px={2}>
+                <Badge
+                  colorPalette="blue"
+                  variant="solid"
+                  rounded="full"
+                  ml="auto"
+                  px={2}
+                >
                   {activeRepairsCount}
                 </Badge>
               )}
@@ -662,7 +1148,8 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               bg={activeMenu === "documents" ? "orange.50" : "transparent"}
               _dark={{
                 color: activeMenu === "documents" ? "orange.400" : "gray.400",
-                bg: activeMenu === "documents" ? "whiteAlpha.100" : "transparent",
+                bg:
+                  activeMenu === "documents" ? "whiteAlpha.100" : "transparent",
               }}
               gap={3}
             >
@@ -710,8 +1197,15 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
       </Box>
 
       {/* --- RIGHT CONTENT AREA --- */}
-      <Box flex="1" p={8} overflowY="auto" h="calc(100vh - 80px)" display="flex" flexDirection="column" gap={8}>
-        
+      <Box
+        flex="1"
+        p={8}
+        overflowY="auto"
+        h="calc(100vh - 80px)"
+        display="flex"
+        flexDirection="column"
+        gap={8}
+      >
         {/* Top metrics summary grid (always visible at top of dashboard workspace) */}
         <SimpleGrid columns={{ base: 1, md: 3 }} gap={6}>
           <Box
@@ -738,10 +1232,20 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
                 <Icon as={Wrench} color="orange.500" boxSize={6} />
               </Flex>
               <VStack align="flex-start" gap={0}>
-                <Text fontSize="xs" fontWeight="bold" color="gray.400" textTransform="uppercase">
+                <Text
+                  fontSize="xs"
+                  fontWeight="bold"
+                  color="gray.400"
+                  textTransform="uppercase"
+                >
                   W trakcie naprawy
                 </Text>
-                <Text fontSize="3xl" fontWeight="black" color="gray.800" _dark={{ color: "white" }}>
+                <Text
+                  fontSize="3xl"
+                  fontWeight="black"
+                  color="gray.800"
+                  _dark={{ color: "white" }}
+                >
                   {activeRepairsCount}
                 </Text>
               </VStack>
@@ -772,10 +1276,20 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
                 <Icon as={Car} color="blue.500" boxSize={6} />
               </Flex>
               <VStack align="flex-start" gap={0}>
-                <Text fontSize="xs" fontWeight="bold" color="gray.400" textTransform="uppercase">
+                <Text
+                  fontSize="xs"
+                  fontWeight="bold"
+                  color="gray.400"
+                  textTransform="uppercase"
+                >
                   Pojazdy w serwisie
                 </Text>
-                <Text fontSize="3xl" fontWeight="black" color="gray.800" _dark={{ color: "white" }}>
+                <Text
+                  fontSize="3xl"
+                  fontWeight="black"
+                  color="gray.800"
+                  _dark={{ color: "white" }}
+                >
                   {vehiclesInShopCount}
                 </Text>
               </VStack>
@@ -806,10 +1320,20 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
                 <Icon as={Clock} color="green.500" boxSize={6} />
               </Flex>
               <VStack align="flex-start" gap={0}>
-                <Text fontSize="xs" fontWeight="bold" color="gray.400" textTransform="uppercase">
+                <Text
+                  fontSize="xs"
+                  fontWeight="bold"
+                  color="gray.400"
+                  textTransform="uppercase"
+                >
                   Nowe zlecenia
                 </Text>
-                <Text fontSize="3xl" fontWeight="black" color="gray.800" _dark={{ color: "white" }}>
+                <Text
+                  fontSize="3xl"
+                  fontWeight="black"
+                  color="gray.800"
+                  _dark={{ color: "white" }}
+                >
                   {newRequestsCount}
                 </Text>
               </VStack>
@@ -817,7 +1341,10 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
           </Box>
         </SimpleGrid>
 
-        <Separator borderColor="gray.200" _dark={{ borderColor: "whiteAlpha.100" }} />
+        <Separator
+          borderColor="gray.200"
+          _dark={{ borderColor: "whiteAlpha.100" }}
+        />
 
         {/* --- MAIN ACTIVE PANEL CONTAINER --- */}
         <Box flex="1">
@@ -826,6 +1353,16 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               repairRequests={repairRequests}
               loading={loading}
               onProvideEstimation={handleProvideEstimation}
+              userPreferences={userPreferences}
+              pageNumber={requestsPage}
+              totalPages={requestsTotalPages}
+              pageSize={requestsPageSize}
+              onPageChange={handleRequestsPageChange}
+              onPageSizeChange={handleRequestsPageSizeChange}
+              searchPhrase={requestsSearchPhrase}
+              onSearchChange={handleRequestsSearchChange}
+              statusFilter={requestsStatus}
+              onStatusFilterChange={handleRequestsStatusChange}
             />
           )}
 
@@ -835,6 +1372,16 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               loading={loading}
               onStartRepair={handleStartRepair}
               onCompleteRepair={handleCompleteRepair}
+              userPreferences={userPreferences}
+              pageNumber={repairsPage}
+              totalPages={repairsTotalPages}
+              pageSize={repairsPageSize}
+              onPageChange={handleRepairsPageChange}
+              onPageSizeChange={handleRepairsPageSizeChange}
+              searchPhrase={repairsSearchPhrase}
+              onSearchChange={handleRepairsSearchChange}
+              statusFilter={repairsStatus}
+              onStatusFilterChange={handleRepairsStatusChange}
             />
           )}
 
@@ -844,6 +1391,7 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               loading={loading}
               onUploadDocument={handleUploadDocument}
               onDeleteDocument={handleDeleteDocument}
+              onDownloadDocument={handleDownloadWorkshopDocument}
             />
           )}
 
@@ -852,6 +1400,15 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               reviews={reviews}
               stats={stats}
               loading={loading}
+              pageNumber={reviewsPage}
+              totalPages={reviewsTotalPages}
+              pageSize={reviewsPageSize}
+              onPageChange={handleReviewsPageChange}
+              onPageSizeChange={handleReviewsPageSizeChange}
+              searchPhrase={reviewsSearchPhrase}
+              onSearchChange={handleReviewsSearchChange}
+              ratingFilter={reviewsRating}
+              onRatingFilterChange={handleReviewsRatingChange}
             />
           )}
 

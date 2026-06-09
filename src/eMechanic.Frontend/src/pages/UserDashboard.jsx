@@ -336,7 +336,6 @@ const formatTimelineEvent = (event) => {
   } catch (e) {
     return { title: event.eventType, description: event.data, color: "gray" };
   }
-
   switch (event.eventType) {
     case "VehicleCreatedDomainEvent":
       return {
@@ -347,7 +346,7 @@ const formatTimelineEvent = (event) => {
     case "VehicleMileageChangedDomainEvent":
       return {
         title: "Aktualizacja przebiegu",
-        description: `Zmieniono przebieg pojazdu na ${parsedData.Mileage.NewValue || 0} ${parsedData.MileageUnit === 2 ? "mi" : "km"}.`,
+        description: `Zmieniono przebieg pojazdu na ${parsedData.Mileage.NewValue.Value || 0} ${parsedData.Mileage.Unit === 2 ? "mi" : "km"}.`,
         color: "orange",
       };
     case "VehicleLicensePlateChangedDomainEvent":
@@ -389,16 +388,17 @@ const formatTimelineEvent = (event) => {
       };
     case "VehicleDocumentAddedTimelineEvent":
     case "VehicleDocumentAddedDomainEvent":
+      console.log(parsedData);
       return {
         title: "Dodano dokument",
-        description: `Załączono nowy dokument do pojazdu: ${parsedData.DocumentName || parsedData.Name || ""}.`,
+        description: `Załączono nowy dokument do pojazdu: ${parsedData.FileName}.`,
         color: "blue",
       };
     case "VehicleDocumentDeletedTimelineEvent":
     case "VehicleDocumentDeletedDomainEvent":
       return {
         title: "Usunięto dokument",
-        description: `Usunięto dokument powiązany z pojazdem: ${parsedData.FileName || parsedData.Name || ""}.`,
+        description: `Usunięto dokument powiązany z pojazdem: ${parsedData.FileName}.`,
         color: "red",
       };
     case "VehicleVinChangedDomainEvent":
