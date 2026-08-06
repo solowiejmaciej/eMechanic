@@ -52,7 +52,7 @@ export const DashboardListLayout = ({
 
   return (
     <VStack align="stretch" gap={6} w="full">
-      {/* Header section */}
+      
       <Flex justify="space-between" align="center" wrap="wrap" gap={4}>
         <Box>
           <Heading size="2xl" fontWeight="black" tracking="tight" _dark={{ color: "white" }}>
@@ -67,7 +67,7 @@ export const DashboardListLayout = ({
         {extraHeaderAction && <Box>{extraHeaderAction}</Box>}
       </Flex>
 
-      {/* Filters & Search Toolbar */}
+      
       <Flex
         direction={{ base: "column", md: "row" }}
         justify="space-between"
@@ -81,7 +81,7 @@ export const DashboardListLayout = ({
         gap={4}
         shadow="sm"
       >
-        {/* Left side: Search input with button & filters */}
+        
         <Flex flex="1" wrap="wrap" gap={4} align="center">
           {onSearchChange && (
             <HStack gap={2} width={{ base: "full", sm: "auto" }}>
@@ -89,7 +89,7 @@ export const DashboardListLayout = ({
                 <Icon as={Search} color="gray.400" boxSize={4} />
                 <Input
                   variant="plain"
-                  placeholder="Szukaj..."
+                  placeholder="Search..."
                   size="sm"
                   value={localSearch}
                   onChange={(e) => setLocalSearch(e.target.value)}
@@ -200,7 +200,7 @@ export const DashboardListLayout = ({
           {onPageSizeChange && (
             <HStack gap={2}>
               <Text fontSize="xs" fontWeight="bold" color="gray.500" _dark={{ color: "gray.400" }}>
-                Wpisów:
+                Records:
               </Text>
               <MenuRoot size="xs">
                 <MenuTrigger asChild>
@@ -314,10 +314,10 @@ export const DashboardListLayout = ({
               px={2.5}
             >
               <Icon as={ChevronLeft} boxSize={3.5} />
-              Poprzednia
+              Previous
             </Button>
             <Text fontSize="xs" fontWeight="bold" color="gray.700" _dark={{ color: "gray.300" }} px={1}>
-              Strona {currentPage} z {totalPages}
+              Page {currentPage} z {totalPages}
             </Text>
             <Button
               variant="ghost"
@@ -329,7 +329,7 @@ export const DashboardListLayout = ({
               gap={1}
               px={2.5}
             >
-              Następna
+              Next
               <Icon as={ChevronRight} boxSize={3.5} />
             </Button>
           </HStack>

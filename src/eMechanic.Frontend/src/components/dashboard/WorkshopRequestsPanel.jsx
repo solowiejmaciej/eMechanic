@@ -94,11 +94,11 @@ export const WorkshopRequestsPanel = ({
     switch (statusNum) {
       case 1:
         return {
-          label: "Nowe",
+          label: "New",
           colorPalette: "blue",
           borderColor: "blue.200",
           icon: Clock,
-          desc: "Zlecenie oczekuje na Twoją diagnozę i wycenę.",
+          desc: "The order is awaiting your diagnosis and quote.",
         };
       case 2:
         return {

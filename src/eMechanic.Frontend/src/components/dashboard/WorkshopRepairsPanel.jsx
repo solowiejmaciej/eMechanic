@@ -76,38 +76,38 @@ export const WorkshopRepairsPanel = ({
     switch (statusNum) {
       case 0:
         return {
-          label: "Zaplanowana",
+          label: "Scheduled",
           colorPalette: "blue",
           borderColor: "blue.200",
           icon: Calendar,
-          desc: "Naprawa zaplanowana. Czeka na rozpoczęcie prac.",
+          desc: "The repair is scheduled. Work is set to begin.",
         };
       case 1:
         return {
-          label: "W trakcie",
+          label: "In progress",
           colorPalette: "orange",
           borderColor: "orange.200",
           icon: Wrench,
-          desc: "Pojazd jest obecnie w trakcie naprawy.",
+          desc: "The vehicle is currently being repaired.",
         };
       case 2:
         return {
-          label: "Ukończona",
+          label: "Completed",
           colorPalette: "yellow",
           borderColor: "yellow.200",
           icon: CheckCircle2,
-          desc: "Prace zakończone. Oczekiwanie na płatność klienta.",
+          desc: "Work completed. Awaiting payment from the client.",
         };
       case 3:
         return {
-          label: "Opłacona",
+          label: "Paid",
           colorPalette: "green",
           borderColor: "green.200",
           icon: CreditCard,
-          desc: "Naprawa ukończona i opłacona przez klienta.",
+          desc: "Repair completed and paid for by the customer.",
         };
       default:
-        return { label: "Nieznany", colorPalette: "gray", borderColor: "gray.200", icon: Clock, desc: "" };
+        return { label: "Unknown", colorPalette: "gray", borderColor: "gray.200", icon: Clock, desc: "" };
     }
   };
 
@@ -138,21 +138,21 @@ export const WorkshopRepairsPanel = ({
       value: statusFilter,
       onChange: onStatusFilterChange,
       options: [
-        { value: "All", label: "Wszystkie", icon: Car, color: "orange.500" },
-        { value: "Scheduled", label: "Zaplanowane", icon: Calendar, color: "blue.500" },
-        { value: "InProgress", label: "W toku", icon: Wrench, color: "orange.500" },
-        { value: "Completed", label: "Ukończone", icon: CheckCircle2, color: "yellow.500" },
-        { value: "Paid", label: "Opłacone", icon: CreditCard, color: "green.500" },
+        { value: "All", label: "All", icon: Car, color: "orange.500" },
+        { value: "Scheduled", label: "Scheduled", icon: Calendar, color: "blue.500" },
+        { value: "InProgress", label: "In progress", icon: Wrench, color: "orange.500" },
+        { value: "Completed", label: "Completed", icon: CheckCircle2, color: "yellow.500" },
+        { value: "Paid", label: "Paid", icon: CreditCard, color: "green.500" },
       ]
     }
   ];
 
   return (
     <DashboardListLayout
-      title="Zlecenia Napraw"
-      subtitle="Śledź postęp aktywnych prac naprawczych, rozpoczynaj zlecenia i zatwierdzaj koszty po zakończeniu naprawy."
+      title="Repair Orders"
+      subtitle="Track the progress of active repair jobs, create work orders, and approve costs once the repair is complete."
       filters={filters}
-      totalItemsLabel={`Pokazano: ${repairs.length} (na stronie)`}
+      totalItemsLabel={`Shown: ${repairs.length} (on page)`}
       currentPage={pageNumber}
       totalPages={totalPages}
       pageSize={pageSize}
@@ -166,10 +166,10 @@ export const WorkshopRepairsPanel = ({
         <Center py={16} flexDirection="column" borderWidth="1.5px" borderStyle="dashed" borderColor="gray.300" rounded="2xl" _dark={{ borderColor: "whiteAlpha.100" }}>
           <Icon as={Wrench} boxSize={16} color="gray.300" mb={4} />
           <Text fontSize="lg" fontWeight="bold" color="gray.500">
-            Brak napraw
+            No repairs
           </Text>
           <Text fontSize="sm" color="gray.400" textAlign="center" mt={1} px={4}>
-            Obecnie nie prowadzisz żadnych prac naprawczych.
+            You are not currently performing any repair work.
           </Text>
         </Center>
       }
@@ -229,7 +229,7 @@ export const WorkshopRepairsPanel = ({
                       {rep.vehicle?.manufacturer} {rep.vehicle?.model}
                     </Text>
                     <Text fontSize="xs" color="gray.400" fontWeight="medium">
-                      Tablice: {rep.vehicle?.licensePlate || "—"} | VIN: {rep.vehicle?.vin || "—"}
+                      Plates: {rep.vehicle?.licensePlate || "—"} | VIN: {rep.vehicle?.vin || "—"}
                     </Text>
                   </VStack>
                 </HStack>
@@ -259,7 +259,7 @@ export const WorkshopRepairsPanel = ({
               <SimpleGrid columns={2} gap={4}>
                 <Box>
                   <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                    Data utworzenia
+                    Date created
                   </Text>
                   <Text mt={0.5} fontSize="sm" color="gray.700" _dark={{ color: "gray.200" }} fontWeight="medium">
                     {new Date(rep.createdAt).toLocaleDateString()}
@@ -267,7 +267,7 @@ export const WorkshopRepairsPanel = ({
                 </Box>
                 <Box>
                   <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                    Usterka / Diagnoza
+                    Malfunction / Diagnosis
                   </Text>
                   <Text mt={0.5} fontSize="sm" color="gray.700" _dark={{ color: "gray.200" }} noOfLines={1} title={rep.diagnosis || rep.description}>
                     {rep.diagnosis || rep.description || "Brak opisu"}
@@ -278,12 +278,12 @@ export const WorkshopRepairsPanel = ({
               {rep.vehicle && (
                 <Box bg="gray.50" _dark={{ bg: "rgb(15, 23, 42)" }} p={3} rounded="xl">
                   <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase" mb={1.5}>
-                    Dane Klienta
+                    Customer Information
                   </Text>
                   <HStack gap={1.5} fontSize="xs">
                     <Icon as={User} color="orange.500" boxSize={3.5} />
                     <Text fontWeight="semibold" color="gray.600" _dark={{ color: "gray.300" }}>
-                      Klient: {rep.clientName || "Brak danych"}
+                      Customer: {rep.clientName || "Brak danych"}
                     </Text>
                   </HStack>
                 </Box>
@@ -293,22 +293,22 @@ export const WorkshopRepairsPanel = ({
               {prefs && (
                 <Box bg="orange.50/20" _dark={{ bg: "orange.950/10" }} p={3.5} rounded="xl" borderWidth="1px" borderColor="orange.100/30" _darkBorder={{ borderColor: "orange.900/15" }}>
                   <Text fontSize="10px" fontWeight="bold" color="orange.600" _dark={{ color: "orange.400" }} textTransform="uppercase" mb={1.5}>
-                    Preferencje naprawy klienta
+                    Customer Repair Preferences
                   </Text>
                   <SimpleGrid columns={{ base: 1, sm: 2 }} gap={2.5} fontSize="xs">
                     <HStack gap={1.5}>
                       <Text fontWeight="semibold" color="gray.500">Części:</Text>
                       <Badge colorPalette="orange" variant="subtle" size="sm" rounded="md">
-                        {prefs.partsPreference === 1 || prefs.partsPreference === "Economy" ? "Ekonomiczne (zamienniki)" :
-                         prefs.partsPreference === 2 || prefs.partsPreference === "Balanced" ? "Zbalansowane (OEM/Zamienniki)" :
-                         prefs.partsPreference === 3 || prefs.partsPreference === "Premium" ? "Premium (tylko OEM)" : "Brak preferencji"}
+                        {prefs.partsPreference === 1 || prefs.partsPreference === "Economy" ? "Economical (substitutes)" :
+                         prefs.partsPreference === 2 || prefs.partsPreference === "Balanced" ? "Balanced (OEM/Replacement Parts)" :
+                         prefs.partsPreference === 3 || prefs.partsPreference === "Premium" ? "Premium (OEM only)" : "No preference"}
                       </Badge>
                     </HStack>
                     <HStack gap={1.5}>
                       <Text fontWeight="semibold" color="gray.500">Czas:</Text>
                       <Badge colorPalette="orange" variant="subtle" size="sm" rounded="md">
-                        {prefs.timelinePreference === 1 || prefs.timelinePreference === "Standard" ? "Standardowy" :
-                         prefs.timelinePreference === 2 || prefs.timelinePreference === "Urgent" ? "Pilny (Ekspres)" : "Brak preferencji"}
+                        {prefs.timelinePreference === 1 || prefs.timelinePreference === "Standard" ? "Standard" :
+                         prefs.timelinePreference === 2 || prefs.timelinePreference === "Urgent" ? "Urgent (Express)" : "No preference"}
                       </Badge>
                     </HStack>
                   </SimpleGrid>
@@ -317,7 +317,7 @@ export const WorkshopRepairsPanel = ({
 
               <Box>
                 <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                  Status prac
+                  Repair status
                 </Text>
                 <Text mt={0.5} fontSize="sm" color="gray.600" _dark={{ color: "gray.300" }}>
                   {statusInfo.desc}
@@ -330,7 +330,7 @@ export const WorkshopRepairsPanel = ({
               <Flex justify="space-between" align="center" wrap="wrap" gap={3}>
                 <Box>
                   <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                    {isCompleted || isPaid ? "Koszt ostateczny" : "Koszt szacowany"}
+                    {isCompleted || isPaid ? "Final cost" : "Estimated cost"}
                   </Text>
                   <Text fontSize="xl" fontWeight="black" color="orange.500">
                     {isCompleted || isPaid
@@ -351,7 +351,7 @@ export const WorkshopRepairsPanel = ({
                     shadow="md"
                   >
                     <Icon as={Play} boxSize={3.5} />
-                    Rozpocznij naprawę
+                    Start the repair
                   </Button>
                 )}
 
@@ -369,20 +369,20 @@ export const WorkshopRepairsPanel = ({
                     fontWeight="bold"
                   >
                     <Icon as={CheckCircle2} boxSize={3.5} />
-                    Zakończ naprawę
+                    Finish the repair
                   </Button>
                 )}
 
                 {isCompleted && (
                   <Badge colorPalette="yellow" variant="subtle" px={2} py={1} rounded="lg">
-                    Oczekiwanie na zapłatę
+                    Waiting for payment
                   </Badge>
                 )}
 
                 {isPaid && (
                   <HStack color="green.500" fontSize="sm" fontWeight="bold" gap={1.5}>
                     <Icon as={Check} boxSize={4} />
-                    <Text>Zakończono i Opłacono</Text>
+                    <Text>Completed and Paid</Text>
                   </HStack>
                 )}
               </Flex>
@@ -402,31 +402,31 @@ export const WorkshopRepairsPanel = ({
                   <DialogTitle fontSize="xl" fontWeight="bold">Zakończ Naprawę</DialogTitle>
                   {selectedRepair && (
                     <Text fontSize="xs" color="gray.400" mt={1}>
-                      Pojazd: {selectedRepair.vehicle?.manufacturer} {selectedRepair.vehicle?.model}
+                      Vechicle: {selectedRepair.vehicle?.manufacturer} {selectedRepair.vehicle?.model}
                     </Text>
                   )}
                 </DialogHeader>
                 <DialogBody display="flex" flexDirection="column" gap={4}>
                   <Field.Root required>
-                    <Field.Label fontWeight="semibold">Ostateczny koszt brutto (PLN)</Field.Label>
+                    <Field.Label fontWeight="semibold">Final gross cost (PLN)</Field.Label>
                     <Input
                       type="number"
-                      placeholder="Wpisz ostateczny koszt, np. 550"
+                      placeholder="Enter the final cost, e.g., 550"
                       value={finalCost}
                       onChange={(e) => setFinalCost(e.target.value)}
                       _dark={{ bg: "rgb(15, 23, 42)" }}
                     />
                     <Text fontSize="xs" color="gray.400" mt={1}>
-                      Podaj rzeczywistą kwotę na fakturze / paragonie dla klienta.
+                     Enter the actual amount shown on the invoice or receipt for the customer.
                     </Text>
                   </Field.Root>
                 </DialogBody>
                 <DialogFooter gap={2}>
                   <DialogActionTrigger asChild>
-                    <Button type="button" variant="ghost" rounded="lg">Anuluj</Button>
+                    <Button type="button" variant="ghost" rounded="lg">Cancel</Button>
                   </DialogActionTrigger>
                   <Button type="submit" loading={isSubmitLoading} colorPalette="orange" rounded="lg">
-                    Zatwierdź i Zakończ
+                    Confirm
                   </Button>
                 </DialogFooter>
               </form>

@@ -53,20 +53,20 @@ export const WorkshopReviewsPanel = ({
       value: ratingFilter,
       onChange: onRatingFilterChange,
       options: [
-        { value: "All", label: "Wszystkie", icon: MessageCircle, color: "orange.500" },
-        { value: "5", label: "5 gwiazdek", icon: Star, color: "orange.400" },
-        { value: "4", label: "4 gwiazdki", icon: Star, color: "orange.400" },
-        { value: "3", label: "3 gwiazdki", icon: Star, color: "orange.400" },
-        { value: "2", label: "2 gwiazdki", icon: Star, color: "orange.400" },
-        { value: "1", label: "1 gwiazdka", icon: Star, color: "orange.400" },
+        { value: "All", label: "All", icon: MessageCircle, color: "orange.500" },
+        { value: "5", label: "5 stars", icon: Star, color: "orange.400" },
+        { value: "4", label: "4 stars", icon: Star, color: "orange.400" },
+        { value: "3", label: "3 stars", icon: Star, color: "orange.400" },
+        { value: "2", label: "2 stars", icon: Star, color: "orange.400" },
+        { value: "1", label: "1 star", icon: Star, color: "orange.400" },
       ]
     }
   ];
 
   return (
     <DashboardListLayout
-      title="Opinie i Oceny Klientów"
-      subtitle="Sprawdź co myślą o Tobie klienci, analizuj oceny i buduj reputację swojego warsztatu."
+      title="Customer Reviews and Ratings"
+      subtitle="Find out what your customers think of you, analyze their reviews, and build your repair shop's reputation."
       currentPage={pageNumber}
       totalPages={totalPages}
       pageSize={pageSize}
@@ -89,10 +89,10 @@ export const WorkshopReviewsPanel = ({
           <VStack gap={3}>
             <Icon as={MessageCircle} boxSize={16} color="gray.300" />
             <Text fontSize="lg" fontWeight="bold" color="gray.500">
-              Brak opinii
+              No reviews
             </Text>
             <Text fontSize="sm" color="gray.400" textAlign="center" maxW="sm" px={4}>
-              Nie znaleziono żadnych opinii spełniających wybrane kryteria wyszukiwania.
+              No reviews matching the selected search criteria were found.
             </Text>
           </VStack>
         </Center>
@@ -117,7 +117,7 @@ export const WorkshopReviewsPanel = ({
             textAlign="center"
           >
             <Text fontSize="md" fontWeight="semibold" color="gray.500" _dark={{ color: "gray.400" }}>
-              Średnia ocena
+              Average rating
             </Text>
             <Text fontSize="6xl" fontWeight="black" color="orange.500" my={2}>
               {Number(avgRating).toFixed(1)}
@@ -134,7 +134,7 @@ export const WorkshopReviewsPanel = ({
               ))}
             </HStack>
             <Text fontSize="sm" color="gray.400" fontWeight="medium">
-              Na podstawie {totalReviews} opinii
+              Based on {totalReviews} reviews
             </Text>
           </Box>
 
@@ -150,7 +150,7 @@ export const WorkshopReviewsPanel = ({
             gridColumn={{ lg: "span 2" }}
           >
             <Text fontSize="md" fontWeight="bold" mb={4} _dark={{ color: "white" }}>
-              Rozkład ocen
+              Grade Distribution
             </Text>
             <VStack gap={3} align="stretch">
               {[5, 4, 3, 2, 1].map((stars) => {
@@ -182,7 +182,7 @@ export const WorkshopReviewsPanel = ({
         </SimpleGrid>
 
         <Heading size="lg" fontWeight="bold" mt={4} _dark={{ color: "white" }}>
-          Opinie klientów
+          Customer reviews
         </Heading>
 
         {/* Reviews List */}
@@ -248,7 +248,7 @@ export const WorkshopReviewsPanel = ({
                 </Text>
               ) : (
                 <Text fontSize="xs" color="gray.400">
-                  Brak komentarza tekstowego.
+                  No text comment.
                 </Text>
               )}
             </Box>

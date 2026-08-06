@@ -29,33 +29,33 @@ export const RepairsPanel = ({
       case "Scheduled":
       case 0:
         return {
-          label: "Zaplanowana",
+          label: "Planned",
           color: "blue",
-          desc: "Naprawa została zaplanowana w warsztacie.",
+          desc: "The repair has been scheduled at the repair shop.",
         };
       case "InProgress":
       case 1:
         return {
-          label: "W trakcie",
+          label: "In progress",
           color: "orange",
-          desc: "Pojazd jest obecnie naprawiany.",
+          desc: "The vehicle is currently being repaired.",
         };
       case "Completed":
       case 2:
         return {
-          label: "Ukończona",
+          label: "Completed",
           color: "yellow",
-          desc: "Prace zakończone. Oczekiwanie na płatność.",
+          desc: "Work completed. Awaiting payment.",
         };
       case "Paid":
       case 3:
         return {
-          label: "Opłacona",
+          label: "Paid",
           color: "green",
-          desc: "Naprawa zakończona i w pełni opłacona.",
+          desc: "The repair is complete and has been paid in full.",
         };
       default:
-        return { label: "Nieznana", color: "gray", desc: "" };
+        return { label: "Unknown", color: "gray", desc: "" };
     }
   };
 
@@ -73,7 +73,7 @@ export const RepairsPanel = ({
   if (loading) {
     return (
       <VStack gap={6} align="stretch">
-        <Heading size="2xl" fontWeight="black" tracking="tight">Aktywne Naprawy</Heading>
+        <Heading size="2xl" fontWeight="black" tracking="tight">Active Repairs</Heading>
         <Center py={20}>
           <Spinner size="xl" color="brand.500" />
         </Center>
@@ -85,10 +85,10 @@ export const RepairsPanel = ({
     <VStack gap={6} align="stretch">
       <Box>
         <Heading size="2xl" fontWeight="black" tracking="tight" _dark={{ color: "white" }}>
-          Aktywne Naprawy i Płatności
+          Active repairs and payments
         </Heading>
         <Text color="gray.500" _dark={{ color: "gray.400" }} fontSize="md" mt={1}>
-          Śledź stan trwających napraw Twoich pojazdów oraz dokonuj bezpiecznych płatności online.
+          Track the status of your vehicles' ongoing repairs and make secure online payments.
         </Text>
       </Box>
 
@@ -105,10 +105,10 @@ export const RepairsPanel = ({
           <VStack gap={3}>
             <Icon as={Wrench} boxSize={12} color="gray.300" />
             <Text fontSize="lg" fontWeight="bold" color="gray.500">
-              Brak aktywnych napraw
+              No active repairs
             </Text>
             <Text fontSize="xs" color="gray.400" textAlign="center" maxW="xs" px={4}>
-              Po zaakceptowaniu wyceny zlecenia przez Ciebie, warsztat rozpocznie naprawę, która pojawi się w tym miejscu.
+              Once you accept the repair estimate, the repair shop will begin the repair, which will appear here.
             </Text>
           </VStack>
         </Center>
@@ -184,7 +184,7 @@ export const RepairsPanel = ({
                 <SimpleGrid columns={2} gap={4}>
                   <Box>
                     <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                      Warsztat
+                      Workshop
                     </Text>
                     <Text
                       mt={0.5}
@@ -198,7 +198,7 @@ export const RepairsPanel = ({
                   </Box>
                   <Box>
                     <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                      Data utworzenia
+                      Date Created
                     </Text>
                     <Text mt={0.5} fontSize="sm" color="gray.600" _dark={{ color: "gray.300" }}>
                       {new Date(rep.createdAt).toLocaleDateString()}
@@ -208,7 +208,7 @@ export const RepairsPanel = ({
 
                 <Box>
                   <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                    Status i Diagnoza
+                    Status and Diagnosis
                   </Text>
                   <Text mt={0.5} fontSize="sm" color="gray.600" _dark={{ color: "gray.300" }}>
                     {statusInfo.desc}
@@ -218,12 +218,12 @@ export const RepairsPanel = ({
                 <Flex justify="space-between" align="center" mt={2} wrap="wrap" gap={3}>
                   <Box>
                     <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                      Koszt
+                      Cost
                     </Text>
                     <Text fontSize="xl" fontWeight="black" color="brand.600" _dark={{ color: "brand.400" }}>
                       {cost
                         ? `${cost.amount.toLocaleString()} ${cost.currency}`
-                        : "Brak wyceny"}
+                        : "No price listed"}
                     </Text>
                   </Box>
 
@@ -240,13 +240,13 @@ export const RepairsPanel = ({
                       shadow="md"
                     >
                       <Icon as={CreditCard} boxSize={3.5} />
-                      Opłać naprawę
+                      Pay for the repair
                     </Button>
                   )}
                   {statusNum === 3 && (
                     <HStack color="green.500" fontSize="sm" fontWeight="bold" gap={1.5}>
                       <Icon as={Check} boxSize={4} />
-                      <Text>Opłacono</Text>
+                      <Text>Paid</Text>
                     </HStack>
                   )}
                 </Flex>

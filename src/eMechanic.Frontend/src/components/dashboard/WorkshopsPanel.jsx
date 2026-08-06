@@ -42,10 +42,10 @@ export const WorkshopsPanel = ({
     <VStack align="stretch" gap={6}>
       <Box>
         <Heading size="2xl" fontWeight="black" tracking="tight" _dark={{ color: "white" }}>
-          Wyszukaj Warsztat
+          Serach Workshop
         </Heading>
         <Text color="gray.500" _dark={{ color: "gray.400" }} fontSize="md" mt={1}>
-          Wybierz warsztat z okolicy, napisz opinię lub zgłoś bezpośrednio usterkę
+          Choose a workshop in your area, write a review, or report a problem directly
         </Text>
       </Box>
 
@@ -123,11 +123,11 @@ export const WorkshopsPanel = ({
             gap={4}
           >
             <Text color="gray.600" _dark={{ color: "gray.400" }} fontSize="sm" fontWeight="medium">
-              Znaleziono{" "}
+              Found{" "}
               <Text as="span" fontWeight="bold" color="brand.500">
                 {workshopTotalCount}
               </Text>{" "}
-              warsztatów
+              workshops
             </Text>
 
             <HStack gap={2}>
@@ -138,7 +138,7 @@ export const WorkshopsPanel = ({
                 disabled={workshopPage === 1}
                 onClick={() => setWorkshopPage((p) => Math.max(p - 1, 1))}
               >
-                Wstecz
+                Back
               </Button>
               <Text fontSize="sm" fontWeight="bold">
                 {workshopPage} / {workshopTotalPages}
@@ -154,7 +154,7 @@ export const WorkshopsPanel = ({
                   )
                 }
               >
-                Dalej
+                Next
               </Button>
             </HStack>
           </Flex>
@@ -250,7 +250,7 @@ export const WorkshopsPanel = ({
                     _hover={{ bg: "brand.50", _dark: { bg: "brand.900/20" } }}
                   >
                     <Icon as={MessageSquare} boxSize={4} />
-                    Opinie
+                    Opinions
                   </Button>
                   <Button
                     size="sm"
@@ -263,7 +263,7 @@ export const WorkshopsPanel = ({
                     shadow="sm"
                   >
                     <Icon as={Plus} boxSize={4} />
-                    Zleć naprawę
+                    Schedule a repair
                   </Button>
                 </Flex>
               </Box>
@@ -274,10 +274,10 @@ export const WorkshopsPanel = ({
         <Center py={16} flexDirection="column" borderWidth="1.5px" borderStyle="dashed" borderColor="gray.350" rounded="2xl" _dark={{ borderColor: "whiteAlpha.100" }}>
           <Icon as={Wrench} boxSize={16} color="gray.300" mb={4} />
           <Text fontSize="lg" fontWeight="bold" color="gray.500">
-            Brak warsztatów
+            No workshops
           </Text>
           <Text fontSize="sm" color="gray.400" textAlign="center" mt={1}>
-            Spróbuj zmienić słowa kluczowe w polu wyszukiwania.
+            Try changing the keywords in the search field.
           </Text>
         </Center>
       )}

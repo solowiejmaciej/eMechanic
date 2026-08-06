@@ -33,10 +33,10 @@ export const WorkshopProfilePanel = ({
     <VStack gap={6} align="stretch">
       <Box>
         <Heading size="2xl" fontWeight="black" tracking="tight" _dark={{ color: "white" }}>
-          Profil Warsztatu
+          Workshop profile
         </Heading>
         <Text color="gray.500" _dark={{ color: "gray.400" }} fontSize="md" mt={1}>
-          Zarządzaj informacjami publicznymi swojego warsztatu, które widzą klienci w wyszukiwarce.
+          Manage the public information about your repair shop that customers see in search results.
         </Text>
       </Box>
 
@@ -54,9 +54,9 @@ export const WorkshopProfilePanel = ({
         <VStack align="stretch" gap={5}>
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
             <Field.Root required>
-              <Field.Label fontWeight="semibold">Nazwa warsztatu</Field.Label>
+              <Field.Label fontWeight="semibold">Workshop name</Field.Label>
               <Input
-                placeholder="np. Auto Serwis Kowalski"
+                placeholder="ex. Auto Serwis Kowalski"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 _dark={{ bg: "rgb(15, 23, 42)" }}
@@ -71,10 +71,10 @@ export const WorkshopProfilePanel = ({
             </Field.Root>
 
             <Field.Root required>
-              <Field.Label fontWeight="semibold">Adres Email (Login)</Field.Label>
+              <Field.Label fontWeight="semibold">Email address(Login)</Field.Label>
               <Input
                 type="email"
-                placeholder="np. kontakt@serwiskowalski.pl"
+                placeholder="ex. kontakt@serwiskowalski.pl"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 _dark={{ bg: "rgb(15, 23, 42)" }}
@@ -91,7 +91,7 @@ export const WorkshopProfilePanel = ({
 
           <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
             <Field.Root required>
-              <Field.Label fontWeight="semibold">Miasto</Field.Label>
+              <Field.Label fontWeight="semibold">City</Field.Label>
               <Input
                 placeholder="np. Warszawa"
                 value={city}
@@ -108,9 +108,9 @@ export const WorkshopProfilePanel = ({
             </Field.Root>
 
             <Field.Root required>
-              <Field.Label fontWeight="semibold">Adres (Ulica i nr)</Field.Label>
+              <Field.Label fontWeight="semibold">Address (Street and no)</Field.Label>
               <Input
-                placeholder="np. Kolejowa 12"
+                placeholder="ex. Kolejowa 12"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 _dark={{ bg: "rgb(15, 23, 42)" }}
@@ -125,7 +125,7 @@ export const WorkshopProfilePanel = ({
             </Field.Root>
 
             <Field.Root>
-              <Field.Label fontWeight="semibold">Telefon kontaktowy</Field.Label>
+              <Field.Label fontWeight="semibold">Phone number</Field.Label>
               <Input
                 placeholder="np. +48600700800"
                 value={phone}
@@ -143,9 +143,9 @@ export const WorkshopProfilePanel = ({
           </SimpleGrid>
 
           <Field.Root>
-            <Field.Label fontWeight="semibold">Opis warsztatu i specjalizacje</Field.Label>
+            <Field.Label fontWeight="semibold">Workshop Description and Specializations</Field.Label>
             <Textarea
-              placeholder="Opisz swój warsztat, w jakich markach pojazdów się specjalizujecie, jakie usługi oferujecie oraz podaj godziny otwarcia..."
+              placeholder="Describe your repair shop, the vehicle brands you specialize in, the services you offer, and your hours of operation..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               _dark={{ bg: "rgb(15, 23, 42)" }}
@@ -172,7 +172,7 @@ export const WorkshopProfilePanel = ({
               shadow="md"
               _hover={{ transform: "translateY(-1px)", shadow: "lg" }}
             >
-              Zapisz Zmiany
+              Save changes
             </Button>
           </Flex>
         </VStack>

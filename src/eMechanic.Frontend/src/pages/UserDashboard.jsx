@@ -121,19 +121,19 @@ const VehicleCard = ({ vehicle, onEdit, onDelete }) => {
   const getFuelTypeString = (type) => {
     switch (type) {
       case 1:
-        return "Benzyna";
+        return "Gas";
       case 2:
         return "Diesel";
       case 3:
         return "LPG";
       case 4:
-        return "Elektryczny";
+        return "Electric";
       case 5:
-        return "Hybryda";
+        return "Hybrid";
       case 6:
-        return "Wodór";
+        return "Hydrogen";
       default:
-        return "Inny";
+        return "Other";
     }
   };
 
@@ -150,7 +150,7 @@ const VehicleCard = ({ vehicle, onEdit, onDelete }) => {
       case 5:
         return "Coupe";
       case 6:
-        return "Kabriolet";
+        return "Cabriolet";
       case 7:
         return "Minivan";
       case 8:
@@ -158,7 +158,7 @@ const VehicleCard = ({ vehicle, onEdit, onDelete }) => {
       case 9:
         return "Van";
       default:
-        return "Inny";
+        return "Other";
     }
   };
 
@@ -206,7 +206,7 @@ const VehicleCard = ({ vehicle, onEdit, onDelete }) => {
       <SimpleGrid columns={2} gap={2} fontSize="sm">
         <VStack align="flex-start" gap={0}>
           <Text color="gray.400" fontSize="xs">
-            Rok
+            Year
           </Text>
           <Text
             fontWeight="semibold"
@@ -218,7 +218,7 @@ const VehicleCard = ({ vehicle, onEdit, onDelete }) => {
         </VStack>
         <VStack align="flex-start" gap={0}>
           <Text color="gray.400" fontSize="xs">
-            Przebieg
+            Mileage
           </Text>
           <Text
             fontWeight="semibold"
@@ -231,7 +231,7 @@ const VehicleCard = ({ vehicle, onEdit, onDelete }) => {
         </VStack>
         <VStack align="flex-start" gap={0}>
           <Text color="gray.400" fontSize="xs">
-            Paliwo
+            Fuel type
           </Text>
           <Text
             fontWeight="semibold"
@@ -243,7 +243,7 @@ const VehicleCard = ({ vehicle, onEdit, onDelete }) => {
         </VStack>
         <VStack align="flex-start" gap={0}>
           <Text color="gray.400" fontSize="xs">
-            Nadwozie
+            Body
           </Text>
           <Text
             fontWeight="semibold"
@@ -268,7 +268,7 @@ const VehicleCard = ({ vehicle, onEdit, onDelete }) => {
           rounded="lg"
           onClick={() => onEdit(vehicle)}
         >
-          Edytuj
+          Edit
         </Button>
         <Button
           size="sm"
@@ -278,7 +278,7 @@ const VehicleCard = ({ vehicle, onEdit, onDelete }) => {
           onClick={() => onDelete(vehicle.id)}
         >
           <Icon as={Trash2} boxSize={3.5} mr={1} />
-          Usuń
+          Delete
         </Button>
       </Flex>
     </Box>
@@ -339,102 +339,102 @@ const formatTimelineEvent = (event) => {
   switch (event.eventType) {
     case "VehicleCreatedDomainEvent":
       return {
-        title: "Pojazd zarejestrowany",
-        description: `Dodano pojazd ${parsedData.Manufacturer || ""} ${parsedData.Model || ""} do systemu z początkowym przebiegiem ${parsedData.Mileage || 0} ${parsedData.MileageUnit === 2 ? "mi" : "km"}.`,
+        title: "Vechicle registered",
+        description: `Vechicle added ${parsedData.Manufacturer || ""} ${parsedData.Model || ""} to the system with mileage ${parsedData.Mileage || 0} ${parsedData.MileageUnit === 2 ? "mi" : "km"}.`,
         color: "blue",
       };
     case "VehicleMileageChangedDomainEvent":
       return {
-        title: "Aktualizacja przebiegu",
-        description: `Zmieniono przebieg pojazdu na ${parsedData.Mileage.NewValue.Value || 0} ${parsedData.Mileage.Unit === 2 ? "mi" : "km"}.`,
+        title: "Mileage Update",
+        description: `Mileage aupdated to ${parsedData.Mileage.NewValue.Value || 0} ${parsedData.Mileage.Unit === 2 ? "mi" : "km"}.`,
         color: "orange",
       };
     case "VehicleLicensePlateChangedDomainEvent":
       return {
-        title: "Zmiana numeru rejestracyjnego",
-        description: `Zaktualizowano numer rejestracyjny na: ${parsedData.LicensePlate || parsedData.Value || ""}.`,
+        title: "Change Register Plate",
+        description: `Register plate udpated to: ${parsedData.LicensePlate || parsedData.Value || ""}.`,
         color: "purple",
       };
     case "RepairRequestCreatedTimelineEvent":
     case "RepairRequestCreatedDomainEvent":
       return {
-        title: "Złożono zgłoszenie naprawy",
-        description: `Wysłano nowe zgłoszenie naprawy. Opis usterki: "${parsedData.Description || ""}".`,
+        title: "A repair request has been submitted.",
+        description: `A new repair request has been submitted. Problem description: "${parsedData.Description || ""}".`,
         color: "yellow",
       };
     case "RepairCreatedDomainEvent":
       return {
-        title: "Utworzono zlecenie naprawy",
-        description: `Zlecenie zostało zaakceptowane. Szacowany koszt: ${parsedData.EstimatedCost || 0} ${parsedData.Currency || "PLN"}.`,
+        title: "A repair order has been created",
+        description: `The order has been accepted. Estimated cost: ${parsedData.EstimatedCost || 0} ${parsedData.Currency || "PLN"}.`,
         color: "teal",
       };
     case "RepairStartedDomainEvent":
       return {
-        title: "Rozpoczęcie prac",
-        description: `Mechanik rozpoczął prace naprawcze nad pojazdem.`,
+        title: "Repair began",
+        description: `The mechanic began repair work on the vehicle.`,
         color: "cyan",
       };
     case "RepairCompletedDomainEvent":
       return {
-        title: "Naprawa zakończona",
-        description: `Prace zostały ukończone. Koszt końcowy: ${parsedData.FinalCost || parsedData.EstimatedCost || 0} ${parsedData.FinalCostCurrency || parsedData.Currency || "PLN"}.`,
+        title: "Repair Complete",
+        description: `The repair has been completed. Final cost: ${parsedData.FinalCost || parsedData.EstimatedCost || 0} ${parsedData.FinalCostCurrency || parsedData.Currency || "PLN"}.`,
         color: "green",
       };
     case "RepairPaidDomainEvent":
       return {
-        title: "Opłacono naprawę",
-        description: `Zarejestrowano płatność za naprawę na kwotę ${parsedData.Amount || 0} ${parsedData.Currency || "PLN"}.`,
+        title: "Repair has been paid",
+        description: `A payment for repairs in the amount of ${parsedData.Amount || 0} ${parsedData.Currency || "PLN"}.`,
         color: "green",
       };
     case "VehicleDocumentAddedTimelineEvent":
     case "VehicleDocumentAddedDomainEvent":
       console.log(parsedData);
       return {
-        title: "Dodano dokument",
-        description: `Załączono nowy dokument do pojazdu: ${parsedData.FileName}.`,
+        title: "Document added",
+        description: `A new document has been attached to the vehicle: ${parsedData.FileName}.`,
         color: "blue",
       };
     case "VehicleDocumentDeletedTimelineEvent":
     case "VehicleDocumentDeletedDomainEvent":
       return {
-        title: "Usunięto dokument",
-        description: `Usunięto dokument powiązany z pojazdem: ${parsedData.FileName}.`,
+        title: "Document deleted",
+        description: `A document associated with the vehicle has been deleted: ${parsedData.FileName}.`,
         color: "red",
       };
     case "VehicleVinChangedDomainEvent":
       return {
-        title: "Zmiana numeru VIN",
-        description: `Zaktualizowano numer VIN na: ${parsedData.Vin || parsedData.Value || ""}.`,
+        title: "Changing the VIN",
+        description: `The VIN has been updated to: ${parsedData.Vin || parsedData.Value || ""}.`,
         color: "purple",
       };
     case "VehicleEngineCapacityChangedDomainEvent":
       return {
-        title: "Zmiana pojemności silnika",
-        description: `Zaktualizowano pojemność silnika na ${parsedData.EngineCapacity || parsedData.Value || ""}l.`,
+        title: "Engine Capcity Change",
+        description: `Engine capacity has been changed to: ${parsedData.EngineCapacity || parsedData.Value || ""}l.`,
         color: "purple",
       };
     case "VehicleHorsePowerChangedDomainEvent":
       return {
-        title: "Zmiana mocy silnika",
-        description: `Zaktualizowano moc silnika na ${parsedData.HorsePower || parsedData.Value || ""} KM.`,
+        title: "Horse Power Change",
+        description: `Horse Power has been changed to: ${parsedData.HorsePower || parsedData.Value || ""} HP.`,
         color: "purple",
       };
     case "VehicleManufacturerChangedDomainEvent":
       return {
-        title: "Zmiana producenta",
-        description: `Zmieniono producenta na: ${parsedData.Manufacturer || parsedData.Value || ""}.`,
+        title: "Change of Manufacturer",
+        description: `The manufacturer has been changed to: ${parsedData.Manufacturer || parsedData.Value || ""}.`,
         color: "purple",
       };
     case "VehicleModelChangedDomainEvent":
       return {
-        title: "Zmiana modelu",
-        description: `Zmieniono model na: ${parsedData.Model || parsedData.Value || ""}.`,
+        title: "Model Change",
+        description: `The model has been changed to: ${parsedData.Model || parsedData.Value || ""}.`,
         color: "purple",
       };
     case "VehicleProductionYearChangedDomainEvent":
       return {
-        title: "Zmiana roku produkcji",
-        description: `Zmieniono rok produkcji na: ${parsedData.ProductionYear || parsedData.Value || ""}.`,
+        title: "Change in the year of manufacture",
+        description: `The year of manufacture has been changed to: ${parsedData.ProductionYear || parsedData.Value || ""}.`,
         color: "purple",
       };
     default: {
@@ -442,7 +442,7 @@ const formatTimelineEvent = (event) => {
         .replace("DomainEvent", "")
         .replace("TimelineEvent", "")
         .replace("Vehicle", "")
-        .replace("Changed", " - zmiana");
+        .replace("Changed", " - change");
       friendlyTitle = friendlyTitle.replace(/([A-Z])/g, " $1").trim();
       const details = Object.entries(parsedData)
         .map(([key, val]) => `${key}: ${val}`)
@@ -578,8 +578,8 @@ const UserDashboard = ({
     } catch (err) {
       console.error("Failed to fetch repairs:", err);
       toaster.create({
-        title: "Błąd pobierania",
-        description: formatErrorMsg(err, "Nie udało się pobrać listy napraw."),
+        title: "Download error",
+        description: formatErrorMsg(err, "The repair list could not be fetched."),
         type: "error",
       });
     } finally {
@@ -600,8 +600,8 @@ const UserDashboard = ({
       const result = await initializePayment(payload);
       if (result && result.checkoutUrl) {
         toaster.create({
-          title: "Inicjowanie płatności",
-          description: "Przekierowanie do bramki płatności...",
+          title: "Initiating a Payment",
+          description: "Redirecting to the payment gateway...",
           type: "info",
         });
         window.location.href = result.checkoutUrl;
@@ -611,10 +611,10 @@ const UserDashboard = ({
     } catch (err) {
       console.error("Payment initialization failed:", err);
       toaster.create({
-        title: "Błąd płatności",
+        title: "Payment Error",
         description: formatErrorMsg(
           err,
-          "Nie udało się zainicjować płatności.",
+          "The payment could not be processed.",
         ),
         type: "error",
       });
@@ -638,10 +638,10 @@ const UserDashboard = ({
     } catch (err) {
       console.error("Failed to fetch vehicle documents:", err);
       toaster.create({
-        title: "Błąd",
+        title: "Error",
         description: formatErrorMsg(
           err,
-          "Nie udało się pobrać dokumentów pojazdu.",
+          "Failed to fetch vehicle documents.",
         ),
         type: "error",
       });
@@ -656,8 +656,8 @@ const UserDashboard = ({
     e.preventDefault();
     if (!selectedDocumentFile) {
       toaster.create({
-        title: "Błąd walidacji",
-        description: "Wybierz plik do przesłania.",
+        title: "Validation error",
+        description: "Select the file you want to upload.",
         type: "error",
       });
       return;
@@ -671,8 +671,8 @@ const UserDashboard = ({
 
       await uploadVehicleDocument(selectedDocumentsVehicle.id, formData);
       toaster.create({
-        title: "Sukces",
-        description: "Dokument został pomyślnie przesłany.",
+        title: "Success",
+        description: "The document was successfully uploaded.",
         type: "success",
       });
 
@@ -687,8 +687,8 @@ const UserDashboard = ({
     } catch (err) {
       console.error("Document upload failed:", err);
       toaster.create({
-        title: "Błąd zapisu",
-        description: formatErrorMsg(err, "Nie udało się przesłać dokumentu."),
+        title: "Upload error",
+        description: formatErrorMsg(err, "The document could not be uploaded."),
         type: "error",
       });
     } finally {
@@ -711,8 +711,8 @@ const UserDashboard = ({
     } catch (err) {
       console.error("Failed to download document:", err);
       toaster.create({
-        title: "Błąd pobierania",
-        description: "Nie udało się pobrać pliku dokumentu.",
+        title: "Download Error",
+        description: "Failed to download document.",
         type: "error",
       });
     }
@@ -723,8 +723,8 @@ const UserDashboard = ({
     try {
       await deleteVehicleDocument(vehicleId, docId);
       toaster.create({
-        title: "Sukces",
-        description: "Dokument został pomyślnie usunięty.",
+        title: "Success",
+        description: "The document was successfully deleted.",
         type: "success",
       });
 
@@ -740,8 +740,8 @@ const UserDashboard = ({
     } catch (err) {
       console.error("Failed to delete document:", err);
       toaster.create({
-        title: "Błąd usuwania",
-        description: formatErrorMsg(err, "Nie udało się usunąć dokumentu."),
+        title: "Delete error",
+        description: formatErrorMsg(err, "The document could not be deleted."),
         type: "error",
       });
     }
@@ -774,15 +774,15 @@ const UserDashboard = ({
       };
       await updateRepairPreferences(payload);
       toaster.create({
-        title: "Zapisano preferencje",
-        description: "Preferencje napraw zostały pomyślnie zaktualizowane.",
+        title: "Preferences have been saved",
+        description: "The repair preferences have been successfully updated.",
         type: "success",
       });
     } catch (err) {
       console.error("Failed to save preferences:", err);
       toaster.create({
-        title: "Błąd zapisu",
-        description: formatErrorMsg(err, "Nie udało się zapisać preferencji."),
+        title: "Save error",
+        description: formatErrorMsg(err, "Your preferences could not be saved."),
         type: "error",
       });
     } finally {
@@ -799,9 +799,9 @@ const UserDashboard = ({
       !profileEmail.trim()
     ) {
       toaster.create({
-        title: "Błąd walidacji",
+        title: "Validation error",
         description:
-          "Wypełnij wszystkie wymagane pola (Imię, Nazwisko, Email).",
+          "Fill in all required fields (First Name, Last Name, Email).",
         type: "error",
       });
       return;
@@ -818,17 +818,17 @@ const UserDashboard = ({
       await updateProfile(payload);
       await refreshUser();
       toaster.create({
-        title: "Zaktualizowano profil",
-        description: "Dane Twojego profilu zostały pomyślnie zaktualizowane.",
+        title: "Profile Updated",
+        description: "Your profile information has been successfully updated.",
         type: "success",
       });
     } catch (err) {
       console.error("Profile update failed:", err);
       toaster.create({
-        title: "Błąd zapisu",
+        title: "Save Error",
         description: formatErrorMsg(
           err,
-          "Nie udało się zaktualizować profilu.",
+          "The profile could not be updated.",
         ),
         type: "error",
       });
@@ -900,10 +900,10 @@ const UserDashboard = ({
     } catch (err) {
       console.error("Failed to fetch vehicle timeline:", err);
       toaster.create({
-        title: "Błąd pobierania historii",
+        title: "Error retrieving history",
         description: formatErrorMsg(
           err,
-          "Nie udało się pobrać historii pojazdu.",
+          "The vehicle history could not be retrieved.",
         ),
         type: "error",
       });
@@ -920,9 +920,9 @@ const UserDashboard = ({
       const summaryText = await getRepairSummary(requestId);
       setRepairSummaries((prev) => ({ ...prev, [requestId]: summaryText }));
       toaster.create({
-        title: "Wygenerowano podsumowanie AI",
+        title: "An AI summary has been generated",
         description:
-          "Podsumowanie zlecenia zostało pomyślnie wygenerowane przez AI.",
+          "The order summary was successfully generated by AI.",
         type: "success",
       });
     } catch (err) {
@@ -931,7 +931,7 @@ const UserDashboard = ({
         title: "Błąd",
         description: formatErrorMsg(
           err,
-          "Nie udało się wygenerować podsumowania AI.",
+          "The AI summary could not be generated.",
         ),
         type: "error",
       });
@@ -1015,17 +1015,17 @@ const UserDashboard = ({
     const paymentParam = params.get("payment");
     if (paymentParam === "success") {
       toaster.create({
-        title: "Płatność udana",
+        title: "Payment Successful",
         description:
-          "Dziękujemy! Płatność za naprawę została zrealizowana pomyślnie.",
+          "Thank you! The payment for the repair was processed successfully.",
         type: "success",
       });
       navigate("/home", { replace: true });
       fetchRepairsList();
     } else if (paymentParam === "cancel") {
       toaster.create({
-        title: "Płatność anulowana",
-        description: "Proces płatności został anulowany.",
+        title: "Payment Canceled",
+        description: "The payment process has been canceled.",
         type: "warning",
       });
       navigate("/home", { replace: true });
@@ -1044,13 +1044,13 @@ const UserDashboard = ({
 
   // Delete Vehicle Action
   const handleDeleteVehicle = async (id) => {
-    if (!window.confirm("Czy na pewno chcesz usunąć ten pojazd?")) return;
+    if (!window.confirm("Are you sure you want to delete this vehicle?")) return;
 
     try {
       await deleteVehicle(id);
       toaster.create({
-        title: "Pojazd usunięty",
-        description: "Pojazd został pomyślnie usunięty z garażu.",
+        title: "Vehicle removed",
+        description: "The vehicle was successfully removed from the garage.",
         type: "success",
       });
       const updatedList = await fetchVehiclesList();
@@ -1058,8 +1058,8 @@ const UserDashboard = ({
     } catch (err) {
       console.error(err);
       toaster.create({
-        title: "Błąd",
-        description: formatErrorMsg(err, "Nie udało się usunąć pojazdu."),
+        title: "Error",
+        description: formatErrorMsg(err, "The vehicle could not be removed."),
         type: "error",
       });
     }
@@ -1074,16 +1074,16 @@ const UserDashboard = ({
 
     if (cleanVin.length !== 17) {
       toaster.create({
-        title: "Błąd walidacji",
-        description: "Numer VIN musi składać się z dokładnie 17 znaków.",
+        title: "Validation error",
+        description: "The VIN must consist of exactly 17 characters.",
         type: "error",
       });
       return;
     }
     if (productionYear.trim().length !== 4) {
       toaster.create({
-        title: "Błąd walidacji",
-        description: "Rok produkcji musi być 4-cyfrową liczbą (np. 2018).",
+        title: "Validation error",
+        description: "The year of manufacture must be a 4-digit number (e.g., 2018).",
         type: "error",
       });
       return;
@@ -1095,8 +1095,8 @@ const UserDashboard = ({
       !cleanPlate
     ) {
       toaster.create({
-        title: "Błąd walidacji",
-        description: "Wypełnij wszystkie wymagane pola.",
+        title: "Validation error",
+        description: "Please fill in all required fields.",
         type: "error",
       });
       return;
@@ -1121,8 +1121,8 @@ const UserDashboard = ({
 
       await createVehicle(payload);
       toaster.create({
-        title: "Pojazd dodany",
-        description: "Pojazd został pomyślnie dodany do Twojego garażu.",
+        title: "Vehicle added",
+        description: "The vehicle has been successfully added to your garage.",
         type: "success",
       });
       setIsAddVehicleOpen(false);
@@ -1149,7 +1149,7 @@ const UserDashboard = ({
         title: "Błąd zapisu",
         description: formatErrorMsg(
           err,
-          "Nie udało się dodać pojazdu. Sprawdź poprawność danych.",
+          "The vehicle could not be added. Please check that the information is correct.",
         ),
         type: "error",
       });
@@ -1187,16 +1187,16 @@ const UserDashboard = ({
 
     if (cleanVin.length !== 17) {
       toaster.create({
-        title: "Błąd walidacji",
-        description: "Numer VIN musi składać się z dokładnie 17 znaków.",
+        title: "Validation Error",
+        description: "The VIN must consist of exactly 17 characters.",
         type: "error",
       });
       return;
     }
     if (productionYear.trim().length !== 4) {
       toaster.create({
-        title: "Błąd walidacji",
-        description: "Rok produkcji musi być 4-cyfrową liczbą (np. 2018).",
+        title: "Validation Error",
+        description: "The year of manufacture must be a 4-digit number (e.g., 2018).",
         type: "error",
       });
       return;
@@ -1208,8 +1208,8 @@ const UserDashboard = ({
       !cleanPlate
     ) {
       toaster.create({
-        title: "Błąd walidacji",
-        description: "Wypełnij wszystkie wymagane pola.",
+        title: "Validation Error",
+        description: "Please fill in all required fields.",
         type: "error",
       });
       return;
@@ -1234,8 +1234,8 @@ const UserDashboard = ({
 
       await updateVehicle(editingVehicle.id, payload);
       toaster.create({
-        title: "Pojazd zaktualizowany",
-        description: "Pojazd został pomyślnie zaktualizowany.",
+        title: "Updated vehicle",
+        description: "The vehicle has been successfully updated.",
         type: "success",
       });
       setIsEditVehicleOpen(false);
@@ -1263,7 +1263,7 @@ const UserDashboard = ({
         title: "Błąd zapisu",
         description: formatErrorMsg(
           err,
-          "Nie udało się zaktualizować pojazdu.",
+          "The vehicle could not be updated.",
         ),
         type: "error",
       });
@@ -1276,8 +1276,8 @@ const UserDashboard = ({
   const openRepairRequestModal = (workshop) => {
     if (vehicles.length === 0) {
       toaster.create({
-        title: "Brak pojazdów",
-        description: "Proszę najpierw dodać pojazd w sekcji Garaż.",
+        title: "No vehicles",
+        description: "Please add the vehicle in the Garage section first.",
         type: "error",
       });
       return;
@@ -1293,8 +1293,8 @@ const UserDashboard = ({
     e.preventDefault();
     if (!repairDescription.trim()) {
       toaster.create({
-        title: "Błąd walidacji",
-        description: "Opisz usterkę.",
+        title: "Validation Error",
+        description: "Describe the problem.",
         type: "error",
       });
       return;
@@ -1308,8 +1308,8 @@ const UserDashboard = ({
         repairDescription.trim(),
       );
       toaster.create({
-        title: "Zlecenie wysłane",
-        description: "Zlecenie naprawy zostało pomyślnie wysłane do warsztatu.",
+        title: "Order Sent",
+        description: "The repair request has been successfully sent to the repair shop.",
         type: "success",
       });
       setIsRepairRequestOpen(false);
@@ -1318,7 +1318,7 @@ const UserDashboard = ({
       console.error(err);
       toaster.create({
         title: "Błąd",
-        description: formatErrorMsg(err, "Nie udało się wysłać zlecenia."),
+        description: formatErrorMsg(err, "The order could not be sent."),
         type: "error",
       });
     } finally {
@@ -1370,8 +1370,8 @@ const UserDashboard = ({
         reviewComment.trim() || null,
       );
       toaster.create({
-        title: "Opinia zapisana",
-        description: "Dziękujemy za wystawienie opinii.",
+        title: "Review saved",
+        description: "Thank you for leaving a review.",
         type: "success",
       });
 
@@ -1389,8 +1389,8 @@ const UserDashboard = ({
     } catch (err) {
       console.error(err);
       toaster.create({
-        title: "Błąd zapisu",
-        description: formatErrorMsg(err, "Nie udało się zapisać opinii."),
+        title: "Save error",
+        description: formatErrorMsg(err, "The review could not be saved."),
         type: "error",
       });
     } finally {
@@ -1400,12 +1400,12 @@ const UserDashboard = ({
 
   // Delete Review Action
   const handleDeleteReview = async () => {
-    if (!window.confirm("Czy na pewno chcesz usunąć swoją opinię?")) return;
+    if (!window.confirm("Are you sure you want to delete your review?")) return;
     try {
       await deleteReview(selectedWorkshop.id);
       toaster.create({
-        title: "Opinia usunięta",
-        description: "Twoja opinia została pomyślnie usunięta.",
+        title: "Review deleted",
+        description: "Your review has been successfully deleted.",
         type: "success",
       });
 
@@ -1421,8 +1421,8 @@ const UserDashboard = ({
     } catch (err) {
       console.error(err);
       toaster.create({
-        title: "Błąd",
-        description: formatErrorMsg(err, "Nie udało się usunąć opinii."),
+        title: "Error",
+        description: formatErrorMsg(err, "The review could not be deleted."),
         type: "error",
       });
     }
@@ -1433,16 +1433,16 @@ const UserDashboard = ({
     try {
       await acceptEstimation(requestId);
       toaster.create({
-        title: "Wycena zaakceptowana",
-        description: "Wycena została pomyślnie zaakceptowana.",
+        title: "Quotation Accepted",
+        description: "The quote has been successfully accepted.",
         type: "success",
       });
       fetchRequestsList();
     } catch (err) {
       console.error(err);
       toaster.create({
-        title: "Błąd",
-        description: formatErrorMsg(err, "Nie udało się zaakceptować wyceny."),
+        title: "Error",
+        description: formatErrorMsg(err, "The quote could not be accepted."),
         type: "error",
       });
     }
@@ -1452,8 +1452,8 @@ const UserDashboard = ({
   const handleRejectEstimationSubmit = async (requestId) => {
     if (!rejectInputReason.trim()) {
       toaster.create({
-        title: "Wpisz powód",
-        description: "Musisz podać powód odrzucenia wyceny.",
+        title: "Enter the reason",
+        description: "You must provide a reason for rejecting the quote.",
         type: "error",
       });
       return;
@@ -1462,8 +1462,8 @@ const UserDashboard = ({
     try {
       await rejectEstimation(requestId, rejectInputReason.trim());
       toaster.create({
-        title: "Wycena odrzucona",
-        description: "Wycena została pomyślnie odrzucona.",
+        title: "Valuation Rejected",
+        description: "The quote was successfully rejected.",
         type: "success",
       });
       setRejectingRequestId(null);
@@ -1472,8 +1472,8 @@ const UserDashboard = ({
     } catch (err) {
       console.error(err);
       toaster.create({
-        title: "Błąd",
-        description: formatErrorMsg(err, "Nie udało się odrzucić wyceny."),
+        title: "Error",
+        description: formatErrorMsg(err, "The valuation could not be rejected."),
         type: "error",
       });
     }
@@ -1493,30 +1493,30 @@ const UserDashboard = ({
     switch (status) {
       case 1:
         return {
-          label: "Oczekuje",
+          label: "Awaiting",
           color: "orange",
-          desc: "Zlecenie czeka na diagnozę i wycenę warsztatu.",
+          desc: "The order is awaiting a diagnosis and a quote from the repair shop.",
         };
       case 2:
         return {
-          label: "Wyceniono",
+          label: "Valued",
           color: "yellow",
-          desc: "Warsztat postawił diagnozę. Oczekiwanie na Twoją akceptację.",
+          desc: "The workshop has made a diagnosis. We are waiting for your approval.",
         };
       case 3:
         return {
-          label: "Zaakceptowano",
+          label: "Approved",
           color: "green",
-          desc: "Wycena zaakceptowana. Trwają prace naprawcze.",
+          desc: "The estimate has been approved. Repair work is underway.",
         };
       case 4:
         return {
-          label: "Odrzucono",
+          label: "Rejected",
           color: "red",
-          desc: "Odrzuciłeś wycenę tego zlecenia.",
+          desc: "You rejected the quote for this order.",
         };
       default:
-        return { label: "Nieznany", color: "gray", desc: "" };
+        return { label: "Unknown", color: "gray", desc: "" };
     }
   };
 
@@ -1563,7 +1563,7 @@ const UserDashboard = ({
               gap={3}
             >
               <Icon as={Car} boxSize={5} />
-              Mój Garaż
+              My Garage
             </Button>
 
             <Button
@@ -1582,7 +1582,7 @@ const UserDashboard = ({
               gap={3}
             >
               <Icon as={Wrench} boxSize={5} />
-              Wyszukaj Warsztat
+              Search Workshop
             </Button>
 
             <Button
@@ -1601,7 +1601,7 @@ const UserDashboard = ({
               gap={3}
             >
               <Icon as={Clock} boxSize={5} />
-              Zlecenia Napraw
+              Repair orders
             </Button>
 
             <Button
@@ -1619,7 +1619,7 @@ const UserDashboard = ({
               gap={3}
             >
               <Icon as={CreditCard} boxSize={5} />
-              Aktywne Naprawy
+              Active repairs
             </Button>
 
             <Button
@@ -1640,7 +1640,7 @@ const UserDashboard = ({
               gap={3}
             >
               <Icon as={Settings} boxSize={5} />
-              Preferencje Napraw
+              Repair preferences
             </Button>
 
             <Button
@@ -1658,7 +1658,7 @@ const UserDashboard = ({
               gap={3}
             >
               <Icon as={User} boxSize={5} />
-              Mój Profil
+              My profile
             </Button>
           </VStack>
         </VStack>
@@ -1765,14 +1765,14 @@ const UserDashboard = ({
           <form onSubmit={handleCreateVehicle}>
             <DialogHeader>
               <DialogTitle fontSize="xl" fontWeight="bold">
-                Dodaj Nowy Pojazd
+                Add new vechicle
               </DialogTitle>
             </DialogHeader>
             <DialogBody display="flex" flexDirection="column" gap={4}>
               <Field.Root required>
-                <Field.Label>VIN (dokładnie 17 znaków)</Field.Label>
+                <Field.Label>VIN (exactly 17 characters)</Field.Label>
                 <Input
-                  placeholder="Wpisz numer VIN"
+                  placeholder="Enter VIN"
                   value={vin}
                   onChange={(e) => setVin(e.target.value)}
                   maxLength={17}
@@ -1782,13 +1782,13 @@ const UserDashboard = ({
                   }}
                 />
                 <Text fontSize="10px" color="gray.400">
-                  VIN musi mieć dokładnie 17 znaków alfanumerycznych.
+                  The VIN must consist of exactly 17 alphanumeric characters.
                 </Text>
               </Field.Root>
 
               <SimpleGrid columns={2} gap={4}>
                 <Field.Root required>
-                  <Field.Label>Marka</Field.Label>
+                  <Field.Label>Make</Field.Label>
                   <Input
                     placeholder="np. Toyota"
                     value={manufacturer}
@@ -1803,7 +1803,7 @@ const UserDashboard = ({
                 <Field.Root required>
                   <Field.Label>Model</Field.Label>
                   <Input
-                    placeholder="np. Corolla"
+                    placeholder="ex. Corolla"
                     value={model}
                     onChange={(e) => setModel(e.target.value)}
                     _dark={{
@@ -1816,10 +1816,10 @@ const UserDashboard = ({
 
               <SimpleGrid columns={2} gap={4}>
                 <Field.Root required>
-                  <Field.Label>Rok produkcji (4 cyfry)</Field.Label>
+                  <Field.Label>Year of manufacture (4 digits)</Field.Label>
                   <Input
                     type="number"
-                    placeholder="np. 2018"
+                    placeholder="ex. 2018"
                     value={productionYear}
                     onChange={(e) => setProductionYear(e.target.value)}
                     maxLength={4}
@@ -1831,9 +1831,9 @@ const UserDashboard = ({
                 </Field.Root>
 
                 <Field.Root required>
-                  <Field.Label>Numer rejestracyjny</Field.Label>
+                  <Field.Label>License plate</Field.Label>
                   <Input
-                    placeholder="np. PO12345"
+                    placeholder="ex. PO12345"
                     value={licensePlate}
                     onChange={(e) => setLicensePlate(e.target.value)}
                     _dark={{
@@ -1845,10 +1845,10 @@ const UserDashboard = ({
               </SimpleGrid>
 
               <Field.Root required>
-                <Field.Label>Przebieg (km)</Field.Label>
+                <Field.Label>Mileage (km)</Field.Label>
                 <Input
                   type="number"
-                  placeholder="np. 150000"
+                  placeholder="ex. 150000"
                   value={mileage}
                   onChange={(e) => setMileage(e.target.value)}
                   _dark={{
@@ -1860,7 +1860,7 @@ const UserDashboard = ({
 
               <SimpleGrid columns={2} gap={4}>
                 <Field.Root>
-                  <Field.Label>Paliwo</Field.Label>
+                  <Field.Label>Fuel</Field.Label>
                   <NativeSelect.Root>
                     <NativeSelect.Field
                       value={fuelType}
@@ -1870,18 +1870,18 @@ const UserDashboard = ({
                         borderColor: "whiteAlpha.200",
                       }}
                     >
-                      <option value="1">Benzyna</option>
+                      <option value="1">Gas</option>
                       <option value="2">Diesel</option>
                       <option value="3">LPG</option>
-                      <option value="4">Elektryczny</option>
-                      <option value="5">Hybryda</option>
-                      <option value="6">Wodór</option>
+                      <option value="4">Electric</option>
+                      <option value="5">Hybrid</option>
+                      <option value="6">Hydrogen</option>
                     </NativeSelect.Field>
                   </NativeSelect.Root>
                 </Field.Root>
 
                 <Field.Root>
-                  <Field.Label>Typ nadwozia</Field.Label>
+                  <Field.Label>Body</Field.Label>
                   <NativeSelect.Root>
                     <NativeSelect.Field
                       value={bodyType}
@@ -1896,7 +1896,7 @@ const UserDashboard = ({
                       <option value="3">Kombi</option>
                       <option value="4">SUV</option>
                       <option value="5">Coupe</option>
-                      <option value="6">Kabriolet</option>
+                      <option value="6">Cabriolet</option>
                       <option value="7">Minivan</option>
                       <option value="8">Pickup</option>
                       <option value="9">Van</option>
@@ -1907,7 +1907,7 @@ const UserDashboard = ({
 
               <SimpleGrid columns={2} gap={4}>
                 <Field.Root>
-                  <Field.Label>Typ pojazdu</Field.Label>
+                  <Field.Label>Vechicle type</Field.Label>
                   <NativeSelect.Root>
                     <NativeSelect.Field
                       value={vehicleType}
@@ -1917,14 +1917,14 @@ const UserDashboard = ({
                         borderColor: "whiteAlpha.200",
                       }}
                     >
-                      <option value="1">Osobowy</option>
-                      <option value="2">Motocykl</option>
+                      <option value="1">Car</option>
+                      <option value="2">Motorcycle</option>
                     </NativeSelect.Field>
                   </NativeSelect.Root>
                 </Field.Root>
 
                 <Field.Root>
-                  <Field.Label>Jednostka przebiegu</Field.Label>
+                  <Field.Label>Mileage unit</Field.Label>
                   <NativeSelect.Root>
                     <NativeSelect.Field
                       value={mileageUnit}
@@ -1934,7 +1934,7 @@ const UserDashboard = ({
                         borderColor: "whiteAlpha.200",
                       }}
                     >
-                      <option value="1">Kilometry (km)</option>
+                      <option value="1">Kilometer (km)</option>
                       <option value="2">Mile (mi)</option>
                     </NativeSelect.Field>
                   </NativeSelect.Root>
@@ -1943,7 +1943,7 @@ const UserDashboard = ({
 
               <SimpleGrid columns={2} gap={4}>
                 <Field.Root>
-                  <Field.Label>Pojemność silnika (L)</Field.Label>
+                  <Field.Label>Engine capacity(L)</Field.Label>
                   <Input
                     type="number"
                     step="0.1"
@@ -1958,7 +1958,7 @@ const UserDashboard = ({
                 </Field.Root>
 
                 <Field.Root>
-                  <Field.Label>Moc silnika (KM)</Field.Label>
+                  <Field.Label>Horse Power (KM)</Field.Label>
                   <Input
                     type="number"
                     placeholder="np. 150"
@@ -1975,7 +1975,7 @@ const UserDashboard = ({
             <DialogFooter gap={2}>
               <DialogActionTrigger asChild>
                 <Button variant="ghost" rounded="lg">
-                  Anuluj
+                  Cancel
                 </Button>
               </DialogActionTrigger>
               <Button
@@ -1984,7 +1984,7 @@ const UserDashboard = ({
                 colorPalette="orange"
                 rounded="lg"
               >
-                Zapisz pojazd
+                Save Vechicle
               </Button>
             </DialogFooter>
           </form>
@@ -2004,12 +2004,12 @@ const UserDashboard = ({
           <form onSubmit={handleUpdateVehicle}>
             <DialogHeader>
               <DialogTitle fontSize="xl" fontWeight="bold">
-                Edytuj Pojazd
+                Edit Vechicle
               </DialogTitle>
             </DialogHeader>
             <DialogBody display="flex" flexDirection="column" gap={4}>
               <Field.Root required>
-                <Field.Label>VIN (dokładnie 17 znaków)</Field.Label>
+                <Field.Label>VIN (exactly 17 characters)</Field.Label>
                 <Input
                   placeholder="Wpisz numer VIN"
                   value={vin}
@@ -2021,15 +2021,15 @@ const UserDashboard = ({
                   }}
                 />
                 <Text fontSize="10px" color="gray.400">
-                  VIN musi mieć dokładnie 17 znaków alfanumerycznych.
+                  The VIN must consist of exactly 17 alphanumeric characters.
                 </Text>
               </Field.Root>
 
               <SimpleGrid columns={2} gap={4}>
                 <Field.Root required>
-                  <Field.Label>Marka</Field.Label>
+                  <Field.Label>Make</Field.Label>
                   <Input
-                    placeholder="np. Toyota"
+                    placeholder="ex. Toyota"
                     value={manufacturer}
                     onChange={(e) => setManufacturer(e.target.value)}
                     _dark={{
@@ -2042,7 +2042,7 @@ const UserDashboard = ({
                 <Field.Root required>
                   <Field.Label>Model</Field.Label>
                   <Input
-                    placeholder="np. Corolla"
+                    placeholder="ex. Corolla"
                     value={model}
                     onChange={(e) => setModel(e.target.value)}
                     _dark={{
@@ -2055,7 +2055,7 @@ const UserDashboard = ({
 
               <SimpleGrid columns={2} gap={4}>
                 <Field.Root required>
-                  <Field.Label>Rok produkcji (4 cyfry)</Field.Label>
+                  <Field.Label>Year of manufacture (4 digits)</Field.Label>
                   <Input
                     type="number"
                     placeholder="np. 2018"
@@ -2070,9 +2070,9 @@ const UserDashboard = ({
                 </Field.Root>
 
                 <Field.Root required>
-                  <Field.Label>Numer rejestracyjny</Field.Label>
+                  <Field.Label>License Plate</Field.Label>
                   <Input
-                    placeholder="np. PO12345"
+                    placeholder="ex. PO12345"
                     value={licensePlate}
                     onChange={(e) => setLicensePlate(e.target.value)}
                     _dark={{
@@ -2084,10 +2084,10 @@ const UserDashboard = ({
               </SimpleGrid>
 
               <Field.Root required>
-                <Field.Label>Przebieg (km)</Field.Label>
+                <Field.Label>Mileage (km)</Field.Label>
                 <Input
                   type="number"
-                  placeholder="np. 150000"
+                  placeholder="ex. 150000"
                   value={mileage}
                   onChange={(e) => setMileage(e.target.value)}
                   _dark={{
@@ -2099,7 +2099,7 @@ const UserDashboard = ({
 
               <SimpleGrid columns={2} gap={4}>
                 <Field.Root>
-                  <Field.Label>Paliwo</Field.Label>
+                  <Field.Label>Fuel</Field.Label>
                   <NativeSelect.Root>
                     <NativeSelect.Field
                       value={fuelType}
@@ -2109,18 +2109,18 @@ const UserDashboard = ({
                         borderColor: "whiteAlpha.200",
                       }}
                     >
-                      <option value="1">Benzyna</option>
+                      <option value="1">Gas</option>
                       <option value="2">Diesel</option>
                       <option value="3">LPG</option>
-                      <option value="4">Elektryczny</option>
-                      <option value="5">Hybryda</option>
-                      <option value="6">Wodór</option>
+                      <option value="4">Electric</option>
+                      <option value="5">Hybrid</option>
+                      <option value="6">Hydrogen</option>
                     </NativeSelect.Field>
                   </NativeSelect.Root>
                 </Field.Root>
 
                 <Field.Root>
-                  <Field.Label>Typ nadwozia</Field.Label>
+                  <Field.Label>Body</Field.Label>
                   <NativeSelect.Root>
                     <NativeSelect.Field
                       value={bodyType}
@@ -2135,7 +2135,7 @@ const UserDashboard = ({
                       <option value="3">Kombi</option>
                       <option value="4">SUV</option>
                       <option value="5">Coupe</option>
-                      <option value="6">Kabriolet</option>
+                      <option value="6">Cabriolet</option>
                       <option value="7">Minivan</option>
                       <option value="8">Pickup</option>
                       <option value="9">Van</option>
@@ -2146,7 +2146,7 @@ const UserDashboard = ({
 
               <SimpleGrid columns={2} gap={4}>
                 <Field.Root>
-                  <Field.Label>Typ pojazdu</Field.Label>
+                  <Field.Label>Vechicle type</Field.Label>
                   <NativeSelect.Root>
                     <NativeSelect.Field
                       value={vehicleType}
@@ -2156,14 +2156,14 @@ const UserDashboard = ({
                         borderColor: "whiteAlpha.200",
                       }}
                     >
-                      <option value="1">Osobowy</option>
-                      <option value="2">Motocykl</option>
+                      <option value="1">Car</option>
+                      <option value="2">Motorcycle</option>
                     </NativeSelect.Field>
                   </NativeSelect.Root>
                 </Field.Root>
 
                 <Field.Root>
-                  <Field.Label>Jednostka przebiegu</Field.Label>
+                  <Field.Label>Mileage Unit</Field.Label>
                   <NativeSelect.Root>
                     <NativeSelect.Field
                       value={mileageUnit}
@@ -2173,7 +2173,7 @@ const UserDashboard = ({
                         borderColor: "whiteAlpha.200",
                       }}
                     >
-                      <option value="1">Kilometry (km)</option>
+                      <option value="1">Kilometer (km)</option>
                       <option value="2">Mile (mi)</option>
                     </NativeSelect.Field>
                   </NativeSelect.Root>
@@ -2182,7 +2182,7 @@ const UserDashboard = ({
 
               <SimpleGrid columns={2} gap={4}>
                 <Field.Root>
-                  <Field.Label>Pojemność silnika (L)</Field.Label>
+                  <Field.Label>Engine Capacity (L)</Field.Label>
                   <Input
                     type="number"
                     step="0.1"
@@ -2197,10 +2197,10 @@ const UserDashboard = ({
                 </Field.Root>
 
                 <Field.Root>
-                  <Field.Label>Moc silnika (KM)</Field.Label>
+                  <Field.Label>Horse Power (KM)</Field.Label>
                   <Input
                     type="number"
-                    placeholder="np. 150"
+                    placeholder="ex. 150"
                     value={horsePower}
                     onChange={(e) => setHorsePower(e.target.value)}
                     _dark={{
@@ -2218,7 +2218,7 @@ const UserDashboard = ({
                   rounded="lg"
                   onClick={() => setEditingVehicle(null)}
                 >
-                  Anuluj
+                  Cancel
                 </Button>
               </DialogActionTrigger>
               <Button
@@ -2227,7 +2227,7 @@ const UserDashboard = ({
                 colorPalette="orange"
                 rounded="lg"
               >
-                Zapisz zmiany
+                Save changes
               </Button>
             </DialogFooter>
           </form>
@@ -2247,15 +2247,15 @@ const UserDashboard = ({
           <form onSubmit={handleCreateRepairRequest}>
             <DialogHeader>
               <DialogTitle fontSize="xl" fontWeight="bold">
-                Zleć naprawę
+                Request Repair
               </DialogTitle>
               <Text fontSize="xs" color="gray.400" mt={1}>
-                Warsztat: {selectedWorkshop?.displayName}
+                Workshop: {selectedWorkshop?.displayName}
               </Text>
             </DialogHeader>
             <DialogBody display="flex" flexDirection="column" gap={4}>
               <Field.Root required>
-                <Field.Label>Wybierz samochód</Field.Label>
+                <Field.Label>Choose Vehicle</Field.Label>
                 <NativeSelect.Root>
                   <NativeSelect.Field
                     value={selectedVehicleId}
@@ -2275,9 +2275,9 @@ const UserDashboard = ({
               </Field.Root>
 
               <Field.Root required>
-                <Field.Label>Opis usterki / Zakres prac</Field.Label>
+                <Field.Label>Fault Description / Scope of Work</Field.Label>
                 <Textarea
-                  placeholder="Opisz co dzieje się z autem, jakie usłyszałeś objawy..."
+                  placeholder="Describe what's happening with the car and what symptoms you've noticed..."
                   value={repairDescription}
                   onChange={(e) => setRepairDescription(e.target.value)}
                   rows={5}
@@ -2291,7 +2291,7 @@ const UserDashboard = ({
             <DialogFooter gap={2}>
               <DialogActionTrigger asChild>
                 <Button variant="ghost" rounded="lg">
-                  Anuluj
+                  Cancel
                 </Button>
               </DialogActionTrigger>
               <Button
@@ -2300,7 +2300,7 @@ const UserDashboard = ({
                 colorPalette="orange"
                 rounded="lg"
               >
-                Wyślij zlecenie
+                Submit a request
               </Button>
             </DialogFooter>
           </form>
@@ -2320,7 +2320,7 @@ const UserDashboard = ({
         <DialogContent _dark={{ bg: "rgb(25, 36, 54)", color: "white" }}>
           <DialogHeader>
             <DialogTitle fontSize="xl" fontWeight="bold">
-              Opinie o: {selectedWorkshop?.displayName}
+              Opinions: {selectedWorkshop?.displayName}
             </DialogTitle>
             {workshopStats && (
               <HStack gap={4} mt={2}>
@@ -2331,12 +2331,12 @@ const UserDashboard = ({
                   px={2}
                   py={0.5}
                 >
-                  Średnia ocena:{" "}
+                  Average Rating:{" "}
                   {parseFloat(workshopStats.averageRating || 0).toFixed(1)} /
                   5.0
                 </Badge>
                 <Text fontSize="xs" color="gray.400">
-                  Suma ocen: {workshopStats.totalReviews || 0}
+                  Total rating: {workshopStats.totalReviews || 0}
                 </Text>
               </HStack>
             )}
@@ -2359,7 +2359,7 @@ const UserDashboard = ({
               <form onSubmit={handleUpsertReview}>
                 <VStack align="stretch" gap={3}>
                   <Text fontWeight="bold" fontSize="sm">
-                    Wystaw / Edytuj opinię
+                    Post / Edit a review
                   </Text>
 
                   <SimpleGrid
@@ -2368,7 +2368,7 @@ const UserDashboard = ({
                     align="flex-end"
                   >
                     <Field.Root required>
-                      <Field.Label>Ocena (gwiazdki)</Field.Label>
+                      <Field.Label>Rating (stars)</Field.Label>
                       <NativeSelect.Root>
                         <NativeSelect.Field
                           value={reviewRating}
@@ -2394,7 +2394,7 @@ const UserDashboard = ({
                           onClick={handleDeleteReview}
                           rounded="lg"
                         >
-                          Usuń moją
+                          Delete mine
                         </Button>
                       )}
                       <Button
@@ -2404,15 +2404,15 @@ const UserDashboard = ({
                         loading={isSubmittingReview}
                         rounded="lg"
                       >
-                        Zapisz
+                        Save
                       </Button>
                     </HStack>
                   </SimpleGrid>
 
                   <Field.Root>
-                    <Field.Label>Komentarz (opcjonalny)</Field.Label>
+                    <Field.Label>Comment (optional)</Field.Label>
                     <Textarea
-                      placeholder="Napisz opinię o jakości usług, terminowości warsztatu..."
+                      placeholder="Write a review about the quality of service, the workshop's punctuality..."
                       value={reviewComment}
                       onChange={(e) => setReviewComment(e.target.value)}
                       rows={2}
@@ -2428,7 +2428,7 @@ const UserDashboard = ({
             {/* Reviews List */}
             <VStack align="stretch" gap={4}>
               <Text fontWeight="bold" fontSize="md">
-                Wszystkie opinie
+                All reviews
               </Text>
 
               {workshopReviews.length > 0 ? (
@@ -2488,7 +2488,7 @@ const UserDashboard = ({
                         color="gray.400"
                         mt={1}
                       >
-                        Brak komentarza tekstowego.
+                        No text comment.
                       </Text>
                     )}
 
@@ -2501,15 +2501,15 @@ const UserDashboard = ({
                         bottom="2"
                         right="3"
                       >
-                        Twoja opinia
+                        Your opinion
                       </Badge>
                     )}
                   </Box>
                 ))
               ) : (
                 <Text fontSize="sm" color="gray.400" textAlign="center" py={6}>
-                  Brak opinii o tym warsztacie. Bądź pierwszym, który doda
-                  ocenę!
+                  There are no reviews for this repair shop. Be the first to add
+                  a review!
                 </Text>
               )}
             </VStack>
@@ -2517,7 +2517,7 @@ const UserDashboard = ({
           <DialogFooter>
             <DialogActionTrigger asChild>
               <Button variant="ghost" rounded="lg">
-                Zamknij
+                Close
               </Button>
             </DialogActionTrigger>
           </DialogFooter>
@@ -2537,11 +2537,11 @@ const UserDashboard = ({
         <DialogContent _dark={{ bg: "rgb(25, 36, 54)", color: "white" }}>
           <DialogHeader>
             <DialogTitle fontSize="xl" fontWeight="bold">
-              Oś czasu pojazdu: {selectedTimelineVehicle?.manufacturer}{" "}
+              Vehicle Timeline: {selectedTimelineVehicle?.manufacturer}{" "}
               {selectedTimelineVehicle?.model}
             </DialogTitle>
             <Text fontSize="xs" color="gray.400" mt={1}>
-              Rejestracja: {selectedTimelineVehicle?.licensePlate} | VIN:{" "}
+              Registration: {selectedTimelineVehicle?.licensePlate} | VIN:{" "}
               {selectedTimelineVehicle?.vin}
             </Text>
           </DialogHeader>
@@ -2550,7 +2550,7 @@ const UserDashboard = ({
               <VStack gap={4} py={8}>
                 <Spinner size="lg" color="brand.500" />
                 <Text color="gray.500" fontSize="sm">
-                  Pobieranie historii zdarzeń...
+                  Retrieving the event history...
                 </Text>
               </VStack>
             ) : vehicleTimeline.length > 0 ? (
@@ -2652,11 +2652,11 @@ const UserDashboard = ({
               <Center py={12} flexDirection="column">
                 <Icon as={Clock} boxSize={12} color="gray.300" mb={4} />
                 <Text fontSize="md" fontWeight="bold" color="gray.500">
-                  Brak historii zdarzeń
+                  No event history
                 </Text>
                 <Text fontSize="xs" color="gray.400" textAlign="center" mt={1}>
-                  Historia i oś czasu pojazdu pojawią się, gdy zaczniesz go
-                  edytować lub zlecać naprawy.
+                  The vehicle's history and timeline will appear when you start
+                  editing it or ordering repairs.
                 </Text>
               </Center>
             )}
@@ -2669,7 +2669,7 @@ const UserDashboard = ({
                 colorPalette="gray"
                 rounded="lg"
               >
-                Zamknij
+                Close
               </Button>
             </DialogActionTrigger>
           </DialogFooter>
@@ -2689,11 +2689,11 @@ const UserDashboard = ({
         <DialogContent _dark={{ bg: "rgb(25, 36, 54)", color: "white" }}>
           <DialogHeader>
             <DialogTitle fontSize="xl" fontWeight="bold">
-              Dokumenty pojazdu: {selectedDocumentsVehicle?.manufacturer}{" "}
+              Vehicle documents: {selectedDocumentsVehicle?.manufacturer}{" "}
               {selectedDocumentsVehicle?.model}
             </DialogTitle>
             <Text fontSize="xs" color="gray.400" mt={1}>
-              Rejestracja: {selectedDocumentsVehicle?.licensePlate} | VIN:{" "}
+              Registration: {selectedDocumentsVehicle?.licensePlate} | VIN:{" "}
               {selectedDocumentsVehicle?.vin}
             </Text>
           </DialogHeader>
@@ -2716,29 +2716,29 @@ const UserDashboard = ({
               onSubmit={handleUploadDocumentSubmit}
             >
               <Text fontWeight="bold" fontSize="sm" mb={3}>
-                Dodaj nowy dokument
+                Add new document
               </Text>
               <SimpleGrid columns={{ base: 1, md: 3 }} gap={4} align="flex-end">
                 <Field.Root required>
-                  <Field.Label fontSize="xs">Typ dokumentu</Field.Label>
+                  <Field.Label fontSize="xs">Document type</Field.Label>
                   <NativeSelect.Root size="sm">
                     <NativeSelect.Field
                       value={selectedDocumentType}
                       onChange={(e) => setSelectedDocumentType(e.target.value)}
                       _dark={{ bg: "rgb(25, 36, 54)" }}
                     >
-                      <option value="1">Faktura (Invoice)</option>
-                      <option value="2">Zdjęcie (Photo)</option>
+                      <option value="1">Invoice</option>
+                      <option value="2">Photo</option>
                       <option value="3">
-                        Dowód rejestracyjny (Registration)
+                        Registration
                       </option>
-                      <option value="4">Inny (Other)</option>
+                      <option value="4">Other</option>
                     </NativeSelect.Field>
                   </NativeSelect.Root>
                 </Field.Root>
 
                 <Field.Root required>
-                  <Field.Label fontSize="xs">Wybierz plik</Field.Label>
+                  <Field.Label fontSize="xs">Select a file</Field.Label>
                   <Input
                     type="file"
                     size="sm"
@@ -2759,7 +2759,7 @@ const UserDashboard = ({
                   gap={1.5}
                 >
                   <Icon as={Upload} boxSize={3.5} />
-                  Prześlij plik
+                  Send File
                 </Button>
               </SimpleGrid>
             </Box>
@@ -2767,13 +2767,13 @@ const UserDashboard = ({
             {/* Documents List */}
             <Box>
               <Text fontWeight="bold" fontSize="sm" mb={3}>
-                Przesłane dokumenty
+                Uploaded documents
               </Text>
               {loadingDocuments ? (
                 <VStack gap={4} py={8}>
                   <Spinner size="md" color="brand.500" />
                   <Text color="gray.500" fontSize="xs">
-                    Pobieranie dokumentów...
+                    Downloading documents...
                   </Text>
                 </VStack>
               ) : vehicleDocuments.length > 0 ? (
@@ -2782,15 +2782,15 @@ const UserDashboard = ({
                     const getDocTypeLabel = (type) => {
                       switch (type) {
                         case 1:
-                          return "Faktura";
+                          return "Invoice";
                         case 2:
-                          return "Zdjęcie";
+                          return "Photo";
                         case 3:
-                          return "Dowód rejestracyjny";
+                          return "Registration";
                         case 4:
-                          return "Inny";
+                          return "Other";
                         default:
-                          return "Nieznany";
+                          return "Unknown";
                       }
                     };
                     return (
@@ -2832,7 +2832,7 @@ const UserDashboard = ({
                               {doc.originalFileName || "Dokument"}
                             </Text>
                             <Text fontSize="10px" color="gray.400">
-                              Typ: {getDocTypeLabel(doc.documentType)} | Dodano:{" "}
+                              Type: {getDocTypeLabel(doc.documentType)} | Added:{" "}
                               {new Date(doc.createdAt).toLocaleDateString()}
                             </Text>
                           </VStack>
@@ -2853,7 +2853,7 @@ const UserDashboard = ({
                               )
                             }
                           >
-                            Pobierz
+                            Download
                           </Button>
                           <Button
                             type="button"
@@ -2869,7 +2869,7 @@ const UserDashboard = ({
                               )
                             }
                           >
-                            Usuń
+                            Delete
                           </Button>
                         </HStack>
                       </Flex>
@@ -2888,10 +2888,10 @@ const UserDashboard = ({
                 >
                   <Icon as={FileText} boxSize={10} color="gray.300" mb={2} />
                   <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                    Brak dokumentów
+                    No documents
                   </Text>
                   <Text fontSize="xs" color="gray.400" mt={1}>
-                    Ten pojazd nie posiada jeszcze żadnych dokumentów.
+                    This vehicle does not yet have any documents.
                   </Text>
                 </Center>
               )}
@@ -2905,7 +2905,7 @@ const UserDashboard = ({
                 colorPalette="gray"
                 rounded="lg"
               >
-                Zamknij
+                Close
               </Button>
             </DialogActionTrigger>
           </DialogFooter>

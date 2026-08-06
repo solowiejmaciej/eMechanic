@@ -24,7 +24,7 @@ export const PreferencesPanel = ({
   if (loading) {
     return (
       <VStack gap={6} align="stretch">
-        <Heading size="2xl" fontWeight="black" tracking="tight">Preferencje Napraw</Heading>
+        <Heading size="2xl" fontWeight="black" tracking="tight">Repair preferences</Heading>
         <Center py={20}>
           <Spinner size="xl" color="brand.500" />
         </Center>
@@ -36,10 +36,10 @@ export const PreferencesPanel = ({
     <VStack gap={6} align="stretch">
       <Box>
         <Heading size="2xl" fontWeight="black" tracking="tight" _dark={{ color: "white" }}>
-          Moje Preferencje Napraw
+          My repair preferences
         </Heading>
         <Text color="gray.500" _dark={{ color: "gray.400" }} fontSize="md" mt={1}>
-          Wybierz swoje domyślne preferencje dotyczące części zamiennych oraz czasu realizacji napraw. Warsztaty otrzymają te informacje przy wycenie.
+          Select your default preferences for replacement parts and repair turnaround times. Repair shops will receive this information when they provide a quote.
         </Text>
       </Box>
 
@@ -57,24 +57,24 @@ export const PreferencesPanel = ({
         <VStack align="stretch" gap={8}>
           <Box>
             <Text fontSize="lg" fontWeight="bold" mb={3} _dark={{ color: "white" }}>
-              Preferowane części zamienne
+              Preferred Replacement Parts
             </Text>
             <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
               {[
                 {
                   value: "1",
-                  title: "Ekonomiczne",
-                  desc: "Najniższa cena, certyfikowane zamienniki.",
+                  title: "Economic",
+                  desc: "Lowest price, certified replacement parts.",
                 },
                 {
                   value: "2",
-                  title: "Zbalansowane",
-                  desc: "Dobry stosunek jakości do ceny, rekomendowane zamienniki.",
+                  title: "Balanced",
+                  desc: "Good value for the price; recommended alternatives.",
                 },
                 {
                   value: "3",
                   title: "Premium",
-                  desc: "Oryginalne części producenta (OEM) lub najwyższa jakość.",
+                  desc: "Original Equipment Manufacturer (OEM) parts or the highest quality.",
                 },
               ].map((item) => (
                 <Box
@@ -117,19 +117,19 @@ export const PreferencesPanel = ({
 
           <Box>
             <Text fontSize="lg" fontWeight="bold" mb={3} _dark={{ color: "white" }}>
-              Tempo realizacji naprawy
+              Turnaround time for repair
             </Text>
             <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
               {[
                 {
                   value: "1",
-                  title: "Standardowe",
-                  desc: "Standardowy czas realizacji prac serwisowych.",
+                  title: "Standard",
+                  desc: "Standard turnaround time for service work.",
                 },
                 {
                   value: "2",
-                  title: "Pilne",
-                  desc: "Ekspresowy czas realizacji naprawy (może wiązać się z dodatkową opłatą).",
+                  title: "Urgent",
+                  desc: "Express repair turnaround time (may incur an additional fee).",
                 },
               ].map((item) => (
                 <Box
@@ -183,7 +183,7 @@ export const PreferencesPanel = ({
               shadow="md"
               _hover={{ transform: "translateY(-1px)", shadow: "lg" }}
             >
-              Zapisz Preferencje
+              Save preferences
             </Button>
           </Flex>
         </VStack>

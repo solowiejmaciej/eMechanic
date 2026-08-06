@@ -21,7 +21,7 @@ export const PasswordInput = React.forwardRef(
       visible: visibleProp,
       onVisibleChange,
       visibilityIcon = { on: <LuEye />, off: <LuEyeOff /> },
-      eyeColor, // 1. Dodany nasz nowy prop do wyciągnięcia
+      eyeColor,
       ...rest
     } = props
 
