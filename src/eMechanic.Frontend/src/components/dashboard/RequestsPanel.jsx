@@ -29,7 +29,7 @@ import {
 const cleanSummary = (text) => {
   if (!text) return "";
   return text
-    .replace(/^(podsumowanie\s+naprawy\s*\(zamknięcie\)\s*:?\s*)/i, "")
+    .replace(/^(summary\s+repairs\s*\(closure\)\s*:?\s*)/i, "")
     .trim();
 };
 
@@ -143,30 +143,30 @@ export const RequestsPanel = ({
     switch (status) {
       case 1:
         return {
-          label: "Oczekuje",
+          label: "Awaiting",
           color: "blue",
-          desc: "Zlecenie czeka na diagnozę i wycenę warsztatu.",
+          desc: "The order is awaiting a diagnosis and a quote from the repair shop.",
         };
       case 2:
         return {
-          label: "Wyceniono",
+          label: "Valued",
           color: "yellow",
-          desc: "Warsztat postawił diagnozę. Oczekiwanie na Twoją akceptację.",
+          desc: "The workshop has made a diagnosis. We are waiting for your approval.",
         };
       case 3:
         return {
-          label: "Zaakceptowano",
+          label: "Accepted",
           color: "green",
-          desc: "Wycena zaakceptowana. Trwają prace naprawcze.",
+          desc: "The estimate has been approved. Repair work is underway.",
         };
       case 4:
         return {
-          label: "Odrzucono",
+          label: "Rejected",
           color: "red",
-          desc: "Odrzuciłeś wycenę tego zlecenia.",
+          desc: "You rejected the quote for this order.",
         };
       default:
-        return { label: "Nieznany", color: "gray", desc: "" };
+        return { label: "Unknown", color: "gray", desc: "" };
     }
   };
 
@@ -174,10 +174,10 @@ export const RequestsPanel = ({
     <VStack align="stretch" gap={6}>
       <Box>
         <Heading size="2xl" fontWeight="black" tracking="tight" _dark={{ color: "white" }}>
-          Zlecenia Napraw
+          Repair orders
         </Heading>
         <Text color="gray.500" _dark={{ color: "gray.400" }} fontSize="md" mt={1}>
-          Wszystkie zgłoszenia napraw Twoich samochodów wysłane do warsztatów
+          All repair requests for your cars sent to repair shops
         </Text>
       </Box>
 
@@ -211,7 +211,7 @@ export const RequestsPanel = ({
             const workshopName =
               allWorkshopsMap[req.workshopId]?.displayName ||
               allWorkshopsMap[req.workshopId]?.name ||
-              "Warsztat";
+              "Workshop";
 
             return (
               <Box
@@ -254,10 +254,10 @@ export const RequestsPanel = ({
                         {req.vehicle?.manufacturer} {req.vehicle?.model}
                       </Text>
                       <Text fontSize="xs" color="gray.400" fontWeight="medium">
-                        Tablice: {req.vehicle?.licensePlate} | VIN: {req.vehicle?.vin}
+                        Plates: {req.vehicle?.licensePlate} | VIN: {req.vehicle?.vin}
                       </Text>
                       <Text fontSize="xs" fontWeight="semibold" color="brand.600" _dark={{ color: "brand.400" }}>
-                        Warsztat: {workshopName}
+                        Workshop: {workshopName}
                       </Text>
                     </VStack>
                   </HStack>
@@ -274,7 +274,7 @@ export const RequestsPanel = ({
                       {statusInfo.label}
                     </Badge>
                     <Text fontSize="10px" color="gray.400" fontWeight="medium">
-                      Dodano: {new Date(req.createdAt).toLocaleDateString()}
+                      Added: {new Date(req.createdAt).toLocaleDateString()}
                     </Text>
                   </VStack>
                 </Flex>
@@ -284,7 +284,7 @@ export const RequestsPanel = ({
                 {/* Description */}
                 <Box>
                   <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                    Opis zgłoszenia
+                    Report Description
                   </Text>
                   <Text mt={1} color="gray.700" _dark={{ color: "gray.200" }} fontSize="sm">
                     {req.description}
@@ -307,7 +307,7 @@ export const RequestsPanel = ({
                       {req.diagnosis && (
                         <Box>
                           <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                            Diagnoza warsztatu
+                            Workshop Diagnosis
                           </Text>
                           <Text mt={1} color="gray.700" _dark={{ color: "gray.200" }} fontSize="sm">
                             {req.diagnosis}
@@ -317,7 +317,7 @@ export const RequestsPanel = ({
                       {req.estimatedCostAmount !== null && (
                         <Box>
                           <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                            Szacowany koszt
+                            Estimated cost
                           </Text>
                           <Text mt={1} fontSize="lg" fontWeight="black" color="brand.600" _dark={{ color: "brand.400" }}>
                             {req.estimatedCostAmount.toLocaleString()} {req.estimatedCostCurrency || "PLN"}
@@ -340,7 +340,7 @@ export const RequestsPanel = ({
                     _darkBorder={{ borderColor: "red.900/30" }}
                   >
                     <Text fontSize="10px" fontWeight="bold" color="red.500" textTransform="uppercase">
-                      Powód odrzucenia wyceny
+                      Reason for rejecting the valuation
                     </Text>
                     <Text mt={1} color="red.700" _dark={{ color: "red.300" }} fontSize="sm">
                       {req.rejectionReason}
@@ -370,7 +370,7 @@ export const RequestsPanel = ({
                         textTransform="uppercase"
                         letterSpacing="wider"
                       >
-                        Podsumowanie naprawy
+                        Repair Summary
                       </Text>
                     </HStack>
                     <Box mt={1} className="markdown-body">
@@ -402,7 +402,7 @@ export const RequestsPanel = ({
                         textTransform="uppercase"
                         letterSpacing="wider"
                       >
-                        Podsumowanie AI (Gemini)
+                        AI Summary (Gemini)
                       </Text>
                     </HStack>
                     <Box mt={1} className="markdown-body">
@@ -438,7 +438,7 @@ export const RequestsPanel = ({
                         onClick={() => setRejectingRequestId(req.id)}
                         fontWeight="semibold"
                       >
-                        Odrzuć wycenę
+                        Reject the quote
                       </Button>
                       <Button
                         size="sm"
@@ -449,7 +449,7 @@ export const RequestsPanel = ({
                         fontWeight="semibold"
                         shadow="sm"
                       >
-                        Zaakceptuj wycenę
+                        Accept the quote
                       </Button>
                     </Flex>
                   )}
@@ -470,7 +470,7 @@ export const RequestsPanel = ({
                   >
                     <VStack align="stretch" gap={3}>
                       <Field.Root required>
-                        <Field.Label fontSize="sm" fontWeight="bold">Powód odrzucenia wyceny</Field.Label>
+                        <Field.Label fontSize="sm" fontWeight="bold">Reason for rejecting the valuation</Field.Label>
                         <Input
                           placeholder="Wpisz powód (np. zbyt wysoki koszt)"
                           value={rejectInputReason}
@@ -491,7 +491,7 @@ export const RequestsPanel = ({
                             setRejectInputReason("");
                           }}
                         >
-                          Anuluj
+                          Cancel
                         </Button>
                         <Button
                           size="xs"
@@ -500,7 +500,7 @@ export const RequestsPanel = ({
                           fontWeight="semibold"
                           onClick={() => handleRejectEstimationSubmit(req.id)}
                         >
-                          Potwierdź odrzucenie
+                          Confirm
                         </Button>
                       </Flex>
                     </VStack>
@@ -514,10 +514,10 @@ export const RequestsPanel = ({
         <Center py={16} flexDirection="column" borderWidth="1.5px" borderStyle="dashed" borderColor="gray.350" rounded="2xl" _dark={{ borderColor: "whiteAlpha.100" }}>
           <Icon as={Clock} boxSize={16} color="gray.300" mb={4} />
           <Text fontSize="lg" fontWeight="bold" color="gray.500">
-            Brak zleceń
+            No orders
           </Text>
           <Text fontSize="sm" color="gray.400" textAlign="center" mt={1} px={4}>
-            Zlecenia pojawią się tutaj po wysłaniu formularza usterki z widoku listy warsztatów.
+            Orders will appear here after you submit the repair request form from the workshop list view.
           </Text>
         </Center>
       )}

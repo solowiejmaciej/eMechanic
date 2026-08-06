@@ -49,15 +49,15 @@ export const WorkshopDocumentsPanel = ({
         return { label: "Logo", color: "orange", icon: Image };
       case "GalleryImage":
       case "galleryImage":
-        return { label: "Zdjęcie z galerii", color: "pink", icon: Image };
+        return { label: "Image from the gallery", color: "pink", icon: Image };
       case "Certificate":
-        return { label: "Certyfikat", color: "green", icon: ShieldCheck };
+        return { label: "Certificate", color: "green", icon: ShieldCheck };
       case "Invoice":
-        return { label: "Faktura", color: "blue", icon: FileSpreadsheet };
+        return { label: "Invoice", color: "blue", icon: FileSpreadsheet };
       case "Insurance":
-        return { label: "Ubezpieczenie", color: "purple", icon: FileText };
+        return { label: "Insurance", color: "purple", icon: FileText };
       default:
-        return { label: "Inny", color: "gray", icon: FileText };
+        return { label: "Other", color: "gray", icon: FileText };
     }
   };
 
@@ -75,7 +75,7 @@ export const WorkshopDocumentsPanel = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!docName.trim()) {
-      toaster.create({ title: "Błąd", description: "Nazwa dokumentu jest wymagana", type: "error" });
+      toaster.create({ title: "Błąd", description: "Document name is required", type: "error" });
       return;
     }
     
@@ -112,10 +112,10 @@ export const WorkshopDocumentsPanel = ({
       <Flex justify="space-between" align="center" wrap="wrap" gap={4}>
         <Box>
           <Heading size="2xl" fontWeight="black" tracking="tight" _dark={{ color: "white" }}>
-            Dokumenty Warsztatu
+            Workshop Documents
           </Heading>
           <Text color="gray.500" _dark={{ color: "gray.400" }} fontSize="md" mt={1}>
-            Przechowuj certyfikaty, polisy ubezpieczeniowe oraz dokumenty finansowe w bezpiecznym miejscu.
+            Keep your certificates, insurance policies, and financial documents in a safe place.
           </Text>
         </Box>
         <Button
@@ -127,7 +127,7 @@ export const WorkshopDocumentsPanel = ({
           shadow="md"
         >
           <Icon as={Plus} boxSize={4} />
-          Dodaj dokument
+          Add a document
         </Button>
       </Flex>
 
@@ -200,7 +200,7 @@ export const WorkshopDocumentsPanel = ({
                     onClick={() => onDownloadDocument(doc.id, doc.fileName)}
                   >
                     <Icon as={Download} boxSize={3.5} />
-                    Podgląd / Pobierz
+                    Preview / Download
                   </Button>
                   <Button
                     size="xs"
@@ -210,7 +210,7 @@ export const WorkshopDocumentsPanel = ({
                     onClick={() => onDeleteDocument(doc.id)}
                   >
                     <Icon as={Trash2} boxSize={3.5} />
-                    Usuń
+                    Delete
                   </Button>
                 </Flex>
               </Box>
@@ -229,10 +229,10 @@ export const WorkshopDocumentsPanel = ({
           <VStack gap={3}>
             <Icon as={FileText} boxSize={16} color="gray.300" />
             <Text fontSize="lg" fontWeight="bold" color="gray.500">
-              Brak dokumentów warsztatu
+             Missing workshop documents
             </Text>
             <Text fontSize="sm" color="gray.400" textAlign="center" maxW="sm" px={4}>
-              Dodaj swoje certyfikaty kwalifikacji zawodowych, polisy ubezpieczeniowe lub umowy w tym miejscu, aby ułatwić zarządzanie i budować zaufanie klientów.
+              Add your professional certification documents, insurance policies, or contracts here to make management easier and build customer trust.
             </Text>
           </VStack>
         </Center>
@@ -246,11 +246,11 @@ export const WorkshopDocumentsPanel = ({
             <DialogContent _dark={{ bg: "rgb(25, 36, 54)", color: "white" }}>
               <form onSubmit={handleSubmit}>
                 <DialogHeader>
-                  <DialogTitle fontSize="xl" fontWeight="bold">Dodaj Nowy Dokument</DialogTitle>
+                  <DialogTitle fontSize="xl" fontWeight="bold">Add a New Document</DialogTitle>
                 </DialogHeader>
                 <DialogBody display="flex" flexDirection="column" gap={4}>
                   <Field.Root required>
-                    <Field.Label fontWeight="semibold">Nazwa wyświetlana</Field.Label>
+                    <Field.Label fontWeight="semibold">Display Name</Field.Label>
                     <Input
                       placeholder="np. Certyfikat Autoryzacji ASO"
                       value={docName}
@@ -260,25 +260,25 @@ export const WorkshopDocumentsPanel = ({
                   </Field.Root>
 
                   <Field.Root required>
-                    <Field.Label fontWeight="semibold">Typ dokumentu</Field.Label>
+                    <Field.Label fontWeight="semibold">Document type</Field.Label>
                     <NativeSelect.Root>
                       <NativeSelect.Field
                         value={docType}
                         onChange={(e) => setDocType(e.target.value)}
                         _dark={{ bg: "rgb(15, 23, 42)" }}
                       >
-                        <option value="Logo">Logo warsztatu</option>
-                        <option value="GalleryImage">Zdjęcie z galerii (Galeria)</option>
-                        <option value="Certificate">Certyfikat szkolenia / Autoryzacja</option>
-                        <option value="Insurance">Ubezpieczenie OC działalności</option>
-                        <option value="Invoice">Faktura VAT / Rozliczenia</option>
-                        <option value="Other">Inny dokument</option>
+                        <option value="Logo">Workshop logo</option>
+                        <option value="GalleryImage">Photo from the gallery (Gallery)</option>
+                        <option value="Certificate">Training Certificate / Authorization</option>
+                        <option value="Insurance">Business Liability Insurance</option>
+                        <option value="Invoice">VAT Invoice / Settlements</option>
+                        <option value="Other">Other document</option>
                       </NativeSelect.Field>
                     </NativeSelect.Root>
                   </Field.Root>
 
                   <Field.Root required>
-                    <Field.Label fontWeight="semibold">Wybierz plik (PDF, PNG, JPG)</Field.Label>
+                    <Field.Label fontWeight="semibold">Choos file (PDF, PNG, JPG)</Field.Label>
                     <Input
                       type="file"
                       accept=".pdf,.png,.jpg,.jpeg"
@@ -290,10 +290,10 @@ export const WorkshopDocumentsPanel = ({
                 </DialogBody>
                 <DialogFooter gap={2}>
                   <DialogActionTrigger asChild>
-                    <Button type="button" variant="ghost" rounded="lg">Anuluj</Button>
+                    <Button type="button" variant="ghost" rounded="lg">Cancel</Button>
                   </DialogActionTrigger>
                   <Button type="submit" colorPalette="orange" rounded="lg">
-                    Dodaj i zapisz
+                    Add and save
                   </Button>
                 </DialogFooter>
               </form>

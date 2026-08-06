@@ -80,7 +80,7 @@ export const VehicleImage = ({ vehicleId, documentId }) => {
     <Box h="160px" w="full" overflow="hidden" rounded="xl">
       <Image
         src={imgUrl}
-        alt="Zdjęcie pojazdu"
+        alt="Vechicle Image"
         w="full"
         h="full"
         objectFit="cover"
@@ -93,13 +93,13 @@ export const VehicleImage = ({ vehicleId, documentId }) => {
 export const VehicleCard = ({ vehicle, onEdit, onDelete, onTimeline, onDocuments }) => {
   const getFuelTypeString = (type) => {
     switch (type) {
-      case 1: return "Benzyna";
+      case 1: return "Petrol";
       case 2: return "Diesel";
       case 3: return "LPG";
-      case 4: return "Elektryczny";
-      case 5: return "Hybryda";
-      case 6: return "Wodór";
-      default: return "Inny";
+      case 4: return "Electric";
+      case 5: return "Hybrid";
+      case 6: return "Hydrogen";
+      default: return "Other";
     }
   };
 
@@ -110,11 +110,11 @@ export const VehicleCard = ({ vehicle, onEdit, onDelete, onTimeline, onDocuments
       case 3: return "Kombi";
       case 4: return "SUV";
       case 5: return "Coupe";
-      case 6: return "Kabriolet";
+      case 6: return "Cabriolet";
       case 7: return "Minivan";
       case 8: return "Pickup";
       case 9: return "Van";
-      default: return "Inny";
+      default: return "Other";
     }
   };
 
@@ -171,7 +171,7 @@ export const VehicleCard = ({ vehicle, onEdit, onDelete, onTimeline, onDocuments
       <SimpleGrid columns={3} gap={3} fontSize="sm">
         <VStack align="flex-start" gap={0}>
           <Text color="gray.400" fontSize="10px" textTransform="uppercase" fontWeight="bold">
-            Rok
+            Year
           </Text>
           <Text fontWeight="semibold" color="gray.700" _dark={{ color: "gray.200" }}>
             {vehicle.productionYear}
@@ -179,7 +179,7 @@ export const VehicleCard = ({ vehicle, onEdit, onDelete, onTimeline, onDocuments
         </VStack>
         <VStack align="flex-start" gap={0}>
           <Text color="gray.400" fontSize="10px" textTransform="uppercase" fontWeight="bold">
-            Przebieg
+            Mileage
           </Text>
           <Text fontWeight="semibold" color="gray.700" _dark={{ color: "gray.200" }}>
             {vehicle.mileageValue.toLocaleString()} {vehicle.mileageUnit === 2 ? "mi" : "km"}
@@ -187,7 +187,7 @@ export const VehicleCard = ({ vehicle, onEdit, onDelete, onTimeline, onDocuments
         </VStack>
         <VStack align="flex-start" gap={0}>
           <Text color="gray.400" fontSize="10px" textTransform="uppercase" fontWeight="bold">
-            Typ
+            Type
           </Text>
           <Text fontWeight="semibold" color="gray.700" _dark={{ color: "gray.200" }}>
             {vehicle.vehicleType === 2 ? "Motocykl" : "Osobowy"}
@@ -195,7 +195,7 @@ export const VehicleCard = ({ vehicle, onEdit, onDelete, onTimeline, onDocuments
         </VStack>
         <VStack align="flex-start" gap={0}>
           <Text color="gray.400" fontSize="10px" textTransform="uppercase" fontWeight="bold">
-            Paliwo
+            Fuel type
           </Text>
           <Text fontWeight="semibold" color="gray.700" _dark={{ color: "gray.200" }}>
             {getFuelTypeString(vehicle.fuelType)}
@@ -203,7 +203,7 @@ export const VehicleCard = ({ vehicle, onEdit, onDelete, onTimeline, onDocuments
         </VStack>
         <VStack align="flex-start" gap={0}>
           <Text color="gray.400" fontSize="10px" textTransform="uppercase" fontWeight="bold">
-            Nadwozie
+            Body
           </Text>
           <Text fontWeight="semibold" color="gray.700" _dark={{ color: "gray.200" }}>
             {vehicle.vehicleType === 2 ? "Brak" : getBodyTypeString(vehicle.bodyType)}
@@ -211,7 +211,7 @@ export const VehicleCard = ({ vehicle, onEdit, onDelete, onTimeline, onDocuments
         </VStack>
         <VStack align="flex-start" gap={0}>
           <Text color="gray.400" fontSize="10px" textTransform="uppercase" fontWeight="bold">
-            Poj. / Moc
+            Engine capacity / HP
           </Text>
           <Text fontWeight="semibold" color="gray.700" _dark={{ color: "gray.200" }}>
             {vehicle.engineCapacity ? vehicle.engineCapacity.toFixed(1) + "l" : "—"} / {vehicle.horsePower || "—"} KM
@@ -232,7 +232,7 @@ export const VehicleCard = ({ vehicle, onEdit, onDelete, onTimeline, onDocuments
           _hover={{ bg: "brand.50", _dark: { bg: "brand.900/20" } }}
         >
           <Icon as={FileText} boxSize={3.5} />
-          Dokumenty
+          Documents
         </Button>
         <Button
           type="button"
@@ -244,7 +244,7 @@ export const VehicleCard = ({ vehicle, onEdit, onDelete, onTimeline, onDocuments
           _hover={{ bg: "purple.50", _dark: { bg: "purple.900/20" } }}
         >
           <Icon as={History} boxSize={3.5} />
-          Historia
+          History
         </Button>
         <Button
           type="button"
@@ -255,7 +255,7 @@ export const VehicleCard = ({ vehicle, onEdit, onDelete, onTimeline, onDocuments
           onClick={() => onEdit(vehicle)}
           _hover={{ bg: "blue.50", _dark: { bg: "blue.900/20" } }}
         >
-          Edytuj
+          Edit
         </Button>
         <Button
           type="button"
@@ -267,7 +267,7 @@ export const VehicleCard = ({ vehicle, onEdit, onDelete, onTimeline, onDocuments
           _hover={{ bg: "red.50", _dark: { bg: "red.900/20" } }}
         >
           <Icon as={Trash2} boxSize={3.5} />
-          Usuń
+          Delete
         </Button>
       </Flex>
     </Box>
@@ -347,10 +347,10 @@ export const GaragePanel = ({
       <Flex justify="space-between" align="center">
         <Box>
           <Heading size="2xl" fontWeight="black" tracking="tight" _dark={{ color: "white" }}>
-            Mój Garaż
+            My Garage
           </Heading>
           <Text color="gray.500" _dark={{ color: "gray.400" }} fontSize="md" mt={1}>
-            Zarządzaj pojazdami zgłoszonymi do eMechanic
+            Manage vehicles registered with eMechanic
           </Text>
         </Box>
         <Button
@@ -363,7 +363,7 @@ export const GaragePanel = ({
           _hover={{ transform: "translateY(-1px)", shadow: "xl" }}
         >
           <Icon as={Plus} />
-          Dodaj Pojazd
+          Add vechicle
         </Button>
       </Flex>
 
@@ -394,7 +394,7 @@ export const GaragePanel = ({
             </Flex>
             <VStack align="flex-start" gap={0}>
               <Text fontSize="xs" color="gray.400" fontWeight="bold" textTransform="uppercase">
-                Moje Samochody
+                My cars
               </Text>
               <Text fontSize="3xl" fontWeight="black" _dark={{ color: "white" }}>
                 {vehicles.length}
@@ -426,7 +426,7 @@ export const GaragePanel = ({
             </Flex>
             <VStack align="flex-start" gap={0}>
               <Text fontSize="xs" color="gray.400" fontWeight="bold" textTransform="uppercase">
-                Aktywne Zlecenia
+                Active repairs
               </Text>
               <Text fontSize="3xl" fontWeight="black" _dark={{ color: "white" }}>
                 {activeRequestsCount}
@@ -458,7 +458,7 @@ export const GaragePanel = ({
             </Flex>
             <VStack align="flex-start" gap={0}>
               <Text fontSize="xs" color="gray.400" fontWeight="bold" textTransform="uppercase">
-                Historia Napraw
+                Repair history
               </Text>
               <Text fontSize="3xl" fontWeight="black" _dark={{ color: "white" }}>
                 {completedRequestsCount}
@@ -480,7 +480,7 @@ export const GaragePanel = ({
       >
         <Flex justify="space-between" align="center" mb={6} wrap="wrap" gap={4}>
           <Heading size="md" fontWeight="bold">
-            Lista Samochodów
+            Car list
           </Heading>
           <InputGroup maxW="300px" startElement={<Icon as={Search} />}>
             <Input
@@ -521,7 +521,7 @@ export const GaragePanel = ({
           <Center py={16} flexDirection="column" borderWidth="1.5px" borderStyle="dashed" borderColor="gray.300" rounded="2xl" _dark={{ borderColor: "whiteAlpha.100" }}>
             <Icon as={Car} boxSize={16} color="gray.300" mb={4} />
             <Text fontSize="lg" fontWeight="bold" color="gray.500">
-              Brak pojazdów
+              No cars
             </Text>
             <Text
               fontSize="sm"
@@ -532,8 +532,8 @@ export const GaragePanel = ({
               px={4}
             >
               {searchVehicle
-                ? "Brak wyników spełniających kryteria wyszukiwania."
-                : "Zarejestruj swój pierwszy pojazd, aby móc zlecać naprawy warsztatom."}
+                ? "No results matching your search criteria."
+                : "Register your first vehicle to be able to commission repairs to workshops."}
             </Text>
             {!searchVehicle && (
               <Button
@@ -545,7 +545,7 @@ export const GaragePanel = ({
                 fontWeight="semibold"
                 shadow="md"
               >
-                Dodaj Pojazd
+                Add vechicle
               </Button>
             )}
           </Center>

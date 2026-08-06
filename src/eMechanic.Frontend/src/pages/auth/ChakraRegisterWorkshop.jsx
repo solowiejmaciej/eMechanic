@@ -78,21 +78,21 @@ const WorkshopRegistration = () => {
 
     return (
         <VStack align={"center"} w="full">
-            <Heading fontSize={"3xl"} fontWeight={"bold"} _dark={{ color: "white" }}>Współpraca z eMechanic</Heading>
-            <Text _dark={{ color: "whiteAlpha.700" }} pb={6}>Zarejestruj swój Warsztat</Text>
+            <Heading fontSize={"3xl"} fontWeight={"bold"} _dark={{ color: "white" }}>e-Mechanic partnership</Heading>
+            <Text _dark={{ color: "whiteAlpha.700" }} pb={6}>Regsiter your workshop</Text>
             
             <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
                 <VStack align="stretch" gap={4} w="full">
-                    <Heading size="md" _dark={{ color: "white" }}>Dane logowania</Heading>
+                    <Heading size="md" _dark={{ color: "white" }}>Login data</Heading>
                     <Separator borderColor="gray.300" _dark={{ borderColor: "whiteAlpha.200" }} />
                     
                     <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
                         <Field.Root invalid={!!errors.username}>
-                            <Field.Label>Adres e-mail konta</Field.Label>
+                            <Field.Label>E-mail address</Field.Label>
                             <InputGroup w="full" startElement={<Icon as={Mail} color={"gray.500"} boxSize={5} />}>
                                 <Input 
                                     type="email"
-                                    {...register("username", { required: "E-mail konta jest wymagany" })} 
+                                    {...register("username", { required: "E-mail address is reuquired" })} 
                                     _focus={{ borderColor: "orange.500", borderWidth: "2px", outline: "none" }} 
                                     w="full" 
                                     rounded="2xl" 
@@ -105,10 +105,10 @@ const WorkshopRegistration = () => {
                         </Field.Root>
                         
                         <Field.Root invalid={!!errors.password}>
-                            <Field.Label>Hasło</Field.Label>
+                            <Field.Label>Password</Field.Label>
                             <InputGroup w="full" startElement={<Icon as={Lock} color={"gray.500"} boxSize={5} />}>
                                 <PasswordInput 
-                                    {...register("password", { required: "Hasło jest wymagane" })} 
+                                    {...register("password", { required: "Password is required" })} 
                                     _focus={{ borderColor: "orange.500", borderWidth: "2px", outline: "none" }} 
                                     w="full" 
                                     rounded="2xl" 
@@ -121,15 +121,15 @@ const WorkshopRegistration = () => {
                         </Field.Root>
                     </SimpleGrid>
 
-                    <Heading size="md" pt={4} _dark={{ color: "white" }}>Dane warsztatu</Heading>
+                    <Heading size="md" pt={4} _dark={{ color: "white" }}>Workshop data</Heading>
                     <Separator borderColor="gray.300" _dark={{ borderColor: "whiteAlpha.200" }} />
                     
                     <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
                         <Field.Root invalid={!!errors.workshopname}>
-                            <Field.Label>Pełna nazwa (rejestrowa)</Field.Label>
+                            <Field.Label>Full name (Company name)</Field.Label>
                             <InputGroup w="full" startElement={<Icon as={Building2} color={"gray.500"} boxSize={5} />}>
                                 <Input 
-                                    {...register("workshopname", { required: "Nazwa warsztatu jest wymagana" })} 
+                                    {...register("workshopname", { required: "Workshop name is required" })} 
                                     _focus={{ borderColor: "orange.500", borderWidth: "2px", outline: "none" }} 
                                     w="full" 
                                     rounded="2xl" 
@@ -142,10 +142,10 @@ const WorkshopRegistration = () => {
                         </Field.Root>
                         
                         <Field.Root invalid={!!errors.displayname}>
-                            <Field.Label>Nazwa wyświetlana publicznie</Field.Label>
+                            <Field.Label>Public name</Field.Label>
                             <InputGroup w="full" startElement={<Icon as={Building2} color={"gray.500"} boxSize={5} />}>
                                 <Input 
-                                    {...register("displayname", { required: "Nazwa wyświetlana jest wymagana" })} 
+                                    {...register("displayname", { required: "Display name is reuquired" })} 
                                     _focus={{ borderColor: "orange.500", borderWidth: "2px", outline: "none" }} 
                                     w="full" 
                                     rounded="2xl" 
@@ -158,7 +158,7 @@ const WorkshopRegistration = () => {
                         </Field.Root>
 
                         <Field.Root invalid={!!errors.contactemail}>
-                            <Field.Label>E-mail kontaktowy dla klientów</Field.Label>
+                            <Field.Label>Contact e-mail</Field.Label>
                             <InputGroup w="full" startElement={<Icon as={Mail} color={"gray.500"} boxSize={5} />}>
                                 <Input 
                                     type="email"
@@ -175,10 +175,10 @@ const WorkshopRegistration = () => {
                         </Field.Root>
                         
                         <Field.Root invalid={!!errors.phonenumber}>
-                            <Field.Label>Numer telefonu</Field.Label>
+                            <Field.Label>Phone number</Field.Label>
                             <InputGroup w="full" startElement={<Icon as={Phone} color={"gray.500"} boxSize={5} />}>
                                 <Input 
-                                    {...register("phonenumber", { required: "Numer telefonu jest wymagany" })} 
+                                    {...register("phonenumber", { required: "Phone number is reuquired" })} 
                                     _focus={{ borderColor: "orange.500", borderWidth: "2px", outline: "none" }} 
                                     w="full" 
                                     rounded="2xl" 
@@ -192,10 +192,10 @@ const WorkshopRegistration = () => {
                     </SimpleGrid>
 
                     <Field.Root invalid={!!errors.address}>
-                        <Field.Label>Ulica i numer</Field.Label>
+                        <Field.Label>Street and house number</Field.Label>
                         <InputGroup w="full" startElement={<Icon as={MapPin} color={"gray.500"} boxSize={5} />}>
                             <Input 
-                                {...register("address", { required: "Adres jest wymagany" })} 
+                                {...register("address", { required: "Address is required" })} 
                                 _focus={{ borderColor: "orange.500", borderWidth: "2px", outline: "none" }} 
                                 w="full" 
                                 rounded="2xl" 
@@ -211,7 +211,7 @@ const WorkshopRegistration = () => {
                         <Field.Root invalid={!!errors.city}>
                             <Field.Label>Miasto</Field.Label>
                             <Input 
-                                {...register("city", { required: "Miasto jest wymagane" })} 
+                                {...register("city", { required: "City is required" })} 
                                 _focus={{ borderColor: "orange.500", borderWidth: "2px", outline: "none" }} 
                                 w="full" 
                                 rounded="2xl" 
@@ -223,9 +223,9 @@ const WorkshopRegistration = () => {
                         </Field.Root>
 
                         <Field.Root invalid={!!errors.postalcode}>
-                            <Field.Label>Kod pocztowy</Field.Label>
+                            <Field.Label>Postal code</Field.Label>
                             <Input 
-                                {...register("postalcode", { required: "Kod pocztowy jest wymagany" })} 
+                                {...register("postalcode", { required: "Postal code is required" })} 
                                 _focus={{ borderColor: "orange.500", borderWidth: "2px", outline: "none" }} 
                                 w="full" 
                                 rounded="2xl" 
@@ -237,14 +237,14 @@ const WorkshopRegistration = () => {
                         </Field.Root>
 
                         <Field.Root invalid={!!errors.country}>
-                            <Field.Label>Kraj</Field.Label>
+                            <Field.Label>Country</Field.Label>
                             <Input 
-                                {...register("country", { required: "Kraj jest wymagany" })} 
+                                {...register("country", { required: "Country required" })} 
                                 _focus={{ borderColor: "orange.500", borderWidth: "2px", outline: "none" }} 
                                 w="full" 
                                 rounded="2xl" 
                                 size="xl" 
-                                placeholder="Polska" 
+                                placeholder="Poland" 
                                 _dark={{ bgcolor: "whiteAlpha.50", bg: "rgb(25, 36, 54)", color: "white", borderColor: "whiteAlpha.300" }} 
                             />
                             <Field.ErrorText>{errors.country?.message}</Field.ErrorText>
@@ -252,16 +252,16 @@ const WorkshopRegistration = () => {
                     </SimpleGrid>
 
                     <Button type="submit" loading={isSubmitting} rounded={"xl"} size={"lg"} h={"50px"} w={"full"} color="white" bg={"orange.500"} _hover={{ bg: "orange.600" }} mt={6}>
-                        Zarejestruj warsztat
+                        Register workshop
                         <Icon as={ArrowRight} />
                     </Button>
                 </VStack>
             </form>
             
             <HStack pt={4}>
-                <Text fontSize={"sm"}>Masz już konto?</Text>
-                <Link asChild fontSize={"sm"} color={"orange.500"} _hover={{ color: "orange.600" }}>
-                    <RouterLink to="/login">Zaloguj się</RouterLink>
+                <Text fontSize={"sm"}>Have an account?</Text>
+                <Link asChild fontSize={"sm"} color={"orange.500"} _hover={{ color: "orange.600", textDecoration: "none"}}>
+                    <RouterLink to="/login">Sign in</RouterLink>
                 </Link>
             </HStack>
         </VStack>

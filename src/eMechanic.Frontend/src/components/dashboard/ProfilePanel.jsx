@@ -28,10 +28,10 @@ export const ProfilePanel = ({
     <VStack gap={6} align="stretch">
       <Box>
         <Heading size="2xl" fontWeight="black" tracking="tight" _dark={{ color: "white" }}>
-          Mój Profil
+          My profile
         </Heading>
         <Text color="gray.500" _dark={{ color: "gray.400" }} fontSize="md" mt={1}>
-          Aktualizuj swoje dane osobowe oraz informacje kontaktowe.
+          Update your personal information and contact details.
         </Text>
       </Box>
 
@@ -49,9 +49,9 @@ export const ProfilePanel = ({
         <VStack align="stretch" gap={5}>
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
             <Field.Root required>
-              <Field.Label fontWeight="semibold">Imię</Field.Label>
+              <Field.Label fontWeight="semibold">Name</Field.Label>
               <Input
-                placeholder="np. Jan"
+                placeholder="ex. Jan"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 _dark={{ bg: "rgb(15, 23, 42)" }}
@@ -66,9 +66,9 @@ export const ProfilePanel = ({
             </Field.Root>
 
             <Field.Root required>
-              <Field.Label fontWeight="semibold">Nazwisko</Field.Label>
+              <Field.Label fontWeight="semibold">Last name</Field.Label>
               <Input
-                placeholder="np. Kowalski"
+                placeholder="ex. Kowalski"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 _dark={{ bg: "rgb(15, 23, 42)" }}
@@ -85,10 +85,10 @@ export const ProfilePanel = ({
 
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
             <Field.Root required>
-              <Field.Label fontWeight="semibold">Adres Email</Field.Label>
+              <Field.Label fontWeight="semibold">E-mail address</Field.Label>
               <Input
                 type="email"
-                placeholder="np. jan.kowalski@email.com"
+                placeholder="ex. jan.kowalski@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 _dark={{ bg: "rgb(15, 23, 42)" }}
@@ -103,9 +103,9 @@ export const ProfilePanel = ({
             </Field.Root>
 
             <Field.Root>
-              <Field.Label fontWeight="semibold">Numer telefonu</Field.Label>
+              <Field.Label fontWeight="semibold">Phone number</Field.Label>
               <Input
-                placeholder="np. +48500100200"
+                placeholder="ex. +48500100200"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 _dark={{ bg: "rgb(15, 23, 42)" }}
@@ -133,7 +133,7 @@ export const ProfilePanel = ({
               shadow="md"
               _hover={{ transform: "translateY(-1px)", shadow: "lg" }}
             >
-              Zapisz Zmiany
+              Save changes
             </Button>
           </Flex>
         </VStack>
