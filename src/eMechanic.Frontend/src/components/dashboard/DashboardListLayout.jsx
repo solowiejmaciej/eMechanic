@@ -16,6 +16,7 @@ import {
   MenuContent,
   MenuItem,
   Portal,
+  MenuPositioner,
 } from "@chakra-ui/react";
 import { ChevronLeft, ChevronRight, Search, ChevronDown } from "lucide-react";
 
@@ -114,6 +115,7 @@ export const DashboardListLayout = ({
                 rounded="xl"
                 fontWeight="semibold"
                 px={4}
+                color={"white"}
               >
                 Search
               </Button>
@@ -155,6 +157,7 @@ export const DashboardListLayout = ({
                         </Button>
                       </MenuTrigger>
                       <Portal>
+                      <MenuPositioner>
                       <MenuContent
                         bg="white"
                         _dark={{ bg: "rgb(25, 36, 54)", borderColor: "whiteAlpha.100" }}
@@ -189,6 +192,7 @@ export const DashboardListLayout = ({
                           </MenuItem>
                         ))}
                       </MenuContent>
+                      </MenuPositioner>
                       </Portal>
                     </MenuRoot>
                   </HStack>
@@ -224,6 +228,7 @@ export const DashboardListLayout = ({
                   </Button>
                 </MenuTrigger>
                 <Portal>
+                  <MenuPositioner>
                 <MenuContent
                   bg="white"
                   _dark={{ bg: "rgb(25, 36, 54)", borderColor: "whiteAlpha.100" }}
@@ -253,6 +258,7 @@ export const DashboardListLayout = ({
                     </MenuItem>
                   ))}
                 </MenuContent>
+                </MenuPositioner>
                 </Portal>
               </MenuRoot>
             </HStack>
