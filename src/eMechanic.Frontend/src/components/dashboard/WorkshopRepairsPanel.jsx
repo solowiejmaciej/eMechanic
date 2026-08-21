@@ -229,7 +229,7 @@ export const WorkshopRepairsPanel = ({
                       {rep.vehicle?.manufacturer} {rep.vehicle?.model}
                     </Text>
                     <Text fontSize="xs" color="gray.400" fontWeight="medium">
-                      Plates: {rep.vehicle?.licensePlate || "—"} | VIN: {rep.vehicle?.vin || "—"}
+                      License plate: {rep.vehicle?.licensePlate || "—"} | VIN: {rep.vehicle?.vin || "—"}
                     </Text>
                   </VStack>
                 </HStack>
@@ -402,7 +402,7 @@ export const WorkshopRepairsPanel = ({
                   <DialogTitle fontSize="xl" fontWeight="bold">Zakończ Naprawę</DialogTitle>
                   {selectedRepair && (
                     <Text fontSize="xs" color="gray.400" mt={1}>
-                      Vechicle: {selectedRepair.vehicle?.manufacturer} {selectedRepair.vehicle?.model}
+                      Vehicle: {selectedRepair.vehicle?.manufacturer} {selectedRepair.vehicle?.model}
                     </Text>
                   )}
                 </DialogHeader>
