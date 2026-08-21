@@ -39,7 +39,7 @@ const UserRegistration = () => {
     const onSubmit = async (data) => {
         if (!data.firstname.trim() || !data.lastname.trim() || !data.username.trim() || !data.password) {
             toaster.create({
-                title: "Błąd walidacji",
+                title: "Validation Error",
                 description: "Please fill out all of the fields",
                 type: "error"
             });
@@ -55,7 +55,7 @@ const UserRegistration = () => {
                 password: data.password
             });
             toaster.create({
-                title: "Konto utworzone",
+                title: "Account created",
                 description: "Account registered, proceed to login",
                 type: "success"
             });
@@ -63,7 +63,7 @@ const UserRegistration = () => {
         } catch (err) {
             console.error(err);
             toaster.create({
-                title: "Błąd rejestracji",
+                title: "Registration Error",
                 description: formatErrorMsg(err, "Account wasn't created, please verify data"),
                 type: "error"
             });

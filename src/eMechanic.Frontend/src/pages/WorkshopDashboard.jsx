@@ -336,8 +336,8 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
                 clientName:
                   vehicle.clientFirstName && vehicle.clientLastName
                     ? `${vehicle.clientFirstName} ${vehicle.clientLastName}`
-                    : vehicle.clientEmail || "Brak danych klienta",
-                clientEmail: vehicle.clientEmail || "Brak e-maila",
+                    : vehicle.clientEmail || "Client data missing",
+                clientEmail: vehicle.clientEmail || "E-mail missing",
               };
             }
           } catch (vehicleErr) {
@@ -349,8 +349,8 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
           return {
             ...item,
             vehicle: null,
-            clientName: "Brak danych klienta",
-            clientEmail: "Brak e-maila",
+            clientName: "Client data missing",
+            clientEmail: "E-mail missing",
           };
         }),
       );
@@ -465,13 +465,13 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               return {
                 ...item,
                 vehicle,
-                description: requestData?.description || "Brak opisu",
-                diagnosis: requestData?.diagnosis || "Brak diagnozy",
+                description: requestData?.description || "Description missing",
+                diagnosis: requestData?.diagnosis || "Diagnose missing",
                 clientName:
                   vehicle.clientFirstName && vehicle.clientLastName
                     ? `${vehicle.clientFirstName} ${vehicle.clientLastName}`
-                    : vehicle.clientEmail || "Brak danych klienta",
-                clientEmail: vehicle.clientEmail || "Brak e-maila",
+                    : vehicle.clientEmail || "Client data missing",
+                clientEmail: vehicle.clientEmail || "E-mail missing",
               };
             }
           } catch (vehicleErr) {
@@ -483,10 +483,10 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
           return {
             ...item,
             vehicle: null,
-            description: requestData?.description || "Brak opisu",
-            diagnosis: requestData?.diagnosis || "Brak diagnozy",
-            clientName: "Brak danych klienta",
-            clientEmail: "Brak e-maila",
+            description: requestData?.description || "Description missing",
+            diagnosis: requestData?.diagnosis || "Diagnose missing",
+            clientName: "Client data missing",
+            clientEmail: "E-mail missing",
           };
         }),
       );
@@ -576,10 +576,10 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
     } catch (err) {
       console.error("Failed to fetch documents from API:", err);
       toaster.create({
-        title: "Błąd pobierania",
+        title: "Download error",
         description: formatErrorMsg(
           err,
-          "Nie udało się pobrać dokumentów z API.",
+          "Failed to fetch documents from API.",
         ),
         type: "error",
       });
@@ -797,15 +797,15 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
       await fetchRequests();
 
       toaster.create({
-        title: "Wycena wysłana",
-        description: "Wycena została pomyślnie wysłana i zapisana w API.",
+        title: "Cost estimation sent",
+        description: "The quote was successfully sent and saved in the API.",
         type: "success",
       });
     } catch (err) {
       console.error("Failed to submit estimation to API:", err);
       toaster.create({
-        title: "Błąd wyceny",
-        description: formatErrorMsg(err, "Nie udało się zapisać wyceny w API."),
+        title: "Pricing Error",
+        description: formatErrorMsg(err, "The quote could not be saved to the API."),
         type: "error",
       });
     }
@@ -818,17 +818,17 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
       await fetchRepairs();
 
       toaster.create({
-        title: "Naprawa rozpoczęta",
-        description: "Status naprawy został zaktualizowany na serwerze.",
+        title: "Repair began",
+        description: "The repair status has been updated on the server.",
         type: "success",
       });
     } catch (err) {
       console.error("Failed to start repair on API:", err);
       toaster.create({
-        title: "Błąd rozpoczęcia naprawy",
+        title: "Repair Start Error",
         description: formatErrorMsg(
           err,
-          "Nie udało się zmienić statusu naprawy w API.",
+          "The repair status could not be updated via the API.",
         ),
         type: "error",
       });
@@ -842,17 +842,17 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
       await fetchRepairs();
 
       toaster.create({
-        title: "Naprawa zakończona",
-        description: "Ostateczny koszt został zapisany na serwerze.",
+        title: "Repair completed",
+        description: "The final cost has been saved on the server.",
         type: "success",
       });
     } catch (err) {
       console.error("Failed to complete repair on API:", err);
       toaster.create({
-        title: "Błąd zakończenia naprawy",
+        title: "Repair Completion Error",
         description: formatErrorMsg(
           err,
-          "Nie udało się zapisać ostatecznego kosztu w API.",
+          "Failed to save the final cost in the API.",
         ),
         type: "error",
       });
@@ -872,25 +872,25 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
         await fetchDocs();
 
         toaster.create({
-          title: "Dodano dokument",
-          description: `Dokument "${mockDoc.displayName}" został pomyślnie przesłany na serwer.`,
+          title: "Document added",
+          description: `Document "${mockDoc.displayName}" was successfully sent to the server.`,
           type: "success",
         });
       } catch (err) {
         console.error("Failed to upload document to API:", err);
         toaster.create({
-          title: "Błąd przesyłania dokumentu",
+          title: "Document upload error",
           description: formatErrorMsg(
             err,
-            "Nie udało się zapisać dokumentu w API.",
+            "Failed to upload document to API.",
           ),
           type: "error",
         });
       }
     } else {
       toaster.create({
-        title: "Błąd",
-        description: "Musisz wybrać fizyczny plik do przesłania.",
+        title: "Error",
+        description: "You must select a file to upload.",
         type: "error",
       });
     }
@@ -904,17 +904,17 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
         await fetchDocs();
 
         toaster.create({
-          title: "Usunięto dokument",
-          description: "Dokument został usunięty z serwera.",
+          title: "Document deleted",
+          description: "The document has been deleted from the server.",
           type: "success",
         });
       } catch (err) {
         console.error("Failed to delete document from API:", err);
         toaster.create({
-          title: "Błąd usuwania dokumentu",
+          title: "Document Delete Error",
           description: formatErrorMsg(
             err,
-            "Nie udało się usunąć dokumentu z API.",
+            "Failed to delete document from API.",
           ),
           type: "error",
         });
@@ -938,8 +938,8 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
     } catch (err) {
       console.error("Failed to download workshop document:", err);
       toaster.create({
-        title: "Błąd pobierania",
-        description: "Nie udało się pobrać pliku dokumentu.",
+        title: "Download Error",
+        description: "Failed to download workshop document.",
         type: "error",
       });
     }
@@ -952,9 +952,9 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
     setTimeout(() => {
       setProfileSubmitting(false);
       toaster.create({
-        title: "Zapisano dane profilowe",
+        title: "Saved profile data",
         description:
-          "Informacje o Twoim warsztacie zostały zaktualizowane pomyślnie.",
+          "The information about your workshop has been successfully updated.",
         type: "success",
       });
     }, 600);
@@ -1060,7 +1060,7 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               tracking="widest"
               textTransform="uppercase"
             >
-              Panel Mechanika
+              Mechanic Panel
             </Text>
             <Heading
               size="md"
@@ -1068,11 +1068,11 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               mt={0.5}
               _dark={{ color: "white" }}
             >
-              {profileDisplayName || "Mój Warsztat"}
+              {profileDisplayName || "My workshop"}
             </Heading>
             {isOfflineMode && (
               <Badge colorPalette="orange" variant="outline" mt={1}>
-                Tryb offline
+                Offline mode
               </Badge>
             )}
           </Box>
@@ -1095,7 +1095,7 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               gap={3}
             >
               <Icon as={Clock} boxSize={5} />
-              Zlecenia
+              Requests
               {newRequestsCount > 0 && (
                 <Badge
                   colorPalette="orange"
@@ -1124,7 +1124,7 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               gap={3}
             >
               <Icon as={Wrench} boxSize={5} />
-              Aktywne Naprawy
+              Active Repairs
               {activeRepairsCount > 0 && (
                 <Badge
                   colorPalette="blue"
@@ -1154,7 +1154,7 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               gap={3}
             >
               <Icon as={FolderOpen} boxSize={5} />
-              Dokumenty
+              Documents
             </Button>
 
             <Button
@@ -1172,7 +1172,7 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               gap={3}
             >
               <Icon as={Star} boxSize={5} />
-              Opinie
+              Opinions
             </Button>
 
             <Button
@@ -1190,7 +1190,7 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               gap={3}
             >
               <Icon as={User} boxSize={5} />
-              Profil
+              Profile
             </Button>
           </VStack>
         </VStack>
@@ -1238,7 +1238,7 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
                   color="gray.400"
                   textTransform="uppercase"
                 >
-                  W trakcie naprawy
+                  Active repairs
                 </Text>
                 <Text
                   fontSize="3xl"
@@ -1282,7 +1282,7 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
                   color="gray.400"
                   textTransform="uppercase"
                 >
-                  Pojazdy w serwisie
+                  Vehicles in the shop
                 </Text>
                 <Text
                   fontSize="3xl"
@@ -1326,7 +1326,7 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
                   color="gray.400"
                   textTransform="uppercase"
                 >
-                  Nowe zlecenia
+                  New requests
                 </Text>
                 <Text
                   fontSize="3xl"

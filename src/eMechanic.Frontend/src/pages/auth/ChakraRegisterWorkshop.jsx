@@ -59,16 +59,16 @@ const WorkshopRegistration = () => {
             });
 
             toaster.create({
-                title: "Konto warsztatu utworzone",
-                description: "Rejestracja warsztatu zakończona sukcesem. Możesz się teraz zalogować.",
+                title: "Workshop acouunt created",
+                description: "Workshop registration was successful. You can now log in.",
                 type: "success"
             });
             navigate("/login");
         } catch (err) {
             console.error(err);
             toaster.create({
-                title: "Błąd rejestracji",
-                description: formatErrorMsg(err, "Nie udało się zarejestrować warsztatu. Sprawdź poprawność danych."),
+                title: "Registrarion error",
+                description: formatErrorMsg(err, "The workshop could not be registered. Please check that the information is correct."),
                 type: "error"
             });
         } finally {
@@ -162,7 +162,7 @@ const WorkshopRegistration = () => {
                             <InputGroup w="full" startElement={<Icon as={Mail} color={"gray.500"} boxSize={5} />}>
                                 <Input 
                                     type="email"
-                                    {...register("contactemail", { required: "E-mail kontaktowy jest wymagany" })} 
+                                    {...register("contactemail", { required: "Contact e-mail is required" })} 
                                     _focus={{ borderColor: "orange.500", borderWidth: "2px", outline: "none" }} 
                                     w="full" 
                                     rounded="2xl" 
