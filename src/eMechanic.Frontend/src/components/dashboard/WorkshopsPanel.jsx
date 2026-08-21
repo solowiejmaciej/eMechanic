@@ -122,7 +122,7 @@ export const WorkshopsPanel = ({
             flexDir={{ base: "column", sm: "row" }}
             gap={4}
           >
-            <Text color="gray.600" _dark={{ color: "gray.400" }} fontSize="sm" fontWeight="medium">
+            <Text color="gray.600" _dark={{ color: "white" }} fontSize="sm" fontWeight="medium">
               Found{" "}
               <Text as="span" fontWeight="bold" color="brand.500">
                 {workshopTotalCount}

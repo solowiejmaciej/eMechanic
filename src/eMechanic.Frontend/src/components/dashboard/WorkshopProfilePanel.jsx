@@ -59,7 +59,7 @@ export const WorkshopProfilePanel = ({
                 placeholder="ex. Auto Serwis Kowalski"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                _dark={{ bg: "rgb(15, 23, 42)" }}
+                _dark={{ bg: "rgb(15, 23, 42)", color: "white" }}
                 rounded="xl"
                 size="md"
                 _focus={{
@@ -77,7 +77,7 @@ export const WorkshopProfilePanel = ({
                 placeholder="ex. kontakt@serwiskowalski.pl"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                _dark={{ bg: "rgb(15, 23, 42)" }}
+                _dark={{ bg: "rgb(15, 23, 42)", color: "white" }}
                 rounded="xl"
                 size="md"
                 _focus={{
@@ -96,7 +96,7 @@ export const WorkshopProfilePanel = ({
                 placeholder="np. Warszawa"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                _dark={{ bg: "rgb(15, 23, 42)" }}
+                _dark={{ bg: "rgb(15, 23, 42)", color: "white" }}
                 rounded="xl"
                 size="md"
                 _focus={{
@@ -113,7 +113,7 @@ export const WorkshopProfilePanel = ({
                 placeholder="ex. Kolejowa 12"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                _dark={{ bg: "rgb(15, 23, 42)" }}
+                _dark={{ bg: "rgb(15, 23, 42)", color: "white" }}
                 rounded="xl"
                 size="md"
                 _focus={{
@@ -130,7 +130,7 @@ export const WorkshopProfilePanel = ({
                 placeholder="np. +48600700800"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                _dark={{ bg: "rgb(15, 23, 42)" }}
+                _dark={{ bg: "rgb(15, 23, 42)", color: "white" }}
                 rounded="xl"
                 size="md"
                 _focus={{
@@ -148,7 +148,7 @@ export const WorkshopProfilePanel = ({
               placeholder="Describe your repair shop, the vehicle brands you specialize in, the services you offer, and your hours of operation..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              _dark={{ bg: "rgb(15, 23, 42)" }}
+              _dark={{ bg: "rgb(15, 23, 42)", color: "white" }}
               rounded="xl"
               rows={5}
               _focus={{
@@ -171,6 +171,7 @@ export const WorkshopProfilePanel = ({
               fontWeight="bold"
               shadow="md"
               _hover={{ transform: "translateY(-1px)", shadow: "lg" }}
+              _dark={{ color: "white"}}
             >
               Save changes
             </Button>
