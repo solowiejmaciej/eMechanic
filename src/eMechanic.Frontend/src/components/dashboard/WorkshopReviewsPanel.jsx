@@ -49,7 +49,7 @@ export const WorkshopReviewsPanel = ({
   const filters = [
     {
       id: "rating",
-      label: "Ocena",
+      label: "Ratings",
       value: ratingFilter,
       onChange: onRatingFilterChange,
       options: [

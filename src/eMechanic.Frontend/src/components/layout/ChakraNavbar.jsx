@@ -88,7 +88,7 @@ const ChakraNavbar = ({ onProfileClick }) => {
                                 <Flex align="center" gap={3} mr={2}>
                                     <Box display={{ base: "none", md: "block" }} textAlign="right">
                                         <Text fontSize="10px" color="gray.400" textTransform="uppercase" fontWeight="bold">
-                                            Zalogowany jako
+                                            Logged in as
                                         </Text>
                                         <Text fontSize="sm" fontWeight="bold" color="gray.700" _dark={{ color: "white" }}>
                                             {user.firstName ? `${user.firstName} ${user.lastName}` : user.email}
@@ -118,7 +118,7 @@ const ChakraNavbar = ({ onProfileClick }) => {
                                     rounded="full"
                                     fontWeight="medium"
                                 >
-                                    Mój profil
+                                    My profile
                                 </Button>
 
                                 <Button
@@ -131,7 +131,7 @@ const ChakraNavbar = ({ onProfileClick }) => {
                                     variant="solid"
                                     _hover={{ bg: iconHoverColor }}
                                 >
-                                    Wyloguj się
+                                    Sign out
                                 </Button>
                             </>
                         ) : (

@@ -60,7 +60,7 @@ export const WorkshopsPanel = ({
             w="full"
             rounded="xl"
             size="lg"
-            placeholder="Wpisz nazwę warsztatu lub miasto..."
+            placeholder="Enter the name of the repair shop or the city..."
             _dark={{ bg: "rgb(25, 36, 54)", color: "white" }}
             value={searchWorkshop}
             onChange={(e) => setSearchWorkshop(e.target.value)}
@@ -76,7 +76,7 @@ export const WorkshopsPanel = ({
           onClick={handleWorkshopSearch}
           shadow="md"
         >
-          Szukaj
+          Search
         </Button>
       </HStack>
 
