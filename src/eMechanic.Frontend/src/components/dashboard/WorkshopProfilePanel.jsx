@@ -54,7 +54,7 @@ export const WorkshopProfilePanel = ({
         <VStack align="stretch" gap={5}>
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
             <Field.Root required>
-              <Field.Label fontWeight="semibold">Workshop name</Field.Label>
+              <Field.Label fontWeight="semibold" _dark={{ color: "white" }}>Workshop name</Field.Label>
               <Input
                 placeholder="ex. Auto Serwis Kowalski"
                 value={displayName}
@@ -71,7 +71,7 @@ export const WorkshopProfilePanel = ({
             </Field.Root>
 
             <Field.Root required>
-              <Field.Label fontWeight="semibold">Email address(Login)</Field.Label>
+              <Field.Label fontWeight="semibold" _dark={{ color: "white" }}>Email address(Login)</Field.Label>
               <Input
                 type="email"
                 placeholder="ex. kontakt@serwiskowalski.pl"
@@ -91,7 +91,7 @@ export const WorkshopProfilePanel = ({
 
           <SimpleGrid columns={{ base: 1, md: 3 }} gap={4}>
             <Field.Root required>
-              <Field.Label fontWeight="semibold">City</Field.Label>
+              <Field.Label fontWeight="semibold" _dark={{ color: "white" }}>City</Field.Label>
               <Input
                 placeholder="np. Warszawa"
                 value={city}
@@ -108,12 +108,12 @@ export const WorkshopProfilePanel = ({
             </Field.Root>
 
             <Field.Root required>
-              <Field.Label fontWeight="semibold">Address (Street and no)</Field.Label>
+              <Field.Label fontWeight="semibold" _dark={{ color: "white" }}>Address (Street and no)</Field.Label>
               <Input
                 placeholder="ex. Kolejowa 12"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                _dark={{ bg: "rgb(15, 23, 42)", color: "white" }}
+                _dark={{ bg: "rgb(15, 23, 42)"}}
                 rounded="xl"
                 size="md"
                 _focus={{
@@ -125,12 +125,12 @@ export const WorkshopProfilePanel = ({
             </Field.Root>
 
             <Field.Root>
-              <Field.Label fontWeight="semibold">Phone number</Field.Label>
+              <Field.Label fontWeight="semibold" _dark={{ color: "white" }}>Phone number</Field.Label>
               <Input
                 placeholder="np. +48600700800"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                _dark={{ bg: "rgb(15, 23, 42)", color: "white" }}
+                _dark={{ bg: "rgb(15, 23, 42)"}}
                 rounded="xl"
                 size="md"
                 _focus={{
@@ -143,7 +143,7 @@ export const WorkshopProfilePanel = ({
           </SimpleGrid>
 
           <Field.Root>
-            <Field.Label fontWeight="semibold">Workshop Description and Specializations</Field.Label>
+            <Field.Label fontWeight="semibold" _dark={{ color: "white" }}>Workshop Description and Specializations</Field.Label>
             <Textarea
               placeholder="Describe your repair shop, the vehicle brands you specialize in, the services you offer, and your hours of operation..."
               value={description}

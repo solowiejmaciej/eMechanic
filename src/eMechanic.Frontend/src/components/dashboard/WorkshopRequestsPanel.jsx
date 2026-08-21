@@ -158,11 +158,11 @@ export const WorkshopRequestsPanel = ({
       value: statusFilter,
       onChange: onStatusFilterChange,
       options: [
-        { value: "All", label: "All", icon: Car, color: "orange.500" },
-        { value: "Pending", label: "New", icon: Clock, color: "blue.500" },
-        { value: "Estimated", label: "Estimated", icon: Sparkles, color: "orange.500" },
-        { value: "Accepted", label: "Accepted", icon: CheckCircle2, color: "green.500" },
-        { value: "Rejected", label: "Rejected", icon: XCircle, color: "red.500" },
+        { value: "All", label: "Wszystkie", icon: Car, color: "orange.500" },
+        { value: "Pending", label: "Nowe", icon: Clock, color: "blue.500" },
+        { value: "Estimated", label: "Wycenione", icon: Sparkles, color: "orange.500" },
+        { value: "Accepted", label: "Zaakceptowane", icon: CheckCircle2, color: "green.500" },
+        { value: "Rejected", label: "Odrzucone", icon: XCircle, color: "red.500" },
       ]
     }
   ];
@@ -172,7 +172,7 @@ export const WorkshopRequestsPanel = ({
       title="Client requests"
       subtitle="Manage service requests, perform diagnostics, and send cost estimates"
       filters={filters}
-      totalItemsLabel={`Shown: ${filteredRequests.length} (on Page)`}
+      totalItemsLabel={`Pokazano: ${filteredRequests.length} (na stronie)`}
       currentPage={pageNumber}
       totalPages={totalPages}
       pageSize={pageSize}
@@ -330,7 +330,7 @@ export const WorkshopRequestsPanel = ({
                 {req.diagnosis && (
                   <Box>
                     <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                      Workshop diagnosis
+                      Diagnoza warsztatu
                     </Text>
                     <Text mt={1} color="gray.700" _dark={{ color: "gray.300" }} fontSize="sm" fontWeight="medium">
                       {req.diagnosis}
@@ -341,7 +341,7 @@ export const WorkshopRequestsPanel = ({
                 {req.estimatedCostAmount !== null && (
                   <HStack justify="space-between" bg="orange.50/50" _dark={{ bg: "orange.950/10" }} p={3} rounded="xl">
                     <Text fontSize="xs" fontWeight="bold" color="orange.700" _dark={{ color: "orange.300" }}>
-                      Estimated repair cost
+                      Szacowany koszt naprawy
                     </Text>
                     <Text fontWeight="black" fontSize="lg" color="orange.600" _dark={{ color: "orange.400" }}>
                       {req.estimatedCostAmount} PLN
@@ -425,7 +425,7 @@ export const WorkshopRequestsPanel = ({
                     <Field.Label fontWeight="semibold">Estimated gross cost (PLN)</Field.Label>
                     <Input
                       type="number"
-                      placeholder="Enter the amount in PLN, e.g. 500"
+                      placeholder="Wpisz kwotę w PLN, np. 500"
                       value={cost}
                       onChange={(e) => setCost(e.target.value)}
                       _dark={{ bg: "rgb(15, 23, 42)" }}
@@ -434,7 +434,7 @@ export const WorkshopRequestsPanel = ({
                 </DialogBody>
                 <DialogFooter gap={2}>
                   <DialogActionTrigger asChild>
-                    <Button type="button" variant="ghost" rounded="lg">Anuluj</Button>
+                    <Button type="button" variant="ghost" rounded="lg">Cancel</Button>
                   </DialogActionTrigger>
                   <Button type="submit" loading={isSubmitLoading} colorPalette="orange" rounded="lg">
                     Send a quote

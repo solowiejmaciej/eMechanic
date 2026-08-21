@@ -125,6 +125,7 @@ export const WorkshopDocumentsPanel = ({
           gap={2}
           fontWeight="semibold"
           shadow="md"
+          color="white"
         >
           <Icon as={Plus} boxSize={4} />
           Add a document
