@@ -37,16 +37,16 @@ const ChakraLogin = () => {
         
         if (result.success) {
             toaster.create({
-                title: "Zalogowano pomyślnie",
-                description: "Zostałeś pomyślnie zalogowany.",
+                title: "Logged in successfully",
+                description: "You have successfully logged in.",
                 type: "success"
             });
             const from = location.state?.from?.pathname || "/home";
             navigate(from, { replace: true });
         } else {
             toaster.create({
-                title: "Błąd logowania",
-                description: result.error || "Niepoprawne dane logowania.",
+                title: "Login error",
+                description: result.error || "Invalid login credentials.",
                 type: "error"
             });
         }
@@ -59,16 +59,16 @@ const ChakraLogin = () => {
         
         if (result.success) {
             toaster.create({
-                title: "Zalogowano pomyślnie",
-                description: "Zostałeś pomyślnie zalogowany przez Google.",
+                title: "Logged in successfully",
+                description: "You have successfully logged in with Google.",
                 type: "success"
             });
             const from = location.state?.from?.pathname || "/home";
             navigate(from, { replace: true });
         } else {
             toaster.create({
-                title: "Błąd logowania",
-                description: result.error || "Logowanie przez Google nie powiodło się.",
+                title: "Login error",
+                description: result.error || "Signing in with Google failed.",
                 type: "error"
             });
         }
@@ -98,14 +98,14 @@ const ChakraLogin = () => {
                             <Field.Root invalid={!!errors.email}>
                                 <Field.Label>Email Address</Field.Label>
                                 <InputGroup startElement={<Icon as={Mail} color={"gray.500"} boxSize={5} />}>
-                                    <Input {...register("email", { required: "Email jest wymagany" })} _focus={{ borderColor: activeTab === 'user' ? "brand.600" : "orange.500", borderWidth: "2px", outline: "none", _dark: { borderColor: activeTab === 'user' ? "brand.600" : "orange.500" } }} w="full" rounded="2xl" size="xl" placeholder="name@example.com" _dark={{ bgcolor: "whiteAlpha.50", bg: "rgb(25, 36, 54)", color: "white", borderColor: "whiteAlpha.300" }} />
+                                    <Input {...register("email", { required: "Email is required" })} _focus={{ borderColor: activeTab === 'user' ? "brand.600" : "orange.500", borderWidth: "2px", outline: "none", _dark: { borderColor: activeTab === 'user' ? "brand.600" : "orange.500" } }} w="full" rounded="2xl" size="xl" placeholder="name@example.com" _dark={{ bgcolor: "whiteAlpha.50", bg: "rgb(25, 36, 54)", color: "white", borderColor: "whiteAlpha.300" }} />
                                 </InputGroup>
                                 <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
                             </Field.Root>
                             <Field.Root invalid={!!errors.password}>
                                 <Field.Label>Password</Field.Label>
                                 <InputGroup startElement={<Icon as={Lock} color={"gray.500"} boxSize={5} />}>
-                                    <PasswordInput {...register("password", { required: "Hasło jest wymagane" })} _focus={{ borderColor: activeTab === 'user' ? "brand.600" : "orange.500", borderWidth: "2px", outline: "none", _dark: { borderColor: activeTab === 'user' ? "brand.600" : "orange.500" } }} w="full" rounded="2xl" size="xl" _dark={{ bgcolor: "whiteAlpha.50", bg: "rgb(25, 36, 54)", color: "white", borderColor: "whiteAlpha.300" }} eyeColor={activeTab === 'user' ? "brand.600" : "orange.500"} />
+                                    <PasswordInput {...register("password", { required: "Password is required" })} _focus={{ borderColor: activeTab === 'user' ? "brand.600" : "orange.500", borderWidth: "2px", outline: "none", _dark: { borderColor: activeTab === 'user' ? "brand.600" : "orange.500" } }} w="full" rounded="2xl" size="xl" _dark={{ bgcolor: "whiteAlpha.50", bg: "rgb(25, 36, 54)", color: "white", borderColor: "whiteAlpha.300" }} eyeColor={activeTab === 'user' ? "brand.600" : "orange.500"} />
                                 </InputGroup>
                                 <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
                             </Field.Root>
@@ -127,8 +127,8 @@ const ChakraLogin = () => {
                             onSuccess={handleGoogleSuccess} 
                             onError={() => {
                                 toaster.create({
-                                    title: "Błąd logowania",
-                                    description: "Logowanie przez Google nie powiodło się.",
+                                    title: "Login error",
+                                    description: "Signing in with Google failed.",
                                     type: "error"
                                 });
                             }} 

@@ -297,7 +297,7 @@ export const WorkshopRepairsPanel = ({
                   </Text>
                   <SimpleGrid columns={{ base: 1, sm: 2 }} gap={2.5} fontSize="xs">
                     <HStack gap={1.5}>
-                      <Text fontWeight="semibold" color="gray.500">Części:</Text>
+                      <Text fontWeight="semibold" color="gray.500">Parts:</Text>
                       <Badge colorPalette="orange" variant="subtle" size="sm" rounded="md">
                         {prefs.partsPreference === 1 || prefs.partsPreference === "Economy" ? "Economical (substitutes)" :
                          prefs.partsPreference === 2 || prefs.partsPreference === "Balanced" ? "Balanced (OEM/Replacement Parts)" :
@@ -305,7 +305,7 @@ export const WorkshopRepairsPanel = ({
                       </Badge>
                     </HStack>
                     <HStack gap={1.5}>
-                      <Text fontWeight="semibold" color="gray.500">Czas:</Text>
+                      <Text fontWeight="semibold" color="gray.500">Time:</Text>
                       <Badge colorPalette="orange" variant="subtle" size="sm" rounded="md">
                         {prefs.timelinePreference === 1 || prefs.timelinePreference === "Standard" ? "Standard" :
                          prefs.timelinePreference === 2 || prefs.timelinePreference === "Urgent" ? "Urgent (Express)" : "No preference"}
@@ -349,6 +349,7 @@ export const WorkshopRepairsPanel = ({
                     gap={1.5}
                     fontWeight="bold"
                     shadow="md"
+                    color={"white"}
                   >
                     <Icon as={Play} boxSize={3.5} />
                     Start the repair
@@ -360,8 +361,8 @@ export const WorkshopRepairsPanel = ({
                     size="sm"
                     colorPalette="orange"
                     variant="outline"
-                    borderColor="orange.500"
-                    color="orange.500"
+                    borderColor="orange.400"
+                    color="orange.400"
                     _hover={{ bg: "orange.50", _dark: { bg: "orange.900/20" } }}
                     rounded="lg"
                     onClick={() => handleOpenCompleteModal(rep)}

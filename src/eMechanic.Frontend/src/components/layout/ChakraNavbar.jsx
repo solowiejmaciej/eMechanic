@@ -104,6 +104,8 @@ const ChakraNavbar = ({ onProfileClick }) => {
                                     colorPalette={user.role === 'Workshop' ? "orange" : "brand"}
                                     rounded="full"
                                     fontWeight="medium"
+                                    borderColor={user.role == 'Workshop' ? "orange" : "brand.500" }
+                                    color={user.role == 'Workshop' ? "orange" : "brand.500" }
                                 >
                                     Panel
                                 </Button>
@@ -117,6 +119,8 @@ const ChakraNavbar = ({ onProfileClick }) => {
                                     colorPalette={user.role === 'Workshop' ? "orange" : "brand"}
                                     rounded="full"
                                     fontWeight="medium"
+                                    borderColor={user.role == 'Workshop' ? "orange" : "brand.500" }
+                                    color={user.role == 'Workshop' ? "orange" : "brand.500" }
                                 >
                                     My profile
                                 </Button>

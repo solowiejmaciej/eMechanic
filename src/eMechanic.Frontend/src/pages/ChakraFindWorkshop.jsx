@@ -58,12 +58,12 @@ const WorkshopCard = ({ workshop }) => {
         )}
         <VStack align="flex-start" gap={1}>
           <Heading size="md" fontWeight="bold" _dark={{ color: "white" }}>
-            {workshop.displayName || "Nazwa warsztatu"}
+            {workshop.displayName || "Workshop name"}
           </Heading>
           <HStack gap={1}>
             <Icon as={MapPin} color="gray.400" boxSize={3.5} />
             <Text fontSize="xs" color="gray.500" _dark={{ color: "gray.400" }}>
-              {workshop.city || "Brak miasta"}
+              {workshop.city || "City missing"}
             </Text>
           </HStack>
         </VStack>
@@ -100,10 +100,10 @@ const WorkshopCard = ({ workshop }) => {
 
       <Flex justify="space-between" align="center" mt={2}>
         <Badge colorPalette="orange" variant="subtle" rounded="md" px={2} py={0.5}>
-          Warsztat
+          Workshop
         </Badge>
-        <Button size="sm" colorPalette="brand" variant="outline" rounded="lg">
-          Szczegóły
+        <Button size="sm" colorPalette="brand" variant="outline" borderColor={"brand.500"} rounded="lg">
+          Details
         </Button>
       </Flex>
     </Box>
@@ -247,13 +247,13 @@ const ChakraFindWorshop = () => {
                       </Text>
                       
                       <HStack gap={2}>
-                          <Button variant="outline" colorPalette="brand" disabled={pageNumber === 1} onClick={() => handlePageChange(pageNumber - 1)}>
+                          <Button variant="outline" color="brand.600" borderColor={"brand.600"} disabled={pageNumber === 1} onClick={() => handlePageChange(pageNumber - 1)}>
                             Previous
                           </Button>
                           <Text fontWeight="bold" px={4} _dark={{ color: "white" }}>
                             {pageNumber} / {totalPages}
                           </Text>
-                          <Button variant="outline" colorPalette="brand" disabled={pageNumber === totalPages} onClick={() => handlePageChange(pageNumber + 1)}>
+                          <Button variant="outline" color="brand.600" borderColor={"brand.600"} disabled={pageNumber === totalPages} onClick={() => handlePageChange(pageNumber + 1)}>
                             Next
                           </Button>
                       </HStack>
