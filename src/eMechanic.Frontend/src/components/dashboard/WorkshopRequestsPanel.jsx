@@ -309,18 +309,18 @@ export const WorkshopRequestsPanel = ({
                     </Text>
                     <SimpleGrid columns={{ base: 1, sm: 2 }} gap={2.5} fontSize="xs">
                       <HStack gap={1.5}>
-                        <Text fontWeight="semibold" color="gray.500">Części:</Text>
+                        <Text fontWeight="semibold" color="gray.500">Parts:</Text>
                         <Badge colorPalette="orange" variant="subtle" size="sm" rounded="md">
-                          {prefs.partsPreference === 1 || prefs.partsPreference === "Economy" ? "Ekonomiczne (zamienniki)" :
-                           prefs.partsPreference === 2 || prefs.partsPreference === "Balanced" ? "Zbalansowane (OEM/Zamienniki)" :
-                           prefs.partsPreference === 3 || prefs.partsPreference === "Premium" ? "Premium (tylko OEM)" : "Brak preferencji"}
+                          {prefs.partsPreference === 1 || prefs.partsPreference === "Economy" ? "Economical (alternatives)" :
+                           prefs.partsPreference === 2 || prefs.partsPreference === "Balanced" ? "Balanced (OEM/Alternatives)" :
+                           prefs.partsPreference === 3 || prefs.partsPreference === "Premium" ? "Premium (only OEM)" : "No preference"}
                         </Badge>
                       </HStack>
                       <HStack gap={1.5}>
-                        <Text fontWeight="semibold" color="gray.500">Czas:</Text>
+                        <Text fontWeight="semibold" color="gray.500">Time:</Text>
                         <Badge colorPalette="orange" variant="subtle" size="sm" rounded="md">
-                          {prefs.timelinePreference === 1 || prefs.timelinePreference === "Standard" ? "Standardowy" :
-                           prefs.timelinePreference === 2 || prefs.timelinePreference === "Urgent" ? "Pilny (Ekspres)" : "Brak preferencji"}
+                          {prefs.timelinePreference === 1 || prefs.timelinePreference === "Standard" ? "Standard" :
+                           prefs.timelinePreference === 2 || prefs.timelinePreference === "Urgent" ? "Urgent (Express)" : "No preference"}
                         </Badge>
                       </HStack>
                     </SimpleGrid>
@@ -330,7 +330,7 @@ export const WorkshopRequestsPanel = ({
                 {req.diagnosis && (
                   <Box>
                     <Text fontSize="10px" fontWeight="bold" color="gray.400" textTransform="uppercase">
-                      Diagnoza warsztatu
+                      Workshop Diagonosis
                     </Text>
                     <Text mt={1} color="gray.700" _dark={{ color: "gray.300" }} fontSize="sm" fontWeight="medium">
                       {req.diagnosis}
@@ -341,7 +341,7 @@ export const WorkshopRequestsPanel = ({
                 {req.estimatedCostAmount !== null && (
                   <HStack justify="space-between" bg="orange.50/50" _dark={{ bg: "orange.950/10" }} p={3} rounded="xl">
                     <Text fontSize="xs" fontWeight="bold" color="orange.700" _dark={{ color: "orange.300" }}>
-                      Szacowany koszt naprawy
+                      Estimated repair cost
                     </Text>
                     <Text fontWeight="black" fontSize="lg" color="orange.600" _dark={{ color: "orange.400" }}>
                       {req.estimatedCostAmount} PLN

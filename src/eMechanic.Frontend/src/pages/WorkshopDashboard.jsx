@@ -1223,8 +1223,8 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               <Flex
                 w={12}
                 h={12}
-                bg="orange.50"
-                _dark={{ bg: "orange.950/30" }}
+                bg="orange.500/30"
+                _dark={{ bg: "orange.700/30"}}
                 rounded="xl"
                 align="center"
                 justify="center"
@@ -1267,8 +1267,8 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               <Flex
                 w={12}
                 h={12}
-                bg="blue.50"
-                _dark={{ bg: "blue.950/30" }}
+                bg="brand.600/30"
+                _dark={{ bg: "brand.600/30" }}
                 rounded="xl"
                 align="center"
                 justify="center"
@@ -1311,8 +1311,8 @@ const WorkshopDashboard = ({ activeMenu, setActiveMenu }) => {
               <Flex
                 w={12}
                 h={12}
-                bg="green.50"
-                _dark={{ bg: "green.950/30" }}
+                bg="green.500/30"
+                _dark={{ bg: "green.700/30" }}
                 rounded="xl"
                 align="center"
                 justify="center"

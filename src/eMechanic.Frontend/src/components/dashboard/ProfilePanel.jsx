@@ -49,12 +49,12 @@ export const ProfilePanel = ({
         <VStack align="stretch" gap={5}>
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
             <Field.Root required>
-              <Field.Label fontWeight="semibold">Name</Field.Label>
+              <Field.Label fontWeight="semibold" _dark={{color:"white"}}>Name</Field.Label>
               <Input
                 placeholder="ex. Jan"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                _dark={{ bg: "rgb(15, 23, 42)" }}
+                _dark={{ bg: "rgb(15, 23, 42)", color:"white"  }}
                 rounded="xl"
                 size="md"
                 _focus={{
@@ -66,12 +66,12 @@ export const ProfilePanel = ({
             </Field.Root>
 
             <Field.Root required>
-              <Field.Label fontWeight="semibold">Last name</Field.Label>
+              <Field.Label fontWeight="semibold" _dark={{color:"white"}}>Last name</Field.Label>
               <Input
                 placeholder="ex. Kowalski"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                _dark={{ bg: "rgb(15, 23, 42)" }}
+                _dark={{ bg: "rgb(15, 23, 42)", color:"white"  }}
                 rounded="xl"
                 size="md"
                 _focus={{
@@ -85,13 +85,13 @@ export const ProfilePanel = ({
 
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
             <Field.Root required>
-              <Field.Label fontWeight="semibold">E-mail address</Field.Label>
+              <Field.Label fontWeight="semibold" _dark={{color:"white"}}>E-mail address</Field.Label>
               <Input
                 type="email"
                 placeholder="ex. jan.kowalski@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                _dark={{ bg: "rgb(15, 23, 42)" }}
+                _dark={{ bg: "rgb(15, 23, 42)", color:"white" }}
                 rounded="xl"
                 size="md"
                 _focus={{
@@ -103,12 +103,12 @@ export const ProfilePanel = ({
             </Field.Root>
 
             <Field.Root>
-              <Field.Label fontWeight="semibold">Phone number</Field.Label>
+              <Field.Label fontWeight="semibold" _dark={{color:"white"}}>Phone number</Field.Label>
               <Input
                 placeholder="ex. +48500100200"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                _dark={{ bg: "rgb(15, 23, 42)" }}
+                _dark={{ bg: "rgb(15, 23, 42)", color:"white" }}
                 rounded="xl"
                 size="md"
                 _focus={{

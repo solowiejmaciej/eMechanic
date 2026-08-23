@@ -384,9 +384,9 @@ export const GaragePanel = ({
             <Flex
               w={12}
               h={12}
-              bg="brand.50"
+              bg="brand.600/30"
               rounded="xl"
-              _dark={{ bg: "brand.900/30" }}
+              _dark={{ bg: "brand.600/30" }}
               align="center"
               justify="center"
             >
@@ -416,13 +416,13 @@ export const GaragePanel = ({
             <Flex
               w={12}
               h={12}
-              bg="brand.50"
+              bg="orange.500/30"
               rounded="xl"
-              _dark={{ bg: "brand.900/30" }}
+              _dark={{ bg: "orange.700/30"}}
               align="center"
               justify="center"
             >
-              <Icon as={Wrench} color="brand.500" boxSize={6} />
+              <Icon as={Wrench} color="orange.500" boxSize={6} />
             </Flex>
             <VStack align="flex-start" gap={0}>
               <Text fontSize="xs" color="gray.400" fontWeight="bold" textTransform="uppercase">
@@ -448,9 +448,9 @@ export const GaragePanel = ({
             <Flex
               w={12}
               h={12}
-              bg="green.50"
+              bg="green.500/30"
               rounded="xl"
-              _dark={{ bg: "green.900/30" }}
+              _dark={{ bg: "green.700/30" }}
               align="center"
               justify="center"
             >
@@ -479,12 +479,12 @@ export const GaragePanel = ({
         boxShadow="0 15px 35px -5px rgba(59, 130, 246, 0.06)"
       >
         <Flex justify="space-between" align="center" mb={6} wrap="wrap" gap={4}>
-          <Heading size="md" fontWeight="bold">
+          <Heading size="md" fontWeight="bold" _dark={{color: "white"}}>
             Car list
           </Heading>
           <InputGroup maxW="300px" startElement={<Icon as={Search} />}>
             <Input
-              placeholder="Filtruj markę, model lub rejestrację..."
+              placeholder="Filter by brand, model, or registration..."
               value={searchVehicle}
               onChange={(e) => setSearchVehicle(e.target.value)}
               _focus={{

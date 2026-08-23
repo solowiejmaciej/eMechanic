@@ -46,7 +46,7 @@ function App() {
             <Route path="/about" element={<ChakraAbout />} />
             <Route path="/privacy" element={<ChakraPrivacy />} />
             <Route path="/find-workshop" element={<ChakraFindWorshop/>}/>
-            <Route path="/how-it-works" element={<ChakraHowItWorks/>}/>
+            <Route path="/how-it-works" element={<ChakraHowItWorks/>}/>ś
             <Route path="/for-mechanics" element ={<CharkaForMechanics/>}/>
             <Route path="/terms" element={<ChakraTerms/>}/>
             <Route path="/login" element={<ChakraLogin/>}/>
