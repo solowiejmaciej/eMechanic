@@ -1,8 +1,11 @@
 ﻿using eMechanic.Events.Events.RepairRequest;
 using eMechanic.Events.Services;
+using eMechanic.NotificationService.Constans;
+using eMechanic.NotificationService.Helpers;
 using eMechanic.NotificationService.Services.Abstractions;
 using MassTransit;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace eMechanic.NotificationService.Consumers;
 
@@ -19,25 +22,26 @@ public class RepairRequestEstimatedConsumer : IEventConsumer<RepairRequestEstima
 
     public async Task Consume(ConsumeContext<RepairRequestEstimatedEvent> context)
     {
-        var msg = context.Message;
-        _logger.LogInformation("RepairRequestEstimatedEvent consumed for request {RequestId}", msg.RepairRequestId);
+        var message = context.Message;
 
-        var html = $@"
-        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px;'>
-            <h2 style='color: #f39c12;'>Nowa Wycena Naprawy</h2>
+        _logger.LogInformation("{EventName} consumed. [UserId: {UserId}, RepairRequestId: {RepairRequestId}]",
+            nameof(RepairRequestEstimatedEvent), message.UserId, message.RepairRequestId);
+
+        var title = "Nowa Wycena Naprawy";
+        var content = $@"
             <p>Mechanik przygotował kosztorys dla Twojego pojazdu.</p>
-            <p>Szacowany koszt: <span style='font-size: 18px; color: #e67e22;'><b>{msg.EstimatedCost} {msg.Currency}</b></span></p>
-            <p>Zaloguj się do panelu eMechanic, aby zaakceptować lub odrzucić wycenę.</p>
-        </div>";
+            <p>Szacowany koszt: <b>{message.EstimatedCost} {message.Currency}</b></p>
+            <p>Zaloguj się do panelu eMechanic, aby zaakceptować lub odrzucić wycenę.</p>";
+
+        var emailHtml = EmailTemplateBuilder.Build(title, content);
 
         await _dispatcher.DispatchAsync(
-            msg.UserId,
-            "Nowa wycena naprawy",
-            html,
+            message.UserId,
+            EmailSubjects.RepairRequestEstimated,
+            emailHtml,
             context.CancellationToken);
 
-
-
-        _logger.LogInformation("Pricing notification has been sent for the request: {RequestId}", msg.RepairRequestId);
+        _logger.LogInformation("Notification dispatched successfully for event {EventName}. [UserId: {UserId}]",
+            nameof(RepairRequestEstimatedEvent), message.UserId);
     }
 }

@@ -1,8 +1,11 @@
 ﻿using eMechanic.Events.Events.RepairRequest;
 using eMechanic.Events.Services;
+using eMechanic.NotificationService.Constans;
+using eMechanic.NotificationService.Helpers;
 using eMechanic.NotificationService.Services.Abstractions;
 using MassTransit;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace eMechanic.NotificationService.Consumers;
 
@@ -19,25 +22,26 @@ public class RepairRequestAcceptedConsumer : IEventConsumer<RepairRequestAccepte
 
     public async Task Consume(ConsumeContext<RepairRequestAcceptedEvent> context)
     {
-        var msg = context.Message;
-        _logger.LogInformation("RepairRequestAcceptedEvent was consumed {EventUserId}", msg.UserId);
+        var message = context.Message;
 
-        var html = $@"
-        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px;'>
-            <h2 style='color: #27ae60;'>Naprawa Zaakceptowana!</h2>
-            <p>Warsztat zaakceptował Twoje zgłoszenie o numerze: <b>{msg.RepairRequestId}</b>.</p>
+        _logger.LogInformation("{EventName} consumed. [UserId: {UserId}, RepairRequestId: {RepairRequestId}]",
+            nameof(RepairRequestAcceptedEvent), message.UserId, message.RepairRequestId);
+
+        var title = "Naprawa Zaakceptowana!";
+        var content = $@"
+            <p>Warsztat zaakceptował Twoje zgłoszenie o numerze: <b>{message.RepairRequestId}</b>.</p>
             <p>Możesz teraz spodziewać się wstępnej wyceny lub kontaktu w celu ustalenia terminu podstawienia auta.</p>
-            <a href='#' style='background: #27ae60; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Sprawdź szczegóły</a>
-        </div>";
+            <p>Zaloguj się do systemu, aby sprawdzić szczegóły.</p>";
+
+        var emailHtml = EmailTemplateBuilder.Build(title, content);
 
         await _dispatcher.DispatchAsync(
-            msg.UserId,
-            "Twoja naprawa została zaakceptowana!",
-            html,
+            message.UserId,
+            EmailSubjects.RepairRequestAccepted,
+            emailHtml,
             context.CancellationToken);
 
-
-
-        _logger.LogInformation("User has been notified that the request: {RequestId} has been accepted.", msg.RepairRequestId);
+        _logger.LogInformation("Notification dispatched successfully for event {EventName}. [UserId: {UserId}]",
+            nameof(RepairRequestAcceptedEvent), message.UserId);
     }
 }

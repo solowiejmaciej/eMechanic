@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eMechanic.NotificationService.DAL;
 
-
 public class NotificationDbContext : DbContext
 {
     public NotificationDbContext(DbContextOptions<NotificationDbContext> options) : base(options) { }

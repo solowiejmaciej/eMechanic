@@ -1,51 +1,29 @@
-namespace eMechanic.NotificationService;
-
-using System.Reflection;
-using Common.Web;
-using eMechanic.NotificationService.DAL;
-using eMechanic.NotificationService.Constans;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using eMechanic.ServiceDefaults;
-using Events;
+using eMechanic.NotificationService.DAL;
+using eMechanic.NotificationService.Services.Abstractions;
+using eMechanic.NotificationService.Services;
+using eMechanic.NotificationService.Services.Infrastructure;
+using System;
+using eMechanic.NotificationService;
 
-public sealed class Program
+var builder = Host.CreateDefaultBuilder(args);
+
+
+builder.ConfigureServices((hostContext, services) =>
 {
-    public static void Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
+    var configuration = hostContext.Configuration;
+    services.AddNotificationService(configuration);
+});
 
-        builder.AddServiceDefaults();
-        builder.Services.AddOpenApi();
-        builder.Services.AddSwagger("eMechanic.NotificationService", WebApiConstans.CURRENT_API_VERSION);
+var host = builder.Build();
 
-        builder.Services.AddDbContext<NotificationDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("NotificationDb")));
+using (var scope = host.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<eMechanic.NotificationService.DAL.NotificationDbContext>();
 
-        builder.Services.AddNotificationService(builder.Configuration);
+    await dbContext.Database.MigrateAsync();}
 
-
-
-        builder.Services.AddEventConsuming(builder.Configuration, Assembly.GetExecutingAssembly());
-
-
-        builder.Services.AddMediatR(cfg =>
-        {
-            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-        });
-
-        var app = builder.Build();
-        
-        app.MapOpenApi();
-        app.UseSwagger();
-        app.UseSwaggerUI();
-
-        app.MapDefaultEndpoints();
-
-        var apiV1Group = app.MapGroup($"/api/{WebApiConstans.CURRENT_API_VERSION}");
-        apiV1Group.MapFeatures();
-
-        app.UseHttpsRedirection();
-        app.Run();
-
-    }
-}
+Console.WriteLine("NotificationService Worker został uruchomiony. Nasłuchiwanie na zdarzenia");
+await host.RunAsync();

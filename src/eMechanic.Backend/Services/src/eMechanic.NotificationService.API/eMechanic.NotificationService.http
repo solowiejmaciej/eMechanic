@@ -1,6 +1,0 @@
-@eMechanic.NotificationService_HostAddress = http://localhost:5066
-
-GET {{eMechanic.NotificationService_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

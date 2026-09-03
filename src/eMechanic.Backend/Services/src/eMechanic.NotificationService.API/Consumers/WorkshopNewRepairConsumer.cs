@@ -1,10 +1,15 @@
-﻿using MassTransit;
-using eMechanic.Events.Events.RepairRequest;
+﻿using eMechanic.Events.Events.RepairRequest;
+using eMechanic.Events.Services;
+using eMechanic.NotificationService.Constans;
+using eMechanic.NotificationService.Helpers;
 using eMechanic.NotificationService.Services.Abstractions;
+using MassTransit;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace eMechanic.NotificationService.Consumers;
 
-public class WorkshopNewRepairConsumer : IConsumer<RepairRequestCreatedEvent>
+public class WorkshopNewRepairConsumer : IEventConsumer<RepairRequestCreatedEvent>
 {
     private readonly ILogger<WorkshopNewRepairConsumer> _logger;
     private readonly INotificationDispatcher _dispatcher;
@@ -17,23 +22,27 @@ public class WorkshopNewRepairConsumer : IConsumer<RepairRequestCreatedEvent>
 
     public async Task Consume(ConsumeContext<RepairRequestCreatedEvent> context)
     {
-        var msg = context.Message;
-        _logger.LogInformation("WorkshopNewRepairConsumer consumed for request {RequestId}", msg.RepairRequestId);
+        var message = context.Message;
 
-        var html = $@"
-            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-top: 5px solid #2980b9;'>
-                <h2 style='color: #2c3e50;'>Nowe zlecenie naprawy!</h2>
-                <p>W systemie eMechanic pojawiło się nowe zgłoszenie dla Twojego warsztatu.</p>
-                <hr style='border: 0; border-top: 1px solid #eee;' />
-                <p><b>ID Naprawy:</b> {msg.RepairRequestId}</p>
-                <p><b>ID Pojazdu:</b> {msg.VehicleId}</p>
-                <p>Zaloguj się do panelu warsztatu, aby przeanalizować zgłoszenie i przygotować wstępną diagnozę.</p>
-                <a href='#' style='display: inline-block; background: #2980b9; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 10px;'>Przejdź do zleceń</a>
-            </div>";
+        _logger.LogInformation("{EventName} consumed for workshop. [WorkshopId: {WorkshopId}, RepairRequestId: {RepairRequestId}]",
+            nameof(RepairRequestCreatedEvent), message.WorkshopId, message.RepairRequestId);
 
-        await _dispatcher.DispatchToWorkshopAsync(msg.WorkshopId, "Nowe zlecenie naprawy", html, context.CancellationToken);
+        var title = "Nowe zlecenie naprawy!";
+        var content = $@"
+            <p>W systemie eMechanic pojawiło się nowe zgłoszenie dla Twojego warsztatu.</p>
+            <p><b>ID Naprawy:</b> {message.RepairRequestId}</p>
+            <p><b>ID Pojazdu:</b> {message.VehicleId}</p>
+            <p>Zaloguj się do panelu warsztatu, aby przeanalizować zgłoszenie i przygotować wstępną diagnozę.</p>";
+
+        var emailHtml = EmailTemplateBuilder.Build(title, content);
+
+        await _dispatcher.DispatchToWorkshopAsync(
+            message.WorkshopId,
+            EmailSubjects.WorkshopNewRepair,
+            emailHtml,
+            context.CancellationToken);
+
+        _logger.LogInformation("Notification dispatched successfully for event {EventName}. [WorkshopId: {WorkshopId}]",
+            nameof(RepairRequestCreatedEvent), message.WorkshopId);
     }
-
-
-
 }

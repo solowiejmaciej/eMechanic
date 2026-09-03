@@ -1,7 +1,11 @@
 ﻿using eMechanic.Events.Events.RepairRequest;
 using eMechanic.Events.Services;
+using eMechanic.NotificationService.Constans;
+using eMechanic.NotificationService.Helpers;
 using eMechanic.NotificationService.Services.Abstractions;
 using MassTransit;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace eMechanic.NotificationService.Consumers;
 
@@ -18,25 +22,25 @@ public class RepairRequestRejectedConsumer : IEventConsumer<RepairRequestRejecte
 
     public async Task Consume(ConsumeContext<RepairRequestRejectedEvent> context)
     {
-        var msg = context.Message;
-        _logger.LogInformation("RepairRequestRejectedEvent consumed for request {RequestId}", msg.RepairRequestId);
+        var message = context.Message;
 
-        var html = $@"
-            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-top: 5px solid #e74c3c;'>
-                <h2 style='color: #c0392b;'>Zgłoszenie odrzucone</h2>
-                <p>Niestety warsztat nie może zająć się Twoim zgłoszeniem {msg.RepairRequestId} w wybranym terminie lub zakresie.</p>
-                <p>Możesz spróbować wysłać zgłoszenie do innego warsztatu w naszej bazie.</p>
-            </div>";
+        _logger.LogInformation("{EventName} consumed. [UserId: {UserId}, RepairRequestId: {RepairRequestId}]",
+            nameof(RepairRequestRejectedEvent), message.UserId, message.RepairRequestId);
+
+        var title = "Zgłoszenie odrzucone";
+        var content = $@"
+            <p>Niestety warsztat nie może zająć się Twoim zgłoszeniem o numerze <b>{message.RepairRequestId}</b> w wybranym terminie lub zakresie.</p>
+            <p>Możesz spróbować wysłać zgłoszenie do innego warsztatu w naszej bazie.</p>";
+
+        var emailHtml = EmailTemplateBuilder.Build(title, content);
 
         await _dispatcher.DispatchAsync(
-            msg.UserId,
-            "Status zgłoszenia: Odrzucone",
-            html,
+            message.UserId,
+            EmailSubjects.RepairRequestRejected,
+            emailHtml,
             context.CancellationToken);
 
-
-
-        _logger.LogInformation("Workshop has been notified that request: {RequestId} has been rejected.", msg.RepairRequestId);
-
+        _logger.LogInformation("Notification dispatched successfully for event {EventName}. [UserId: {UserId}]",
+            nameof(RepairRequestRejectedEvent), message.UserId);
     }
 }

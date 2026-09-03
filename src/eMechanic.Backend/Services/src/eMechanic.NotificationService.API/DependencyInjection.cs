@@ -1,57 +1,47 @@
 namespace eMechanic.NotificationService;
 
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Reflection;
+using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.OpenApi.Models;
+using eMechanic.Events;
+using eMechanic.NotificationService.DAL;
 using eMechanic.NotificationService.Services;
 using eMechanic.NotificationService.Services.Infrastructure;
 using eMechanic.NotificationService.Services.Abstractions;
 
-public static class DependencyInjection
+public static class DependecyInjection
 {
     public static IServiceCollection AddNotificationService(this IServiceCollection services,
         IConfiguration configuration)
     {
+        var baseConnectionString = configuration.GetConnectionString("eMechanic");
+        string notificationDbConnectionString;
+
+        if (!string.IsNullOrWhiteSpace(baseConnectionString))
+        {
+            var builder = new Npgsql.NpgsqlConnectionStringBuilder(baseConnectionString);
+            builder.Database = "eMechanic_Notifications";
+            notificationDbConnectionString = builder.ConnectionString;
+
+        }
+        else
+        {
+            notificationDbConnectionString = "Host=localhost;Port=5432;Database=eMechanic_Notifications;Username=postgres;Password=HCn{QDGTU*4e1e~H4hnVHu";
+        }
+
+        services.AddDbContext<NotificationDbContext>(options =>
+            options.UseNpgsql(notificationDbConnectionString));
+
         services.Configure<NotificationSettings>(configuration.GetSection(NotificationSettings.SECTION_NAME));
 
         services.AddHttpClient<IEmailService, EmailLabsApiService>();
-
         services.AddScoped<ISmsService, TwilioSmsService>();
-
         services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
 
+        services.AddEventConsuming(configuration, Assembly.GetExecutingAssembly());
+
         return services;
-    }
-
-    public static void AddSwagger(this IServiceCollection services, string title, string version)
-    {
-        services.AddSwaggerGen();
-        services.AddSwaggerGen(c =>
-        {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = title, Version = version });
-
-            var securityScheme = new OpenApiSecurityScheme
-            {
-                Name = "JWT Authentication",
-                Description = "Enter JWT Bearer token **_only_**",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.Http,
-                Scheme = "bearer",
-                BearerFormat = "JWT",
-                Reference = new OpenApiReference
-                {
-                    Id = JwtBearerDefaults.AuthenticationScheme,
-                    Type = ReferenceType.SecurityScheme
-                }
-            };
-
-            c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
-
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                { securityScheme, Array.Empty<string>() }
-            });
-        });
     }
 }

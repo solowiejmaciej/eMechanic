@@ -1,41 +1,47 @@
-﻿using eMechanic.Events.Events.RepairRequest;
+﻿using eMechanic.Events.Events.Repair;
 using eMechanic.Events.Services;
+using eMechanic.NotificationService.Constans;
+using eMechanic.NotificationService.Helpers;
 using eMechanic.NotificationService.Services.Abstractions;
 using MassTransit;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace eMechanic.NotificationService.Consumers;
 
-public class RepairRequestCreatedConsumer : IEventConsumer<RepairRequestCreatedEvent>
+public class RepairCreatedConsumer : IEventConsumer<RepairCreatedEvent>
 {
     private readonly INotificationDispatcher _dispatcher;
-    private readonly ILogger<RepairRequestCreatedConsumer> _logger;
+    private readonly ILogger<RepairCreatedConsumer> _logger;
 
-    public RepairRequestCreatedConsumer(INotificationDispatcher dispatcher, ILogger<RepairRequestCreatedConsumer> logger)
+    public RepairCreatedConsumer(INotificationDispatcher dispatcher, ILogger<RepairCreatedConsumer> logger)
     {
         _dispatcher = dispatcher;
         _logger = logger;
     }
 
-    public async Task Consume(ConsumeContext<RepairRequestCreatedEvent> context)
+    public async Task Consume(ConsumeContext<RepairCreatedEvent> context)
     {
-        var msg = context.Message;
-        _logger.LogInformation("RepairRequestCreatedEvent was consumed {EventUserId}", msg.UserId);
+        var message = context.Message;
 
-        var html = $@"
-            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-top: 5px solid #3498db;'>
-                <h2 style='color: #2980b9;'>Zgłoszenie zostało wysłane!</h2>
-                <p>Twoja prośba o naprawę została zarejestrowana w systemie.</p>
-                <p><b>Numer zgłoszenia:</b> {msg.RepairRequestId}</p>
-                <p>Teraz czekamy na akceptację warsztatu. Poinformujemy Cię o kolejnych krokach!</p>
-            </div>";
+        _logger.LogInformation("{EventName} consumed. [UserId: {UserId}, RepairRequestId: {RepairRequestId}]",
+            nameof(RepairCreatedEvent), message.UserId, message.RepairRequestId);
+
+        var title = "Zgłoszenie zostało wysłane!";
+        var content = $@"
+            <p>Twoja prośba o naprawę została zarejestrowana w systemie.</p>
+            <p><b>Numer zgłoszenia:</b> {message.RepairRequestId}</p>
+            <p>Teraz czekamy na akceptację warsztatu. Poinformujemy Cię o kolejnych krokach!</p>";
+
+        var emailHtml = EmailTemplateBuilder.Build(title, content);
 
         await _dispatcher.DispatchAsync(
-            msg.UserId,
-            "Potwierdzenie zgłoszenia naprawy",
-            html,
+            message.UserId,
+            EmailSubjects.RepairCreated,
+            emailHtml,
             context.CancellationToken);
 
-        _logger.LogInformation("Email notification has been sent for the report: {EventUserId}", msg.UserId);
+        _logger.LogInformation("Notification dispatched successfully for event {EventName}. [UserId: {UserId}]",
+            nameof(RepairCreatedEvent), message.UserId);
     }
 }
